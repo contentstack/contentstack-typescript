@@ -4,9 +4,6 @@
   "type": "commonjs",
   "main": "./dist/cjs/src/index.js",
   "types": "./dist/types/src/index.d.ts",
-  "publishConfig": {
-    "tag": "beta"
-  },
   "scripts": {
     "prepack": "npm run test",
     "prepare": "npm run build",
