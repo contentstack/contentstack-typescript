@@ -137,3 +137,31 @@ describe('Entries class', () => {
       expect(query._parameters).toEqual({"taxonomies.taxonomy_uid": {"$above": "term_uid", "levels": 4 }});
     });
 });
+
+class TestVariants extends Entries {
+
+  constructor(client: AxiosInstance) {
+    super(client, 'xyz');
+    this._client = client;
+  }
+
+  getVariantsHeaders(): string {
+    return this._client.defaults.headers['x-cs-variant-uid'] || "";
+  }
+}
+
+describe('Variants test', () => {
+  let client: AxiosInstance;
+  let mockClient: MockAdapter;
+
+  beforeAll(() => {
+    client = httpClient(MOCK_CLIENT_OPTIONS);
+    mockClient = new MockAdapter(client as any);
+  });
+  it('should get the correct variant headers added to client', async () => {
+    const testVariantObj = new TestVariants(httpClient(MOCK_CLIENT_OPTIONS))
+    
+    testVariantObj.variants(['variant1', 'variant2']);
+    expect(testVariantObj.getVariantsHeaders()).toBe('variant1,variant2');
+  });
+})
