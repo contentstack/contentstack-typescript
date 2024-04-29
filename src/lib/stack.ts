@@ -1,4 +1,4 @@
-import { StackConfig, SyncStack, SyncType, LivePreviewQuery } from './types';
+import { StackConfig, SyncStack, SyncType, LivePreviewQuery, ReleasePreview } from './types';
 import { AxiosInstance } from '@contentstack/core';
 import { Asset } from './asset';
 import { AssetQuery } from './asset-query';
@@ -15,6 +15,12 @@ export class Stack {
   constructor(client: AxiosInstance, config: StackConfig) {
     this._client = client;
     this.config = config;
+
+    if (this.config.release_preview) {
+      this._client.defaults.headers['release_id'] = this.config.release_preview.release_id;
+      this._client.defaults.headers['preview_timestamp'] = this.config.release_preview.preview_timestamp;
+    }
+    
   }
 
   /**
@@ -113,6 +119,60 @@ export class Stack {
    */
   setLocale(locale: string) {
     this.config.locale = locale;
+  }
+
+  /**
+   * @method setReleasePreview
+   * @memberOf Stack
+   * @description Sets the release preview config of the API server
+   * @param {ReleasePreview} release_preview_config - An object of type `ReleasePreview` which contains the `release_id` and `preview_timestamp` properties.
+   * 
+   * @example
+   * let releasePreviewConfig = {
+   *   release_id: "123",
+   *   preview_timestamp: "2022-01-01T00:00:00Z"
+   * };
+   * 
+   * setReleasePreview(releasePreviewConfig);
+   */
+  setReleasePreview(release_preview_config: ReleasePreview): Stack {
+    this._client.defaults.headers['release_id'] = release_preview_config.release_id;
+    this._client.defaults.headers['preview_timestamp'] = release_preview_config.preview_timestamp;
+
+    return this;
+  }
+
+  /**
+   * @method getReleasePreview
+   * @memberOf Stack
+   * @description Returns the current release preview configuration of the API server
+   * 
+   * @returns {ReleasePreview} An object of type `ReleasePreview` which contains the `release_id` and `preview_timestamp` properties.
+   * 
+   * @example
+   * let releasePreviewConfig = Stack.getReleasePreview();
+   * console.log(releasePreviewConfig);
+   */
+  getReleasePreview(): ReleasePreview {
+    return {
+        release_id: this._client.defaults.headers['release_id'],
+        preview_timestamp: this._client.defaults.headers['preview_timestamp']
+    };
+  }
+
+  /**
+   * @method removeReleasePreview
+   * @memberOf Stack
+   * @description Removes the current release preview configuration from the API server
+   * 
+   * @example
+   * Stack.removeReleasePreview();
+   */
+  removeReleasePreview(): Stack {
+    delete this._client.defaults.headers['release_id'];
+    delete this._client.defaults.headers['preview_timestamp'];
+
+    return this;
   }
 
   /**
