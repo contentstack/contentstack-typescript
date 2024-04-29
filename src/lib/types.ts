@@ -21,6 +21,7 @@ export interface StackConfig extends HttpClientParams {
   logHandler?: (level: string, data: any) => void;
   cacheOptions?: CacheOptions;
   live_preview?: LivePreview;
+  release_preview?: ReleasePreview;
 }
 export interface CacheOptions extends PersistanceStoreOptions {
   policy: Policy;
@@ -270,4 +271,9 @@ export type LivePreview = {
   enable: boolean;
   management_token?: string;
   preview_token?: string;
+}
+
+export type ReleasePreview = {
+  release_id: string;
+  preview_timestamp: string;
 }
