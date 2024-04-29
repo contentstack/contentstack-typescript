@@ -2,7 +2,7 @@ fileignoreconfig:
 - filename: test/utils/mocks.ts
   checksum: 6936ea8696be3a5daf085b58ec6dd1f10be625ca2674580b0147ae65e42fd350
 - filename: package-lock.json
-  checksum: d088a6f7b7f51da879c65e582037301a21e425c11b1bbb85c410d3c3e087e1f2
+  checksum: 5ffcf1eea69f53e6899e9ca7e0c088045db2ca3291f30b007f89887e9aadc0d1
 - filename: src/lib/content-type.ts
   checksum: e8e582d24cbb22b79c91e82939d8a600ffd98f95b7575051d7b568adbf8d5cc8
 - filename: src/lib/cache.ts
@@ -24,9 +24,9 @@ fileignoreconfig:
 - filename: src/lib/global-field-query.ts
   checksum: 217060ddaedf5b0b50baa6d893bff2f8b71b9cb76885fbf097f748c95692ff71
 - filename: src/lib/entries.ts
-  checksum: 7296d64216993216ed1ea9ba1729cdef0fbe88efc612f49ba846ff9b3e2e0d33
+  checksum: 12e9b089188aa7d1999fcc9f7081e2ce81da8300012712c29e4d469e98c8c73b
 - filename: src/lib/entry.ts
-  checksum: 9e6f131b59f64f4acc8a26fa757b89ec2456e3f45ed40c1db506b76413feefdb
+  checksum: d698568eec5f48ff7f15e1d4b25c3a4a786f2128238fc49605cef33c3f6fdae0
 - filename: src/persistance/storages/memory-storage.ts
   checksum: f5a094538ab269335065e9ac6412dcd5cb107e32efc2fe36e3599aac3268cb54
 - filename: src/lib/global-field.ts
