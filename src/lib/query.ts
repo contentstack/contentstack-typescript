@@ -25,13 +25,10 @@ export class Query extends BaseQuery {
   }
   // Validate if input is a valid regex pattern
   private isValidRegexPattern(input: string): boolean {
-    try {
-      new RegExp(input);
-      return true;
-    } catch (error) {
-      return false;
+     RegExp(input);
+     return true;
     }
-  }
+  
   // Validate if value is an array of strings, numbers, or booleans
   private isValidValue(value: any[]): boolean {
     return Array.isArray(value) && value.every(item => typeof item === 'string' || typeof item === 'number' || typeof item === 'boolean');
