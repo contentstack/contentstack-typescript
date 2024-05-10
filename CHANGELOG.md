@@ -1,5 +1,8 @@
 ## Change log
 
+### Version: 4.0.1
+#### Date: May-20-2024
+Fixed SRE vulnerabilities 
 
 ### Version: 4.0.0
 #### Date: April-23-2024
