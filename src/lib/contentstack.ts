@@ -69,6 +69,10 @@ export function stack(config: StackConfig): StackClass {
     throw new Error('Environment for Stack is required');
   }
 
+  if (config.branch) {
+    defaultConfig.headers.branch = config.branch;
+  }
+
   if (config.early_access) {
     defaultConfig.headers['x-header-ea'] = config.early_access.join(',');
   }
