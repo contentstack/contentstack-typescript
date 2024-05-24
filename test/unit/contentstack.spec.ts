@@ -97,12 +97,14 @@ describe('Contentstack', () => {
       apiKey: 'apiKey',
       deliveryToken: 'delivery',
       environment: 'env',
+      branch: 'branch',
     };
     const stackInstance = createStackInstance(config);
     expect(stackInstance).toBeInstanceOf(Stack);
     expect(stackInstance.config.apiKey).toEqual(config.apiKey);
     expect(stackInstance.config.deliveryToken).toEqual(config.deliveryToken);
     expect(stackInstance.config.environment).toEqual(config.environment);
+    expect(stackInstance.config.branch).toEqual(config.branch);
     done();
   });
 
