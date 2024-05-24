@@ -6,6 +6,8 @@ import { Policy, StackConfig } from './types';
 import { getHost } from './utils';
 export * as Utils from '@contentstack/utils';
 
+let version = '{{VERSION}}';
+
 /**
  * @method stack
  * @memberof Contentstack
@@ -67,9 +69,15 @@ export function stack(config: StackConfig): StackClass {
     throw new Error('Environment for Stack is required');
   }
 
+  if (config.branch) {
+    defaultConfig.headers.branch = config.branch;
+  }
+
   if (config.early_access) {
     defaultConfig.headers['x-header-ea'] = config.early_access.join(',');
   }
+
+  defaultConfig.headers['X-User-Agent'] = 'contentstack-delivery-typescript-{{PLATFORM}}/' + version;
 
   // return new Stack(httpClient(defaultConfig), config);
   const client = httpClient(defaultConfig as any);

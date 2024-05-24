@@ -14,6 +14,7 @@ export interface StackConfig extends HttpClientParams {
   apiKey: string;
   deliveryToken: string;
   environment: string;
+  branch?: string;
   early_access?: string[];
   region?: Region;
   locale?: string;
