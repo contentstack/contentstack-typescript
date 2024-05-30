@@ -1,5 +1,9 @@
 ## Change log
 
+### Version: 4.0.2
+#### Date: June-03-2024
+Custom host implementation
+
 ### Version: 4.0.1
 #### Date: May-20-2024
 Fixed SRE vulnerabilities 
