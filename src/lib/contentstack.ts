@@ -48,10 +48,12 @@ export function stack(config: StackConfig): StackClass {
       config.host = 'rest-preview.contentstack.com'
       config.live_preview.host = config.host
     }
-  } else config.host = defaultConfig.defaultHostname
-  defaultConfig.live_preview = config.live_preview
+  } else {
+    config.host = config.host || defaultConfig.defaultHostname;
+    defaultConfig.live_preview = config.live_preview
+  }
 
-  defaultConfig.defaultHostname = getHost(config.region, config.host);
+  defaultConfig.defaultHostname = config.host ? config.host : getHost(config.region, config.host);
 
   if (config.apiKey) {
     defaultConfig.headers.api_key = config.apiKey;
