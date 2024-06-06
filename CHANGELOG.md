@@ -1,5 +1,9 @@
 ## Change log
 
+### Version: 4.0.3
+#### Date: June-11-2024
+Fixed region issue
+
 ### Version: 4.0.2
 #### Date: June-03-2024
 Custom host implementation
