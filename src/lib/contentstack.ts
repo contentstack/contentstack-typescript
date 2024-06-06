@@ -49,11 +49,10 @@ export function stack(config: StackConfig): StackClass {
       config.live_preview.host = config.host
     }
   } else {
+    defaultConfig.defaultHostname = config.host ? config.host : getHost(config.region, config.host);
     config.host = config.host || defaultConfig.defaultHostname;
     defaultConfig.live_preview = config.live_preview
   }
-
-  defaultConfig.defaultHostname = config.host ? config.host : getHost(config.region, config.host);
 
   if (config.apiKey) {
     defaultConfig.headers.api_key = config.apiKey;
