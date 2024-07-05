@@ -3,6 +3,10 @@ import { BaseQuery } from './base-query';
 import { BaseQueryParameters, QueryOperation, QueryOperator, TaxonomyQueryOperation } from './types';
 import { params, queryParams } from './internal-types';
 
+const safePatterns: RegExp[] = [
+  /^[a-zA-Z0-9_.-]+$/, // Alphanumeric with underscores, periods, and dashes
+];
+
 export class Query extends BaseQuery {
   private _contentTypeUid?: string;
 
@@ -23,19 +27,15 @@ export class Query extends BaseQuery {
     const alphanumericRegex = /^[a-zA-Z0-9_.-]+$/;
     return alphanumericRegex.test(input);
   }
-  // Validate if input is a valid regex pattern
+
+  // Validate if input matches any of the safe, pre-approved patterns
   private isValidRegexPattern(input: string): boolean {
-    try {
-      RegExp(input)
-      return true;
-    }
-    catch {
+    if (!this.isValidAlphanumeric(input)) {
       return false;
     }
-
+    return safePatterns.some(pattern => pattern.test(input));
   }
 
-  // Validate if value is an array of strings, numbers, or booleans
   private isValidValue(value: any[]): boolean {
     return Array.isArray(value) && value.every(item => typeof item === 'string' || typeof item === 'number' || typeof item === 'boolean');
   }
