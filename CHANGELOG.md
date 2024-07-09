@@ -1,7 +1,7 @@
 ## Change log
 
 ### Version: 4.0.4
-#### Date: July-09-2024
+#### Date: July-10-2024
 Fixed semgrep issues
 
 ### Version: 4.0.3

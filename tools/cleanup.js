@@ -1,6 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
+// To remove the relative path 
+function sanitizePath(str) {
+  return str ? str.replace(/^(\.\.(\/|\\|$))+/, '') : str;
+}
+
+
 function validateAndSanitize(input) {
   // Allow only alphanumeric characters, dashes, underscores, and dots for file extensions
   return input.replace(/[^a-zA-Z0-9-_\.]/g, '');
@@ -24,7 +30,8 @@ const deleteFolderRecursive = (_path) => {
   // console.log('Attempting to delete:', _path);
 
   if (fs.existsSync(_path)) {
-    fs.readdirSync(_path).forEach((file) => {
+    const sanitizedPath = sanitizePath(_path);
+    fs.readdirSync(sanitizedPath).forEach((file) => {
       const sanitizedFile = validateAndSanitize(file);
       const curPath = ensureSafePath(_path, sanitizedFile);
 

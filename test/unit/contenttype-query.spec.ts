@@ -4,19 +4,15 @@ import MockAdapter from 'axios-mock-adapter';
 import { HOST_URL } from '../utils/constant';
 import { contentTypeQueryFindResponseDataMock } from '../utils/mocks';
 import axios, { Axios } from 'axios';
+import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
 
 describe('ContentTypeQuery class', () => {
   let contentTypeQuery: ContentTypeQuery;
   let client: AxiosInstance;
   let mockClient: MockAdapter;
-  let clientConfig: HttpClientParams;
 
   beforeAll(() => {
-    clientConfig = {
-      apiKey: 'API_KEY',
-      accessToken: 'DELIVERY_TOKEN',
-    };
-    client = httpClient(clientConfig);
+    client = httpClient(MOCK_CLIENT_OPTIONS);
     mockClient = new MockAdapter(client as any);
   });
 
