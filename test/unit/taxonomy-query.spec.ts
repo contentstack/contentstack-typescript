@@ -2,18 +2,14 @@ import { TaxonomyQuery } from "../../src/lib/taxonomy-query";
 import { AxiosInstance, HttpClientParams, httpClient } from "@contentstack/core";
 import MockAdapter from 'axios-mock-adapter';
 import { QueryOperation, QueryOperator, TaxonomyQueryOperation } from "../../src/lib/types";
+import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
 
 describe("Taxonomy-query class", () => {
     let taxonomyQuery: TaxonomyQuery;
     let client: AxiosInstance;
-    let clientConfig: HttpClientParams;
 
     beforeAll(() => {
-        clientConfig = {
-            apiKey: 'API_KEY',
-            accessToken: 'DELIVERY_TOKEN',
-        };
-        client = httpClient(clientConfig);
+        client = httpClient(MOCK_CLIENT_OPTIONS);
     })
 
     beforeEach(() => {
