@@ -96,7 +96,7 @@ export function stack(config: StackConfig): StackClass {
   }
   // Retry policy handlers
   const errorHandler = (error: any) => {
-    retryResponseErrorHandler(error, config);
+    return retryResponseErrorHandler(error, config, client);
   };
   client.interceptors.request.use(retryRequestHandler);
   client.interceptors.response.use(retryResponseHandler, errorHandler);
