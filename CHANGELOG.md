@@ -1,5 +1,9 @@
 ## Change log
 
+### Version: 4.0.5
+#### Date: July-23-2024
+Dependecy updates
+
 ### Version: 4.0.4
 #### Date: July-10-2024
 Fixed semgrep issues
