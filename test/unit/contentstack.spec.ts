@@ -3,7 +3,7 @@ import * as core from '@contentstack/core';
 import * as Contentstack from '../../src/lib/contentstack';
 import { Stack } from '../../src/lib/stack';
 import { Policy, Region, StackConfig } from '../../src/lib/types';
-import { DUMMY_URL, HOST_EU_REGION, HOST_URL } from '../utils/constant';
+import { CUSTOM_HOST, DUMMY_URL, HOST_EU_REGION, HOST_URL } from '../utils/constant';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 jest.mock('@contentstack/core');
@@ -97,12 +97,14 @@ describe('Contentstack', () => {
       apiKey: 'apiKey',
       deliveryToken: 'delivery',
       environment: 'env',
+      branch: 'branch',
     };
     const stackInstance = createStackInstance(config);
     expect(stackInstance).toBeInstanceOf(Stack);
     expect(stackInstance.config.apiKey).toEqual(config.apiKey);
     expect(stackInstance.config.deliveryToken).toEqual(config.deliveryToken);
     expect(stackInstance.config.environment).toEqual(config.environment);
+    expect(stackInstance.config.branch).toEqual(config.branch);
     done();
   });
 
@@ -112,6 +114,18 @@ describe('Contentstack', () => {
       deliveryToken: 'delivery',
       environment: 'env',
       host: HOST_EU_REGION,
+    };
+    const stackInstance = createStackInstance(config);
+    expect(stackInstance).toBeInstanceOf(Stack);
+    done();
+  });
+
+  it('should change the host when custom host config is passed', (done) => {
+    const config = {
+      apiKey: 'apiKey',
+      deliveryToken: 'delivery',
+      environment: 'env',
+      host: CUSTOM_HOST,
     };
     const stackInstance = createStackInstance(config);
     expect(stackInstance).toBeInstanceOf(Stack);

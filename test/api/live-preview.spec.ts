@@ -7,6 +7,7 @@ dotenv.config();
 const apiKey = process.env.API_KEY as string
 const deliveryToken = process.env.DELIVERY_TOKEN as string
 const environment = process.env.ENVIRONMENT as string
+const branch = process.env.BRANCH as string
 
 describe('Live preview tests', () => {
     test('should check for values initialized', () => {
@@ -14,10 +15,12 @@ describe('Live preview tests', () => {
             apiKey: apiKey,
             deliveryToken: deliveryToken,
             environment: environment,
+            branch: branch,
         });
         const livePreviewObject = stack.config.live_preview;
         expect(livePreviewObject).toBeUndefined();
         expect(stack.config.host).toBe('cdn.contentstack.io');
+        expect(stack.config.branch).toBe(branch);
     });
 
     test('should check host when live preview is enabled and management token is provided', () => {

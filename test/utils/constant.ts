@@ -1,5 +1,6 @@
 export const HOST_URL = 'cdn.contentstack.io';
 export const LOCALE = 'en-155';
+export const CUSTOM_HOST = 'example-cdn.csnonprod.com';
 export const HOST_EU_REGION = 'eu-cdn.contentstack.com';
 export const HOST_AZURE_NA_REGION = 'azure-na-cdn.contentstack.com';
 export const HOST_GCP_NA_REGION = 'gcp-na-cdn.contentstack.com';

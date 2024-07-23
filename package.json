@@ -1,12 +1,9 @@
 {
   "name": "@contentstack/delivery-sdk",
-  "version": "4.0.0-beta.6",
+  "version": "4.0.4",
   "type": "commonjs",
   "main": "./dist/cjs/src/index.js",
   "types": "./dist/types/src/index.d.ts",
-  "publishConfig": {
-    "tag": "beta"
-  },
   "scripts": {
     "prepack": "npm run test",
     "prepare": "npm run build",

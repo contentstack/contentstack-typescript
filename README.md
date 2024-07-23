@@ -1,11 +1,11 @@
 [![Contentstack](https://www.contentstack.com/docs/static/images/contentstack.png)](https://www.contentstack.com/)
-## JavaScript Content Delivery SDK for Contentstack
+## Typescript Content Delivery SDK for Contentstack
 
 Contentstack is a headless CMS with an API-first approach. It is a CMS that developers can use to build powerful cross-platform applications in their favorite languages. Build your application frontend, and Contentstack will take care of the rest. [Read More](https://www.contentstack.com/).
 
-Contentstack provides JavaScript SDK to build application on top of JavaScript. Given below is the detailed guide and helpful resources to get started with our JavaScript SDK.
+Contentstack provides Typescript SDK to build application on top of Typescript. Given below is the detailed guide and helpful resources to get started with our Typescript SDK.
 
-The JavaScript SDK can also be used to create Node.js and React native applications.
+The Typescript SDK can also be used to create Node.js and React native applications.
 
 ### Prerequisite
 
@@ -13,86 +13,23 @@ You need Node.js version 4.4.7 or later installed to use the Contentstack JavaSc
 
 ### Setup and Installation
 
-#### For JavaScript (Browser)
-For browsers, we recommend to download the library via npm or yarn to ensure 100% availability.
-
-If you'd like to use a standalone built file you can use the following script tag or download it from [jsDelivr](https://www.jsdelivr.com/package/npm/contentstack), under the `dist` directory:
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/contentstack@latest/dist/web/contentstack.min.js"></script>
-```
-You can also specify a specific version number.
-```html
-<script src="https://cdn.jsdelivr.net/npm/contentstack@3.16.0/dist/web/contentstack.min.js"></script>
-```
-
-To initialize the SDK, you will need to specify the API Key, Delivery Token, and Environment Name of your stack.
-
-```javascript
-    const Stack = Contentstack.Stack({ "api_key": "api_key", "delivery_token": "delivery_token", "environment": "environment" });
-```
-
-For Setting the European Region:
-If you want to set and use European region, refer to the code below:
-
-```javascript
-    const Stack = Contentstack.Stack({ "api_key": "api_key", "delivery_token": "delivery_token", "environment": "environment", "region": Contentstack.Region.EU });
-```
-
-#### For Node.js
-
-Node.js uses the Javascript SDK to create apps. To use the JavaScript SDK, install it via npm:
+Node.js uses the Typescript SDK to create apps. To use the Typescript SDK, install it via npm:
 
 ```bash
-npm i contentstack
+npm i @contentstack/delivery-sdk
 ```
 
 To import the SDK in your project, use the following command:
 
-```javascript
-import Contentstack from ‘contentstack’
+```typescript
+import contentstack from '@contentstack/delivery-sdk'
 ```
 
 To initialize the SDK, you will need to specify the API Key, Delivery Token, and Environment Name of your stack.
 
-```javascript
-    const Stack = Contentstack.Stack({ "api_key": "api_key", "delivery_token": "delivery_token", "environment": "environment" });
-```
-
-For Setting the European Region: 
-
-If you want to set and use European region, refer to the code below:
-
-```javascript
-    const Stack = Contentstack.Stack({ "api_key": "api_key", "delivery_token": "delivery_token", "environment": "environment", "region": Contentstack.Region.EU });
-```
-
-#### For React Native
-
-React Native uses the Javascript SDK to create apps. To use the JavaScript SDK, install it via npm:
-
-```bash
-npm i contentstack
-```
-
-To import the SDK in your project, use the following command:
-
-```javascript
-import Contentstack from `contentstack`
-```
-
-To initialize the SDK, you will need to specify the API Key, Delivery Token, and Environment Name of your stack.
-
-```javascript
-    const Stack = Contentstack.Stack({ "api_key": "api_key", "delivery_token": "delivery_token", "environment": "environment" });
-```
-
-For Setting the European Region:
-
-If you want to set and use European region, refer to the code below:
-
-```javascript
-    const Stack = Contentstack.Stack({ "api_key": "api_key", "delivery_token": "delivery_token", "environment": "environment" "region": Contentstack.Region.EU });
+```typescript
+    import contentstack from '@contentstack/delivery-sdk'
+    const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
 ```
 
 ### Key Concepts for using Contentstack
@@ -117,14 +54,14 @@ Assets refer to all the media files (images, videos, PDFs, audio files, and so o
 
 A publishing environment corresponds to one or more deployment servers or a content delivery destination where the entries need to be published. Learn how to work with [Environments](https://www.contentstack.com/docs/guide/environments).
 
-### Contentstack JavaScript SDK: 5-minute Quickstart
+### Contentstack Typescript SDK
 
 #### Initializing your SDK
 
 You will need to specify the API key, Delivery Token, and Environment Name of your stack to initialize the SDK:
 
-```javascript
-    const Stack = Contentstack.Stack({ "api_key": "api_key", "delivery_token": "delivery_token", "environment": "environment" });
+```typescript
+    const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
 ```
 
 Once you have initialized the SDK, you can start getting content in your app.
@@ -133,66 +70,34 @@ Once you have initialized the SDK, you can start getting content in your app.
 
 To get a single entry, you need to specify the content type as well as the ID of the entry.
 
-```javascript
-const Query = Stack.ContentType('blog').Entry("<entry_uid>");
-
-Query.fetch()
-.then(function success(entry) {
-    console.log(entry.get('title')); // Retrieve field value by providing a field's uid
-    console.log(entry.toJSON()); // Convert the entry result object to JSON
-}, function error(err) {
-    // err object
-})
+```typescript
+import { BaseEntry } from '@contentstack/delivery-sdk'
+interface BlogPostEntry extends BaseEntry {
+  // custom entry types
+}
+const result = await stack
+                      .contentType(contentType_uid)
+                      .entry(entry_uid)
+                      .fetch<BlogPostEntry>();
 ```
 
 To retrieve multiple entries of a content type, you need to specify the content type uid. You can also specify search parameters to filter results.
 
-```javascript
-const Query = Stack.ContentType('blog').Query();
-
-Query
-.where("title", "welcome")
-.includeContentType()
-.includeCount()
-.toJSON()
-.find()
-.then(function success(result) {
-    // result is array where -
-    // result[0] =&gt; entry objects
-    // result[result.length-1] =&gt; entry objects count included only when .includeCount() is queried.
-    // result[1] =&gt; schema of the content type is included when .includeContentType() is queried.
-}, function error(err) {
-    // err object
-})
-```
-
-#### Cache Policies
-
-You can set a cache policy on a stack and/or query object.
-
-##### Setting a cache policy on a stack
-
-This option allows you to globalize a cache policy. This means the cache policy you set will be applied to all the query objects of the stack.
-
-```javascript
-//Setting a cache policy on a stack
-Stack.setCachePolicy(Contentstack.CachePolicy.NETWORK_ELSE_CACHE)
-```
-
-##### Setting a cache policy on a query object
-
-This option allows you to set/override a cache policy on a specific query object.
-
-```javascript
-// setting a cache policy on a queryobject
-Query.setCachePolicy(Contentstack.CachePolicy.CACHE_THEN_NETWORK)
+```typescript
+import { BaseEntry, FindEntry } from '@contentstack/delivery-sdk'
+interface BlogPostEntry extends BaseEntry {
+  // custom entry types
+}
+const result = await stack.contentType("contentType1Uid").entry()
+                    .query()
+                    .find<BlogPostEntry>()
 ```
 
 ### Advanced Queries
 
-You can query for content types, entries, assets and more using our JavaScript API Reference.
+You can query for content types, entries, assets and more using our Typescript API Reference.
 
-[JavaScript API Reference Doc](https://www.contentstack.com/docs/developers/javascript-browser/api-reference/)
+[Typescript API Reference Doc](https://www.contentstack.com/docs/developers/sdks/content-delivery-sdk/typescript/reference#contentstack)
 
 ### Working with Images
 
@@ -204,84 +109,28 @@ For example, if you want to crop an image (with width as 300 and height as 400),
 
 Following are Image Delivery API examples.
 
-```javascript
-// set the quality 100 
-imageUrl = Stack.imageTransform(imageUrl, {
-    'quality': 100
-})
-
-// set the quality to 100, auto optimization, width and height
-imageUrl = Stack.imageTransform(imageUrl, {
-    'quality': 100,
-    'auto': 'webp',
-    'width': 100,
-    'height': 100
-})
+```typescript
+const url = 'www.example.com';
+const transformObj = new imageTransform().bgColor('cccccc');
+const transformURL = url.transform(transformObj);
 ```
 
-### Using the Sync API with JavaScript SDK
 
-The Sync API takes care of syncing your Contentstack data with your app and ensures that the data is always up-to-date by providing delta updates. Contentstack’s JavaScript SDK supports Sync API, which you can use to build powerful apps. Read through to understand how to use the Sync API with Contentstack JavaScript SDK.
-[Read Sync API documentation](https://www.contentstack.com/docs/platforms/javascript-browser#using-the-sync-api-with-javascript-sdk).
-
-> Note: Sync function does not support cache policy. When using the Sync function, we recommend you to set the cache policy to IGNORE_CACHE.
-##### Initial sync
-
-The Initial Sync process performs a complete sync of your app data. It returns all the published entries and assets of the specified stack in response.
-
-To start the Initial Sync process, use the syncStack method.
-
-```javascript
-let data = Stack.sync({"init": true})
-data.then(function(sync_data, err) {
-    //error for any error description
-    //sync_data.items: contains sync data
-    //sync_data.paginationToken: for fetching the next batch of entries using pagination token
-    //sync_token.syncToken: for performing subsequent sync after initial sync
-    if (err) throw err
-})
-```
-> Note: Sync function does not support cache policy. When using the Sync function, we recommend you to set the cache policy to IGNORE_CACHE.
-
-
-The response also contains a sync token, which you need to store, since this token is used to get subsequent delta updates later, as shown in the Subsequent Sync section below.
-
-You can also fetch custom results in initial sync by using advanced sync queries.
-
-##### Sync pagination
+### Pagination
 
 If the result of the initial sync (or subsequent sync) contains more than 100 records, the response would be paginated. It provides pagination token in the response. You will need to use this token to get the next batch of data.
 
-```javascript
-let data = Stack.sync({"pagination_token" : "<pagination_token>"})
-data.then(function(result,  err) {
-    //error for any error description
-    //result.items: contains sync data
-    //result.paginationToken: For fetching the next batch of entries using pagination token
-    //result.syncToken: For performing subsequent sync after initial sync
-    if(err) throw err
-})
+```typescript
+const query = stack.contentType("contentTypeUid").entry().query();
+const pagedResult = await query
+                            .paginate()
+                            .find<BlogPostEntry>(); 
+// OR
+const pagedResult = await query
+                            .paginate({ skip: 20, limit: 20 })
+                            .find<BlogPostEntry>();
+
 ```
-
-##### Subsequent sync
-
-You can use the sync token (that you receive after initial sync) to get the updated content next time. The sync token fetches only the content that was added after your last sync, and the details of the content that was deleted or updated.
-
-```javascript
-let data = Stack.sync({"sync_token" :  “<sync_token>”})
-data.then(function(sync_data,  err) {
-    //error for any error description
-    //sync_data.items: contains sync data
-    //sync_data.paginationToken: for fetching the next batch of entries using pagination token
-    //sync_token.syncToken: for performing subsequent sync after initial sync
-    if(err) throw err
-})
-```
-
-##### Advanced sync queries
-
-You can use advanced sync queries to fetch custom results while performing initial sync. 
-[Read advanced sync queries documentation](https://www.contentstack.com/docs/guide/synchronization/using-the-sync-api-with-javascript-sdk#advanced-sync-queries)
 
 ### Helpful Links
 
