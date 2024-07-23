@@ -6,6 +6,8 @@ import { Policy, StackConfig } from './types';
 import { getHost } from './utils';
 export * as Utils from '@contentstack/utils';
 
+let version = '{{VERSION}}';
+
 /**
  * @method stack
  * @memberof Contentstack
@@ -46,10 +48,11 @@ export function Stack(config: StackConfig): StackClass {
       config.host = 'rest-preview.contentstack.com'
       config.live_preview.host = config.host
     }
-  } else config.host = defaultConfig.defaultHostname
-  defaultConfig.live_preview = config.live_preview
-
-  defaultConfig.defaultHostname = getHost(config.region, config.host);
+  } else {
+    defaultConfig.defaultHostname = config.host ? config.host : getHost(config.region, config.host);
+    config.host = config.host || defaultConfig.defaultHostname;
+    defaultConfig.live_preview = config.live_preview
+  }
 
   if (config.apiKey) {
     defaultConfig.headers.api_key = config.apiKey;

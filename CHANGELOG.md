@@ -1,5 +1,25 @@
 ## Change log
 
+### Version: 4.0.4
+#### Date: July-10-2024
+Fixed semgrep issues
+
+### Version: 4.0.3
+#### Date: June-11-2024
+Fixed region issue
+
+### Version: 4.0.2
+#### Date: June-03-2024
+Custom host implementation
+
+### Version: 4.0.1
+#### Date: May-20-2024
+Fixed SRE vulnerabilities 
+
+### Version: 4.0.0
+#### Date: April-23-2024
+Official release of Typescript SDK
+
 ### Version: 4.0.0-beta.6
 #### Date: April-09-2024
 ##### New Features:
