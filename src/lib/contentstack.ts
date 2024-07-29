@@ -42,11 +42,9 @@ export function stack(config: StackConfig): StackClass {
 
   if (config.live_preview?.enable === true) {
     if (config.live_preview?.management_token != null && config.live_preview?.preview_token == null) {
-      config.host = 'api.contentstack.io'
-      config.live_preview.host = config.host
+      config.host = config.live_preview.host
     } else if (config.live_preview?.preview_token != null && config.live_preview?.management_token == null) {
-      config.host = 'rest-preview.contentstack.com'
-      config.live_preview.host = config.host
+      config.host = config.live_preview.host
     }
   } else {
     defaultConfig.defaultHostname = config.host ? config.host : getHost(config.region, config.host);
