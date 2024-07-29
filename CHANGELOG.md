@@ -1,6 +1,10 @@
 ## Change log
 
 ### Version: 4.0.5
+#### Date: July-30-2024
+Fix: Live preview endpoint issue
+
+### Version: 4.0.5
 #### Date: July-23-2024
 Dependecy updates
 
