@@ -3,6 +3,7 @@ import { httpClient, AxiosInstance } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
 import { assetQueryFindResponseDataMock } from '../utils/mocks';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
+import { QueryOperation } from '../../src/lib/types';
 
 describe('AssetQuery class', () => {
   let assetQuery: AssetQuery;
@@ -57,5 +58,12 @@ describe('AssetQuery class', () => {
     mockClient.onGet('/assets').reply(200, assetQueryFindResponseDataMock);
     const response = await assetQuery.find();
     expect(response).toEqual(assetQueryFindResponseDataMock);
+  });
+
+  it('should add "query" in queryParameter when query method is called', async () => {
+    const returnedValue = await assetQuery.query().where('fieldUid', QueryOperation.EQUALS, 'value')
+    if (returnedValue) {  
+      expect(returnedValue._parameters).toEqual({ fieldUid: 'value' });
+    }
   });
 });
