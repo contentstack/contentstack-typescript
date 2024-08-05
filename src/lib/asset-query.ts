@@ -1,5 +1,6 @@
 import { BaseQuery } from './base-query';
 import { AxiosInstance } from '@contentstack/core';
+import { Query } from './query';
 
 export class AssetQuery extends BaseQuery {
   constructor(client: AxiosInstance) {
@@ -124,5 +125,19 @@ export class AssetQuery extends BaseQuery {
     this._queryParams.locale = locale;
 
     return this;
+  }
+  /**
+   * @method query
+   * @memberof Query
+   * @description Fetches the asset data on the basis of the query
+   * @returns {Query}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.asset().query().where('fieldUid', queryOperators, 'value').find();
+   */
+  query() {
+    return new Query(this._client, this._parameters, this._queryParams);
   }
 }
