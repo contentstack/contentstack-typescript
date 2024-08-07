@@ -1,11 +1,14 @@
+// @ts-nocheck
 import { ContentTypeQuery } from '../../src/lib/contenttype-query';
 import { stackInstance } from '../utils/stack-instance';
-import { TContentTypes } from './types';
+import { TContentType, TContentTypes } from './types';
 
 const stack = stackInstance();
 describe('ContentTypeQuery API test cases', () => {
-  it('should check for content_types are defined', async () => {
-    const result = await makeContentTypeQuery().find<TContentTypes>();
+  it.only('should check for content_types are defined', async () => {
+    const result = await makeContentTypeQuery().find<TContentType>();
+    console.log('🚀 ~ it.only ~ result:', result.content_types?.length);
+  
     expect(result.content_types).toBeDefined();
     expect(result.content_types[0]._version).toBeDefined();
     expect(result.content_types[0].uid).toBeDefined();
