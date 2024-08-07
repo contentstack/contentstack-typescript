@@ -7,7 +7,6 @@ const stack = stackInstance();
 describe('ContentTypeQuery API test cases', () => {
   it.only('should check for content_types are defined', async () => {
     const result = await makeContentTypeQuery().find<TContentType>();
-    console.log('🚀 ~ it.only ~ result:', result.content_types?.length);
   
     expect(result.content_types).toBeDefined();
     expect(result.content_types[0]._version).toBeDefined();
