@@ -1,8 +1,8 @@
 ## Change log
 
 ### Version: 4.2.0
-#### Date: August-08-2024
-Feat: fetch asset by any field-uid other that asset-uid
+#### Date: August-07-2024
+Feat: Live Preview configuration changes
 
 ### Version: 4.1.0
 #### Date: August-08-2024
