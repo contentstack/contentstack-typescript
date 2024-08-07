@@ -15,6 +15,7 @@ export class Stack {
   constructor(client: AxiosInstance, config: StackConfig) {
     this._client = client;
     this.config = config;
+    this._client.stackConfig = this.config;
   }
 
   /**
@@ -144,9 +145,13 @@ export class Stack {
 
   livePreviewQuery(query: LivePreviewQuery) {
     if (this.config.live_preview) {
-      this.config.live_preview.live_preview = query.live_preview || 'init';
-      this.config.live_preview.contentTypeUid = query.contentTypeUid;
-      this.config.live_preview.entryUid = query.entryUid
+      const livePreviewParams: any = {
+        ...this.config.live_preview,
+        live_preview: query.live_preview || 'init',
+        contentTypeUid: query.contentTypeUid,
+        entryUid: query.entryUid
+      }
+      this._client.stackConfig.live_preview = livePreviewParams;
     }
   }
 }
