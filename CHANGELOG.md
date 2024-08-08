@@ -1,6 +1,11 @@
 ## Change log
 
-### Version: 4.0.5
+### Version: 4.1.0
+#### Date: August-07-2024
+Feat: Live Preview configuration changes
+Feat: fetch asset by any field-uid other that asset-uid
+
+### Version: 4.0.6
 #### Date: July-30-2024
 Fix: Live preview endpoint issue
 
