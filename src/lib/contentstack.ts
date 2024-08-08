@@ -40,17 +40,8 @@ export function stack(config: StackConfig): StackClass {
     live_preview: {} as any
   };
 
-  if (config.live_preview?.enable === true) {
-    if (config.live_preview?.management_token != null && config.live_preview?.preview_token == null) {
-      config.host = config.live_preview.host
-    } else if (config.live_preview?.preview_token != null && config.live_preview?.management_token == null) {
-      config.host = config.live_preview.host
-    }
-  } else {
-    defaultConfig.defaultHostname = config.host ? config.host : getHost(config.region, config.host);
-    config.host = config.host || defaultConfig.defaultHostname;
-    defaultConfig.live_preview = config.live_preview
-  }
+  defaultConfig.defaultHostname = config.host || getHost(config.region, config.host);
+  config.host = defaultConfig.defaultHostname;
 
   if (config.apiKey) {
     defaultConfig.headers.api_key = config.apiKey;
@@ -78,7 +69,7 @@ export function stack(config: StackConfig): StackClass {
 
   defaultConfig.headers['X-User-Agent'] = 'contentstack-delivery-typescript-{{PLATFORM}}/' + version;
 
-  // return new Stack(httpClient(defaultConfig), config);
+
   const client = httpClient(defaultConfig as any);
 
   if (config.logHandler) client.defaults.logHandler = config.logHandler;
