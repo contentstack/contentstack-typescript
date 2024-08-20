@@ -9,6 +9,11 @@ function stackInstance() {
     apiKey: process.env.API_KEY || '',
     deliveryToken: process.env.DELIVERY_TOKEN || '',
     environment: process.env.ENVIRONMENT || '',
+    live_preview: {
+      enable: true,
+      preview_token: "abcda",
+      host: "xyz,contentstack.com",
+    }
   };
 
   return contentstack.Stack(params);

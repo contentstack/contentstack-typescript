@@ -40,19 +40,8 @@ export function Stack(config: StackConfig): StackClass {
     live_preview: {} as any
   };
 
-  if (config.live_preview?.enable === true) {
-    if (config.live_preview?.management_token != null && config.live_preview?.preview_token == null) {
-      config.host = 'api.contentstack.io'
-      config.live_preview.host = config.host
-    } else if (config.live_preview?.preview_token != null && config.live_preview?.management_token == null) {
-      config.host = 'rest-preview.contentstack.com'
-      config.live_preview.host = config.host
-    }
-  } else {
-    defaultConfig.defaultHostname = config.host ? config.host : getHost(config.region, config.host);
-    config.host = config.host || defaultConfig.defaultHostname;
-    defaultConfig.live_preview = config.live_preview
-  }
+  defaultConfig.defaultHostname = config.host || getHost(config.region, config.host);
+  config.host = defaultConfig.defaultHostname;
 
   if (config.apiKey) {
     defaultConfig.headers.api_key = config.apiKey;
@@ -75,6 +64,10 @@ export function Stack(config: StackConfig): StackClass {
   }
 
   // return new Stack(httpClient(defaultConfig), config);
+
+  defaultConfig.headers['X-User-Agent'] = 'contentstack-delivery-typescript-{{PLATFORM}}/' + version;
+
+
   const client = httpClient(defaultConfig as any);
 
   if (config.logHandler) client.defaults.logHandler = config.logHandler;
@@ -90,7 +83,7 @@ export function Stack(config: StackConfig): StackClass {
   }
   // Retry policy handlers
   const errorHandler = (error: any) => {
-    retryResponseErrorHandler(error, config);
+    return retryResponseErrorHandler(error, config, client);
   };
   client.interceptors.request.use(retryRequestHandler);
   client.interceptors.response.use(retryResponseHandler, errorHandler);

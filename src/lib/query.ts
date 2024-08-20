@@ -18,6 +18,9 @@ export class Query extends BaseQuery {
     this._parameters = params || {};
     this._queryParams = queryParams || {};
 
+    if (!uid) {
+      this._urlPath = `/assets`;
+    }
     if (queryObj) {
       this._parameters = { ...this._parameters, ...queryObj };
     }

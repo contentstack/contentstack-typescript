@@ -89,4 +89,15 @@ fileignoreconfig:
   checksum: 7a7408e296f1fb0821bbb44023a8f73c34ea8124e96cef7c01569f5950fd3159
 - filename: test/api/query.spec.ts
   checksum: 6922d10a76aa95512f74c0aedae66c91db5f789b946608496733c5ea14bc980c
+  checksum: 6e6c9c6f379ec75ce259a49f405c49a6b24dfbfd68406d6d49642042db2bf188
+- filename: test/typescript/taxonomy.test.ts
+  checksum: e4bdf633e147fd60d929d379f20c814eed5f68b11421d7b53ec8826e9142de37
+- filename: src/core/modules/taxonomy.js
+  checksum: 84589be9805c1be5fd6c56021c41d18365126cf82059ad2cbef1d418c70d08e0
+- filename: src/core/lib/utils.js
+  checksum: 6018f9f13fa32b724d09b9cdf5f78cf030a6332ca549651e1e35fe91e8c7e0e7
+- filename: src/core/modules/query.js
+  checksum: c88b336f9a271397ffedcf8c5085941ceb0bd1cd7e25ed9ada3acd8ce4f8970c
+- filename: test/typescript/stack.test.ts
+  checksum: bbb3c425f8e1a63d4793f69ee9eaba9559294ff53f163a28f70ae54b1792276a
 version: ""

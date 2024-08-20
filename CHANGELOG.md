@@ -1,7 +1,7 @@
 ## Change log
 
-### Version: 3.20.0
-#### Date: March-12-2024
+### Version: 5.0.0
+#### Date: 27-08-2024
 ##### New Features:
  - Variants Feature support added
  
@@ -9,6 +9,23 @@
 #### Date:  April-17-2024
 ##### Dependency:
  - Hotfix moving slack/bolt to devDependency
+### Version: 4.1.0
+#### Date: August-07-2024
+Feat: Live Preview configuration changes
+Feat: fetch asset by any field-uid other that asset-uid
+
+### Version: 4.0.6
+#### Date: July-30-2024
+Fix: Live preview endpoint issue
+
+### Version: 4.0.5
+#### Date: July-23-2024
+Dependecy updates
+
+### Version: 4.0.4
+#### Date: July-10-2024
+Fixed semgrep issues
+
 
 ### Version: 4.0.3
 #### Date: June-11-2024
