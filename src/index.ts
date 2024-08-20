@@ -1,4 +1,4 @@
-import * as contentstack from './lib/contentstack';
+import contentstack from './lib/contentstack';
 export * from './lib/types';
 
-export default contentstack;
+export { contentstack as stack };
