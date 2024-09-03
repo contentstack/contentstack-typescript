@@ -261,6 +261,8 @@ export interface LivePreviewQuery {
   live_preview: string
   contentTypeUid: string
   entryUid?: any;
+  preview_timestamp?: string
+  release_id?: string
 }
 
 export type LivePreview = {

@@ -10,3 +10,7 @@ export function getHost(region: Region = Region.US, host?: string) {
 
   return url;
 }
+
+export function isBrowser() {
+  return (typeof window !== "undefined");
+}
