@@ -1,5 +1,9 @@
 ## Change log
 
+### Version: 5.1.0
+#### Date: Septmber-04-2024
+Feat: Variants support added
+
 ### Version: 4.1.0
 #### Date: August-07-2024
 Feat: Live Preview configuration changes
