@@ -4,7 +4,7 @@ interface EntryResponse<T> {
   entry: T;
 }
 export class Entry {
-  private _client: AxiosInstance;
+  protected _client: AxiosInstance;
   private _contentTypeUid: string;
   private _entryUid: string;
   private _urlPath: string;
@@ -30,6 +30,27 @@ export class Entry {
    */
   includeFallback(): Entry {
     this._queryParams.include_fallback = 'true';
+
+    return this;
+  }
+
+  /**
+   * @method variants
+   * @memberof Entry
+   * @description The variant header will be added to axios client
+   * @returns {Entry}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.contentType('abc').entry('entry_uid').variant('xyz').fetch();
+   */
+  variants(variants: string | string[]): Entry {
+    if (Array.isArray(variants) && variants.length > 0) {
+      this._client.defaults.headers['x-cs-variant-uid'] = variants.join(',');
+    } else if (typeof variants == 'string' && variants.length > 0) {
+      this._client.defaults.headers['x-cs-variant-uid'] = variants;
+    }
 
     return this;
   }
