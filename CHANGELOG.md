@@ -1,6 +1,6 @@
 ## Change log
 
-### Version: 5.1.0
+### Version: 4.2.0
 #### Date: Septmber-04-2024
 Feat: Variants support added
 
