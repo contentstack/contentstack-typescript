@@ -112,5 +112,3 @@ export function stack(config: StackConfig): StackClass {
 
   return new StackClass(client, config);
 }
-
-export default stack;
