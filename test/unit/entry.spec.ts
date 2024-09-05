@@ -62,3 +62,30 @@ describe('Entry class', () => {
     expect(returnedValue).toEqual(entryFetchMock.entry);
   });
 });
+
+class TestVariants extends Entry {
+  constructor(client: AxiosInstance) {
+    super(client, 'xyz', 'abc');
+    this._client = client;
+  }
+
+  getVariantsHeaders(): string {
+    return this._client.defaults.headers['x-cs-variant-uid'] || "";
+  }
+}
+
+describe('Variants test', () => {
+  let client: AxiosInstance;
+  let mockClient: MockAdapter;
+
+  beforeAll(() => {
+    client = httpClient(MOCK_CLIENT_OPTIONS);
+    mockClient = new MockAdapter(client as any);
+  });
+  it('should get the correct variant headers added to client', async () => {
+    const testVariantObj = new TestVariants(httpClient(MOCK_CLIENT_OPTIONS))
+
+    testVariantObj.variants(['variant1', 'variant2']);
+    expect(testVariantObj.getVariantsHeaders()).toBe('variant1,variant2');
+  });
+})

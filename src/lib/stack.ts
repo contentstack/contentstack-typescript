@@ -153,5 +153,12 @@ export class Stack {
       }
       this._client.stackConfig.live_preview = livePreviewParams;
     }
+
+    if (query.hasOwnProperty('release_id')) {
+      this._client.defaults.headers['release_id'] = query.release_id;
+    }
+    if (query.hasOwnProperty('preview_timestamp')) {
+      this._client.defaults.headers['preview_timestamp'] = query.preview_timestamp;
+    }
   }
 }

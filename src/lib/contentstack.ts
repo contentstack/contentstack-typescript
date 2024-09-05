@@ -3,7 +3,7 @@ import { InternalAxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from '
 import { handleRequest } from './cache';
 import { Stack as StackClass } from './stack';
 import { Policy, StackConfig } from './types';
-import { getHost } from './utils';
+import * as Utility from './utils';
 export * as Utils from '@contentstack/utils';
 
 let version = '{{VERSION}}';
@@ -40,7 +40,7 @@ export function stack(config: StackConfig): StackClass {
     live_preview: {} as any
   };
 
-  defaultConfig.defaultHostname = config.host || getHost(config.region, config.host);
+  defaultConfig.defaultHostname = config.host || Utility.getHost(config.region, config.host);
   config.host = defaultConfig.defaultHostname;
 
   if (config.apiKey) {
@@ -57,6 +57,21 @@ export function stack(config: StackConfig): StackClass {
     defaultConfig.params.environment = config.environment;
   } else {
     throw new Error('Environment for Stack is required');
+  }
+
+  if (config.live_preview) {
+    if (Utility.isBrowser()) {
+      const params = new URL(document.location.toString()).searchParams;
+      if (params.has('live_preview')) {
+          config.live_preview.live_preview = params.get('live_preview') || config.live_preview.live_preview;
+      }
+      if (params.has('release_id')) {
+          defaultConfig.headers['release_id'] = params.get('release_id');
+      }
+      if (params.has('preview_timestamp')) {
+          defaultConfig.headers['preview_timestamp'] = params.get('preview_timestamp');
+      }
+    }
   }
 
   if (config.branch) {
