@@ -53,7 +53,7 @@ const assetQueryFindResponseDataMock = {
       "file_size": "3780",
       "tags": [],
       "filename": "Samsung_Logo.png",
-      "url": "https://images.contentstack.io/v3/assets/***REMOVED***/blt41cb1c94d363d824/5d5663cc34d39437c37c537e/Samsung_Logo.png",
+      "url": "https://images.contentstack.io/v3/assets/blt02f7b45378b008ee/blt41cb1c94d363d824/5d5663cc34d39437c37c537e/Samsung_Logo.png",
       "ACL": {
         "roles": [],
         "others": {
@@ -81,7 +81,7 @@ const assetQueryFindResponseDataMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-19T12:28:47.432Z",
-        "user": "***REMOVED***"
+        "user": "blt587a89fc7883c56700a95bfe"
       }
     },
     {
@@ -94,7 +94,7 @@ const assetQueryFindResponseDataMock = {
       "file_size": "1537",
       "tags": [],
       "filename": "android-128.png",
-      "url": "https://images.contentstack.io/v3/assets/***REMOVED***/bltaf7230686bd6513c/5d5663ccd1312137ca910e00/android-128.png",
+      "url": "https://images.contentstack.io/v3/assets/blt02f7b45378b008ee/bltaf7230686bd6513c/5d5663ccd1312137ca910e00/android-128.png",
       "ACL": {
         "roles": [],
         "others": {
@@ -122,7 +122,7 @@ const assetQueryFindResponseDataMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-19T12:28:47.432Z",
-        "user": "***REMOVED***"
+        "user": "blt587a89fc7883c56700a95bfe"
       }
     },
     {
@@ -135,7 +135,7 @@ const assetQueryFindResponseDataMock = {
       "file_size": "69609",
       "tags": [],
       "filename": "in-galaxy-note-5-n9208-sm-n9208zdvins-000000003-back-gold.jpg",
-      "url": "https://images.contentstack.io/v3/assets/***REMOVED***/blt19c34e5374418484/5d5663ca9e9032233cab321a/in-galaxy-note-5-n9208-sm-n9208zdvins-000000003-back-gold.jpg",
+      "url": "https://images.contentstack.io/v3/assets/blt02f7b45378b008ee/blt19c34e5374418484/5d5663ca9e9032233cab321a/in-galaxy-note-5-n9208-sm-n9208zdvins-000000003-back-gold.jpg",
       "ACL": {
         "roles": [],
         "others": {
@@ -163,7 +163,7 @@ const assetQueryFindResponseDataMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-19T12:28:47.432Z",
-        "user": "***REMOVED***"
+        "user": "blt587a89fc7883c56700a95bfe"
       }
     },
     {
@@ -176,7 +176,7 @@ const assetQueryFindResponseDataMock = {
       "file_size": "2185",
       "tags": [],
       "filename": "download.png",
-      "url": "https://images.contentstack.io/v3/assets/***REMOVED***/blt6045a4b8db103c2b/5d5663ca1a1b7e3885350f53/download.png",
+      "url": "https://images.contentstack.io/v3/assets/blt02f7b45378b008ee/blt6045a4b8db103c2b/5d5663ca1a1b7e3885350f53/download.png",
       "ACL": {
         "roles": [],
         "others": {
@@ -204,7 +204,7 @@ const assetQueryFindResponseDataMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-19T12:28:47.432Z",
-        "user": "***REMOVED***"
+        "user": "blt587a89fc7883c56700a95bfe"
       }
     },
     {
@@ -217,7 +217,7 @@ const assetQueryFindResponseDataMock = {
       "file_size": "1546",
       "tags": [],
       "filename": "Samsung_Logo.png",
-      "url": "https://images.contentstack.io/v3/assets/***REMOVED***/bltb7851ab3713053d0/5d5663c7cb96683648a7967b/Samsung_Logo.png",
+      "url": "https://images.contentstack.io/v3/assets/blt02f7b45378b008ee/bltb7851ab3713053d0/5d5663c7cb96683648a7967b/Samsung_Logo.png",
       "ACL": {
         "roles": [],
         "others": {
@@ -245,7 +245,7 @@ const assetQueryFindResponseDataMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-19T12:28:47.432Z",
-        "user": "***REMOVED***"
+        "user": "blt587a89fc7883c56700a95bfe"
       }
     },
     {
@@ -258,7 +258,7 @@ const assetQueryFindResponseDataMock = {
       "file_size": "5275",
       "tags": [],
       "filename": "download.jpg",
-      "url": "https://images.contentstack.io/v3/assets/***REMOVED***/blt9c3dff6e3151d374/5d5663c79722fb38d7db52e5/download.jpg",
+      "url": "https://images.contentstack.io/v3/assets/blt02f7b45378b008ee/blt9c3dff6e3151d374/5d5663c79722fb38d7db52e5/download.jpg",
       "ACL": {
         "roles": [],
         "others": {
@@ -286,7 +286,7 @@ const assetQueryFindResponseDataMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-19T12:28:47.432Z",
-        "user": "***REMOVED***"
+        "user": "blt587a89fc7883c56700a95bfe"
       }
     },
   ]
@@ -1077,7 +1077,7 @@ const assetFetchDataMock = {
       "environment": "blta39a4441696e35e0",
       "locale": "en-us",
       "time": "2019-08-19T12:28:47.432Z",
-      "user": "***REMOVED***"
+      "user": "blt587a89fc7883c56700a95bfe"
     }
 
   }
@@ -1217,7 +1217,7 @@ const entryFindMock = {
           "file_size": "145200",
           "tags": [],
           "filename": "01.jpg",
-          "url": "https://images.contentstack.io/v3/assets/***REMOVED***/blt50a7a9dd6866776f/5d5663be34d39437c37c5376/01.jpg",
+          "url": "https://images.contentstack.io/v3/assets/blt02f7b45378b008ee/blt50a7a9dd6866776f/5d5663be34d39437c37c5376/01.jpg",
           "ACL": [],
           "is_dir": false,
           "_version": 1,
@@ -1226,7 +1226,7 @@ const entryFindMock = {
             "environment": "blta39a4441696e35e0",
             "locale": "en-us",
             "time": "2019-08-19T12:28:56.964Z",
-            "user": "***REMOVED***"
+            "user": "blt587a89fc7883c56700a95bfe"
           }
         }
       ],
@@ -1291,7 +1291,7 @@ const entryFindMock = {
       "ACL": {},
       "uid": "blt4f1fd991ec80e52f",
       "created_by": "bltcd82b2c6bf913241",
-      "updated_by": "***REMOVED***",
+      "updated_by": "blt42e55757d70d5f81026a2b9f",
       "created_at": "2019-08-16T08:19:25.397Z",
       "updated_at": "2019-08-23T13:02:21.457Z",
       "_version": 4,
@@ -1300,7 +1300,7 @@ const entryFindMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-23T13:02:25.439Z",
-        "user": "***REMOVED***"
+        "user": "blt42e55757d70d5f81026a2b9f"
       }
     },
     {
@@ -1319,7 +1319,7 @@ const entryFindMock = {
           "file_size": "5275",
           "tags": [],
           "filename": "download.jpg",
-          "url": "https://images.contentstack.io/v3/assets/***REMOVED***/blt9c3dff6e3151d374/5d5663c79722fb38d7db52e5/download.jpg",
+          "url": "https://images.contentstack.io/v3/assets/blt02f7b45378b008ee/blt9c3dff6e3151d374/5d5663c79722fb38d7db52e5/download.jpg",
           "ACL": [],
           "is_dir": false,
           "_version": 1,
@@ -1328,7 +1328,7 @@ const entryFindMock = {
             "environment": "blta39a4441696e35e0",
             "locale": "en-us",
             "time": "2019-08-19T12:28:47.432Z",
-            "user": "***REMOVED***"
+            "user": "blt587a89fc7883c56700a95bfe"
           }
         }
       ],
@@ -1387,7 +1387,7 @@ const entryFindMock = {
       "ACL": {},
       "uid": "blta278bb5672180c94",
       "created_by": "bltcd82b2c6bf913241",
-      "updated_by": "***REMOVED***",
+      "updated_by": "blt42e55757d70d5f81026a2b9f",
       "created_at": "2019-08-16T08:19:27.182Z",
       "updated_at": "2019-08-23T13:01:19.866Z",
       "_version": 4,
@@ -1396,7 +1396,7 @@ const entryFindMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-23T13:01:23.290Z",
-        "user": "***REMOVED***"
+        "user": "blt42e55757d70d5f81026a2b9f"
       }
     },
     {
@@ -1415,7 +1415,7 @@ const entryFindMock = {
           "file_size": "48163",
           "tags": [],
           "filename": "iphone7.jpg",
-          "url": "https://images.contentstack.io/v3/assets/***REMOVED***/bltc4f54f7ce3155b0e/5d5663bbdf859f364dbe36dd/iphone7.jpg",
+          "url": "https://images.contentstack.io/v3/assets/blt02f7b45378b008ee/bltc4f54f7ce3155b0e/5d5663bbdf859f364dbe36dd/iphone7.jpg",
           "ACL": [],
           "is_dir": false,
           "_version": 1,
@@ -1424,7 +1424,7 @@ const entryFindMock = {
             "environment": "blta39a4441696e35e0",
             "locale": "en-us",
             "time": "2019-08-19T12:28:56.964Z",
-            "user": "***REMOVED***"
+            "user": "blt587a89fc7883c56700a95bfe"
           }
         }
       ],
@@ -1476,7 +1476,7 @@ const entryFindMock = {
       "ACL": {},
       "uid": "bltbd92ac498e3d5f96",
       "created_by": "bltcd82b2c6bf913241",
-      "updated_by": "***REMOVED***",
+      "updated_by": "blt42e55757d70d5f81026a2b9f",
       "created_at": "2019-08-16T08:19:20.072Z",
       "updated_at": "2019-08-23T12:50:53.424Z",
       "_version": 13,
@@ -1485,7 +1485,7 @@ const entryFindMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-23T12:50:56.727Z",
-        "user": "***REMOVED***"
+        "user": "blt42e55757d70d5f81026a2b9f"
       }
     }
   ]
@@ -1508,7 +1508,7 @@ const entryFetchMock = {
         "file_size": "5275",
         "tags": [],
         "filename": "download.jpg",
-        "url": "https://images.contentstack.io/v3/assets/***REMOVED***/blt9c3dff6e3151d374/5d5663c79722fb38d7db52e5/download.jpg",
+        "url": "https://images.contentstack.io/v3/assets/blt02f7b45378b008ee/blt9c3dff6e3151d374/5d5663c79722fb38d7db52e5/download.jpg",
         "ACL": [],
         "is_dir": false,
         "_version": 1,
@@ -1517,7 +1517,7 @@ const entryFetchMock = {
           "environment": "blta39a4441696e35e0",
           "locale": "en-us",
           "time": "2019-08-19T12:28:47.432Z",
-          "user": "***REMOVED***"
+          "user": "blt587a89fc7883c56700a95bfe"
         }
       }
     ],
@@ -1576,7 +1576,7 @@ const entryFetchMock = {
     "ACL": {},
     "uid": "blta278bb5672180c94",
     "created_by": "bltcd82b2c6bf913241",
-    "updated_by": "***REMOVED***",
+    "updated_by": "blt42e55757d70d5f81026a2b9f",
     "created_at": "2019-08-16T08:19:27.182Z",
     "updated_at": "2019-08-23T13:01:19.866Z",
     "_version": 4,
@@ -1585,7 +1585,7 @@ const entryFetchMock = {
       "environment": "blta39a4441696e35e0",
       "locale": "en-us",
       "time": "2019-08-23T13:01:23.290Z",
-      "user": "***REMOVED***"
+      "user": "blt42e55757d70d5f81026a2b9f"
     }
   }
 }
