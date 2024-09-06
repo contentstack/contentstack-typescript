@@ -1,5 +1,9 @@
 ## Change log
 
+### Version: 4.3.0
+#### Date: Septmber-09-2024
+Feat: Include refernce accepts array of values 
+
 ### Version: 4.2.0
 #### Date: Septmber-04-2024
 Feat: Variants support added
