@@ -111,9 +111,17 @@ export class Entries extends EntryQueryable {
    * @param {string} referenceFieldUid - UID of the reference field to include.
    * @returns {Entries} - Returns the Entries instance for chaining.
    */
-  includeReference(referenceFieldUid: string): Entries {
-    this._queryParams['include[]'] = referenceFieldUid;
-
+  includeReference(...referenceFieldUid: (string | string[])[]): Entries {
+    if (referenceFieldUid.length) {
+      referenceFieldUid.forEach(value => {
+        if (!Array.isArray(this._queryParams['include[]'])) {
+          this._queryParams['include[]'] = [];
+        }
+        (this._queryParams['include[]'] as string[]).push(...(Array.isArray(value) ? value : [value]));
+      });
+    } else {
+      console.error("Argument should be a String or an Array.");
+    }
     return this;
   }
 

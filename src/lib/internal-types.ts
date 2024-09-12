@@ -3,5 +3,5 @@ export type params = {
 }
 
 export type queryParams = { 
-    [key: string]: string | boolean | number 
+    [key: string]: string | boolean | number | string[]
 }

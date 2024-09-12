@@ -35,9 +35,9 @@ describe('Entries class', () => {
   it('should set the include parameter to the given reference field UID', () => {
     const referenceFieldUid = 'referenceFieldUid';
     entry.includeReference(referenceFieldUid);
+    expect(entry._queryParams['include[]']).toContain(referenceFieldUid);
+});
 
-    expect(entry._queryParams['include[]']).toBe(referenceFieldUid);
-  });
 
   it('should add "include_fallback" in _queryParams when includeFallback method is called', () => {
     const returnedValue = entry.includeFallback();
