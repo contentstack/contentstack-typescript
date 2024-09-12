@@ -81,7 +81,7 @@ const assetQueryFindResponseDataMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-19T12:28:47.432Z",
-        "user": "***REMOVED***"
+        "user": "blt587a89fc7883c56700a95bfe"
       }
     },
     {
@@ -122,7 +122,7 @@ const assetQueryFindResponseDataMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-19T12:28:47.432Z",
-        "user": "***REMOVED***"
+        "user": "blt587a89fc7883c56700a95bfe"
       }
     },
     {
@@ -163,7 +163,7 @@ const assetQueryFindResponseDataMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-19T12:28:47.432Z",
-        "user": "***REMOVED***"
+        "user": "blt587a89fc7883c56700a95bfe"
       }
     },
     {
@@ -204,7 +204,7 @@ const assetQueryFindResponseDataMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-19T12:28:47.432Z",
-        "user": "***REMOVED***"
+        "user": "blt587a89fc7883c56700a95bfe"
       }
     },
     {
@@ -245,7 +245,7 @@ const assetQueryFindResponseDataMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-19T12:28:47.432Z",
-        "user": "***REMOVED***"
+        "user": "blt587a89fc7883c56700a95bfe"
       }
     },
     {
@@ -286,7 +286,7 @@ const assetQueryFindResponseDataMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-19T12:28:47.432Z",
-        "user": "***REMOVED***"
+        "user": "blt587a89fc7883c56700a95bfe"
       }
     },
   ]
@@ -1077,7 +1077,7 @@ const assetFetchDataMock = {
       "environment": "blta39a4441696e35e0",
       "locale": "en-us",
       "time": "2019-08-19T12:28:47.432Z",
-      "user": "***REMOVED***"
+      "user": "blt587a89fc7883c56700a95bfe"
     }
 
   }
@@ -1226,7 +1226,7 @@ const entryFindMock = {
             "environment": "blta39a4441696e35e0",
             "locale": "en-us",
             "time": "2019-08-19T12:28:56.964Z",
-            "user": "***REMOVED***"
+            "user": "blt587a89fc7883c56700a95bfe"
           }
         }
       ],
@@ -1291,7 +1291,7 @@ const entryFindMock = {
       "ACL": {},
       "uid": "blt4f1fd991ec80e52f",
       "created_by": "bltcd82b2c6bf913241",
-      "updated_by": "***REMOVED***",
+      "updated_by": "blt42e55757d70d5f81026a2b9f",
       "created_at": "2019-08-16T08:19:25.397Z",
       "updated_at": "2019-08-23T13:02:21.457Z",
       "_version": 4,
@@ -1300,7 +1300,7 @@ const entryFindMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-23T13:02:25.439Z",
-        "user": "***REMOVED***"
+        "user": "blt42e55757d70d5f81026a2b9f"
       }
     },
     {
@@ -1328,7 +1328,7 @@ const entryFindMock = {
             "environment": "blta39a4441696e35e0",
             "locale": "en-us",
             "time": "2019-08-19T12:28:47.432Z",
-            "user": "***REMOVED***"
+            "user": "blt587a89fc7883c56700a95bfe"
           }
         }
       ],
@@ -1387,7 +1387,7 @@ const entryFindMock = {
       "ACL": {},
       "uid": "blta278bb5672180c94",
       "created_by": "bltcd82b2c6bf913241",
-      "updated_by": "***REMOVED***",
+      "updated_by": "blt42e55757d70d5f81026a2b9f",
       "created_at": "2019-08-16T08:19:27.182Z",
       "updated_at": "2019-08-23T13:01:19.866Z",
       "_version": 4,
@@ -1396,7 +1396,7 @@ const entryFindMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-23T13:01:23.290Z",
-        "user": "***REMOVED***"
+        "user": "blt42e55757d70d5f81026a2b9f"
       }
     },
     {
@@ -1424,7 +1424,7 @@ const entryFindMock = {
             "environment": "blta39a4441696e35e0",
             "locale": "en-us",
             "time": "2019-08-19T12:28:56.964Z",
-            "user": "***REMOVED***"
+            "user": "blt587a89fc7883c56700a95bfe"
           }
         }
       ],
@@ -1476,7 +1476,7 @@ const entryFindMock = {
       "ACL": {},
       "uid": "bltbd92ac498e3d5f96",
       "created_by": "bltcd82b2c6bf913241",
-      "updated_by": "***REMOVED***",
+      "updated_by": "blt42e55757d70d5f81026a2b9f",
       "created_at": "2019-08-16T08:19:20.072Z",
       "updated_at": "2019-08-23T12:50:53.424Z",
       "_version": 13,
@@ -1485,7 +1485,7 @@ const entryFindMock = {
         "environment": "blta39a4441696e35e0",
         "locale": "en-us",
         "time": "2019-08-23T12:50:56.727Z",
-        "user": "***REMOVED***"
+        "user": "blt42e55757d70d5f81026a2b9f"
       }
     }
   ]
@@ -1517,7 +1517,7 @@ const entryFetchMock = {
           "environment": "blta39a4441696e35e0",
           "locale": "en-us",
           "time": "2019-08-19T12:28:47.432Z",
-          "user": "***REMOVED***"
+          "user": "blt587a89fc7883c56700a95bfe"
         }
       }
     ],
@@ -1576,7 +1576,7 @@ const entryFetchMock = {
     "ACL": {},
     "uid": "blta278bb5672180c94",
     "created_by": "bltcd82b2c6bf913241",
-    "updated_by": "***REMOVED***",
+    "updated_by": "blt42e55757d70d5f81026a2b9f",
     "created_at": "2019-08-16T08:19:27.182Z",
     "updated_at": "2019-08-23T13:01:19.866Z",
     "_version": 4,
@@ -1585,7 +1585,7 @@ const entryFetchMock = {
       "environment": "blta39a4441696e35e0",
       "locale": "en-us",
       "time": "2019-08-23T13:01:23.290Z",
-      "user": "***REMOVED***"
+      "user": "blt42e55757d70d5f81026a2b9f"
     }
   }
 }
