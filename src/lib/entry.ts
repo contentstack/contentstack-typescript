@@ -8,7 +8,7 @@ export class Entry {
   private _contentTypeUid: string;
   private _entryUid: string;
   private _urlPath: string;
-  _queryParams: { [key: string]: string | number } = {};
+  _queryParams: { [key: string]: string | number | string[] } = {};
 
   constructor(client: AxiosInstance, contentTypeUid: string, entryUid: string) {
     this._client = client;
