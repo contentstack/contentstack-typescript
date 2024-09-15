@@ -25,7 +25,7 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).includeFallback().fetch();
    */
   includeFallback(): Entry {
@@ -42,7 +42,7 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType('abc').entry('entry_uid').variant('xyz').fetch();
    */
   variants(variants: string | string[]): Entry {
@@ -63,7 +63,7 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).includeMetadata().fetch();
    */
   includeMetadata(): Entry {
@@ -80,7 +80,7 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).includeEmbeddedItems().fetch();
    */
   includeEmbeddedItems(): Entry {
@@ -97,7 +97,7 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).includeContentType().fetch();
    */
   includeContentType(): Entry {
@@ -114,7 +114,7 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).includeBranch().fetch();
    */
   includeBranch(): Entry {
@@ -131,7 +131,7 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.assetQuery().locale('en-us').fetch();
    */
   locale(locale: string): Entry {
@@ -148,7 +148,7 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).fetch();
    */
   async fetch<T>(): Promise<T> {

@@ -6,7 +6,7 @@
 
 # Contentstack Configuration
 
-        Stack = Contentstack.Stack({
+        Stack = contentstack.stack({
             "api_key": "",
             "delivery_token": "",
             "environment": ""

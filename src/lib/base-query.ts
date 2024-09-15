@@ -16,7 +16,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.includeCount().find()
    * // OR
@@ -37,7 +37,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.orderByAscending("field_uid").find()
    * // OR
@@ -58,7 +58,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.orderByDescending("field_uid").find()
    * // OR
@@ -79,7 +79,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.limit("limit_value").find()
    * // OR
@@ -100,7 +100,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.skip("skip_value").find()
    * // OR
@@ -123,7 +123,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.param("key", "value").find()
    * // OR
@@ -144,7 +144,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.addParams({"key": "value"}).find()
    * // OR
@@ -165,7 +165,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.removeParam("query_param_key").find()
    * // OR
@@ -187,17 +187,17 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.asset().find();
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType("contentType1Uid").entry().query().find();
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.asset(asset_uid).fetch();
    */
 
