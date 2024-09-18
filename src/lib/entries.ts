@@ -202,7 +202,7 @@ export class Entries extends EntryQueryable {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.contentType('abc').entry().variant('xyz').find();
+   * const result = await stack.contentType('abc').entry().variants('xyz').find();
    */
   variants(variants: string | string[]): Entries {
     if (Array.isArray(variants) && variants.length > 0) {
