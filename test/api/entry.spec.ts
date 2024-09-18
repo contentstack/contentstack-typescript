@@ -61,7 +61,7 @@ describe('Entry API tests', () => {
   });
 });
 function makeEntry(uid = ''): Entry {
-  const entry = stack.contentType('author').entry(uid);
+  const entry = stack.contentType('blog_post').entry(uid);
 
   return entry;
 }
