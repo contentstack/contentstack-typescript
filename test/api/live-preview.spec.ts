@@ -8,6 +8,10 @@ const apiKey = process.env.API_KEY as string
 const deliveryToken = process.env.DELIVERY_TOKEN as string
 const environment = process.env.ENVIRONMENT as string
 const branch = process.env.BRANCH as string
+const entryUid = process.env.ENTRY_UID as string
+const previewToken = process.env.PREVIEW_TOKEN as string
+const managementToken = process.env.MANAGEMENT_TOKEN as string
+const host = process.env.HOST as string
 
 describe('Live preview tests', () => {
     test('should check for values initialized', () => {
@@ -30,7 +34,8 @@ describe('Live preview tests', () => {
             environment: environment,
             live_preview: {
                 enable: true,
-                management_token: 'management_token'
+                management_token: managementToken,
+                host: host
             }
         })
         const livePreviewObject = stack.config.live_preview
@@ -48,7 +53,7 @@ describe('Live preview tests', () => {
             environment: environment,
             live_preview: {
                 enable: false,
-                management_token: 'management_token'
+                management_token: managementToken
             }
         })
         const livePreviewObject = stack.config.live_preview
@@ -66,7 +71,8 @@ describe('Live preview tests', () => {
             environment: environment,
             live_preview: {
                 enable: true,
-                preview_token: 'preview_token'
+                preview_token: previewToken,
+                host: host
             }
         })
         const livePreviewObject = stack.config.live_preview
@@ -84,7 +90,7 @@ describe('Live preview tests', () => {
             environment: environment,
             live_preview: {
                 enable: false,
-                preview_token: 'preview_token'
+                preview_token: previewToken
             }
         })
         const livePreviewObject = stack.config.live_preview
@@ -104,14 +110,15 @@ describe('Live preview query Entry API tests', () => {
             environment: process.env.ENVIRONMENT as string,
             live_preview: {
                 enable: true,
-                management_token: 'management_token'
+                management_token: managementToken,
+                host: host
             }
         })
         stack.livePreviewQuery({
-            contentTypeUid: 'contentTypeUid',
+            contentTypeUid: 'blog_post',
             live_preview: 'ser',
         })
-        const result = await stack.contentType('contentTypeUid').entry('entryUid').fetch<TEntry>();
+        const result = await stack.contentType('blog_post').entry(entryUid).fetch<TEntry>();
         expect(result).toBeDefined();
         expect(result._version).toBeDefined();
         expect(result.locale).toEqual('en-us');
@@ -127,14 +134,14 @@ describe('Live preview query Entry API tests', () => {
             environment: process.env.ENVIRONMENT as string,
             live_preview: {
                 enable: false,
-                management_token: 'management_token'
+                management_token: managementToken
             }
         })
         stack.livePreviewQuery({
-            contentTypeUid: 'contentTypeUid',
+            contentTypeUid: 'blog_post',
             live_preview: 'ser',
         })
-        const result = await stack.contentType('contentTypeUid').entry('entryUid').fetch<TEntry>();
+        const result = await stack.contentType('blog_post').entry(entryUid).fetch<TEntry>();
         expect(result).toBeDefined();
         expect(result._version).toBeDefined();
         expect(result.locale).toEqual('en-us');
@@ -150,14 +157,14 @@ describe('Live preview query Entry API tests', () => {
             environment: process.env.ENVIRONMENT as string,
             live_preview: {
                 enable: false,
-                preview_token: 'preview_token'
+                preview_token: previewToken
             }
         })
         stack.livePreviewQuery({
-            contentTypeUid: 'contentTypeUid',
+            contentTypeUid: 'blog_post',
             live_preview: 'ser',
         })
-        const result = await stack.contentType('contentTypeUid').entry('entryUid').fetch<TEntry>();
+        const result = await stack.contentType('blog_post').entry(entryUid).fetch<TEntry>();
         expect(result).toBeDefined();
         expect(result._version).toBeDefined();
         expect(result.locale).toEqual('en-us');
