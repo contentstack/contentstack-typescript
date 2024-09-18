@@ -312,9 +312,9 @@ export class Query extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query1 = stack.contentType('contenttype_uid').Entry().query().containedIn('fieldUID', ['value']);
-   * const query2 = stack.contentType('contenttype_uid').Entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
-   * const query = await stack.contentType('contenttype_uid').Entry().query().or(query1, query2).find();
+   * const query1 = stack.contentType('contenttype_uid').entry().query().containedIn('fieldUID', ['value']);
+   * const query2 = stack.contentType('contenttype_uid').entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
+   * const query = await stack.contentType('contenttype_uid').entry().query().or(query1, query2).find();
    *  
    * @returns {Query}
    */
