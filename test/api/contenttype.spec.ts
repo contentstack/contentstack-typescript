@@ -10,11 +10,11 @@ dotenv.config()
 const stack = stackInstance();
 describe('ContentType API test cases', () => {
   it('should give Entry instance when entry method is called with entryUid', async () => {
-    const result = await makeContentType('author').entry(process.env.ENTRY_UID as string).fetch<TEntry>();
+    const result = await makeContentType('blog_post').entry(process.env.ENTRY_UID as string).fetch<TEntry>();
     expect(result).toBeDefined();
   });
   it('should check for content_types of the given contentTypeUid', async () => {
-    const result = await makeContentType('header').fetch<TContentType>();
+    const result = await makeContentType('blog_post').fetch<TContentType>();
     expect(result).toBeDefined();
     expect(result._version).toBeDefined();
     expect(result.title).toBeDefined();

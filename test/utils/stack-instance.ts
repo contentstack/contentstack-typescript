@@ -10,9 +10,9 @@ function stackInstance() {
     deliveryToken: process.env.DELIVERY_TOKEN || '',
     environment: process.env.ENVIRONMENT || '',
     live_preview: {
-      enable: true,
-      preview_token: "abcda",
-      host: "xyz,contentstack.com",
+      enable: false,
+      preview_token: process.env.PREVIEW_TOKEN || '',
+      host: process.env.HOST || '',
     }
   };
 

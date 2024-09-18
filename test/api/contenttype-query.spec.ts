@@ -5,7 +5,7 @@ import { TContentType, TContentTypes } from './types';
 
 const stack = stackInstance();
 describe('ContentTypeQuery API test cases', () => {
-  it.only('should check for content_types are defined', async () => {
+  it('should check for content_types are defined', async () => {
     const result = await makeContentTypeQuery().find<TContentType>();
   
     expect(result.content_types).toBeDefined();
