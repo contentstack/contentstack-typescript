@@ -43,7 +43,7 @@ export class Entry {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.contentType('abc').entry('entry_uid').variant('xyz').fetch();
+   * const result = await stack.contentType('abc').entry('entry_uid').variants('xyz').fetch();
    */
   variants(variants: string | string[]): Entry {
     if (Array.isArray(variants) && variants.length > 0) {

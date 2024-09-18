@@ -7,8 +7,8 @@
 # Contentstack Configuration
 
         Stack = contentstack.stack({
-            "api_key": "",
-            "delivery_token": "",
+            "apiKey": "",
+            "deliveryToken": "",
             "environment": ""
         });
     
