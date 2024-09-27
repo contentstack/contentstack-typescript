@@ -15,7 +15,7 @@ export class GlobalField {
    * @description Includes the _branch top-level key in the response
    * @returns {GlobalField}
    * @example
-   * const stack = contentstack.Stack('apiKey','deliveryToken','environment');
+   * const stack = contentstack.stack('apiKey','deliveryToken','environment');
    * const globalField = stack.globalField('global_field_uid');
    * const result = globalField.includeBranch().fetch();
    */
@@ -30,7 +30,7 @@ export class GlobalField {
    * @description Fetches comprehensive details of a specific global field
    * @returns {GlobalField}
    * @example
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const globalField = stack.globalField('global_field_uid');
    * const result = globalField.fetch();
    */

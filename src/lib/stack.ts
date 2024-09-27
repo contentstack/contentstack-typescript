@@ -28,7 +28,7 @@ export class Stack {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const asset = stack.asset() // For collection of asset
    * // OR
    * const asset = stack.asset('assetUid') // For a single asset with uid 'assetUid'
@@ -52,7 +52,7 @@ export class Stack {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const contentType = stack.contentType() // For collection of contentType
    * // OR
    * const contentType = stack.contentType('contentTypeUid') // For a single contentType with uid 'contentTypeUid'
@@ -73,9 +73,9 @@ export class Stack {
    * @returns {TaxonomyQuery} * @example
    * import contentstack from '@contentstack/typescript'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
 
-   * const taxonomy = stack.Taxonomy() // For taxonomy query object
+   * const taxonomy = stack.taxonomy() // For taxonomy query object
    */
   taxonomy(): TaxonomyQuery {
     return new TaxonomyQuery(this._client)
@@ -109,7 +109,7 @@ export class Stack {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * stack.setLocale('en-155');
    */
   setLocale(locale: string) {
