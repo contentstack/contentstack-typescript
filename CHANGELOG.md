@@ -1,6 +1,10 @@
 ## Change log
 
 ### Version: 4.3.0
+#### Date: October-14-2024
+Refactor: Package type changed to be module instead of CommonJS 
+
+### Version: 4.3.0
 #### Date: Septmber-09-2024
 Feat: Include refernce accepts array of values 
 
