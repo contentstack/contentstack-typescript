@@ -1,6 +1,11 @@
-const path = require('path');
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-module.exports = {
+// Replicating __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default {
   mode: 'production',
   entry: './src/index.ts',
   output: {
