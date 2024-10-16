@@ -1,7 +1,7 @@
-## Change log
-### Version: 4.3.1
-#### Date: October-22-2024
+### Version: 4.4.0
+#### Date: October-21-2024
 Enh: Node version bump
+Refactor: Package type changed to be module instead of CommonJS 
 
 ### Version: 4.3.0
 #### Date: Septmber-09-2024
