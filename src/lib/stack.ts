@@ -149,7 +149,8 @@ export class Stack {
         ...this.config.live_preview,
         live_preview: query.live_preview || 'init',
         contentTypeUid: query.contentTypeUid,
-        entryUid: query.entryUid
+        entryUid: query.entryUid,
+        preview_timestamp: query.preview_timestamp || "",
       }
       this._client.stackConfig.live_preview = livePreviewParams;
     }
