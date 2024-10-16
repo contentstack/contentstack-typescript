@@ -1,4 +1,7 @@
 ## Change log
+### Version: 4.3.1
+#### Date: October-22-2024
+Enh: Node version bump
 
 ### Version: 4.3.0
 #### Date: October-14-2024
