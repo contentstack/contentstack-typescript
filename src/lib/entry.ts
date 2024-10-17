@@ -8,6 +8,7 @@ export class Entry {
   private _contentTypeUid: string;
   private _entryUid: string;
   private _urlPath: string;
+  protected _variants: string;
   _queryParams: { [key: string]: string | number | string[] } = {};
 
   constructor(client: AxiosInstance, contentTypeUid: string, entryUid: string) {
@@ -15,6 +16,7 @@ export class Entry {
     this._contentTypeUid = contentTypeUid;
     this._entryUid = entryUid;
     this._urlPath = `/content_types/${this._contentTypeUid}/entries/${this._entryUid}`;
+    this._variants = '';
   }
 
   /**
@@ -47,9 +49,9 @@ export class Entry {
    */
   variants(variants: string | string[]): Entry {
     if (Array.isArray(variants) && variants.length > 0) {
-      this._client.defaults.headers['x-cs-variant-uid'] = variants.join(',');
+      this._variants = variants.join(',');
     } else if (typeof variants == 'string' && variants.length > 0) {
-      this._client.defaults.headers['x-cs-variant-uid'] = variants;
+      this._variants = variants;
     }
 
     return this;
@@ -152,7 +154,15 @@ export class Entry {
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).fetch();
    */
   async fetch<T>(): Promise<T> {
-    const response = await getData(this._client, this._urlPath, this._queryParams);
+    const getRequestOptions: any = { params: this._queryParams};
+    if (this._variants) {
+      getRequestOptions.headers = {
+        ...getRequestOptions.headers,
+        'x-cs-variant-uid': this._variants
+      };
+    }
+
+    const response = await getData(this._client, this._urlPath, getRequestOptions);
 
     if (response.entry) return response.entry as T;
 

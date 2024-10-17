@@ -69,8 +69,9 @@ class TestVariants extends Entry {
     this._client = client;
   }
 
-  getVariantsHeaders(): string {
-    return this._client.defaults.headers['x-cs-variant-uid'] || "";
+  setAndGetVariantsHeaders(): string {
+    this.variants(['variant1', 'variant2']); // setting the variants headers so it doesnt give empty string
+    return this._variants || "";
   }
 }
 
@@ -85,7 +86,6 @@ describe('Variants test', () => {
   it('should get the correct variant headers added to client', async () => {
     const testVariantObj = new TestVariants(httpClient(MOCK_CLIENT_OPTIONS))
 
-    testVariantObj.variants(['variant1', 'variant2']);
-    expect(testVariantObj.getVariantsHeaders()).toBe('variant1,variant2');
+    expect(testVariantObj.setAndGetVariantsHeaders()).toBe('variant1,variant2');
   });
 })
