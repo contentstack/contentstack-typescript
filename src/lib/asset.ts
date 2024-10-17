@@ -141,7 +141,7 @@ export class Asset {
    * const result = await stack.asset('asset_uid').fetch();
    */
   async fetch<T>(): Promise<T> {
-    const response = await getData(this._client, this._urlPath, this._queryParams);
+    const response = await getData(this._client, this._urlPath, { params: this._queryParams});
 
     if (response.asset) return response.asset as T;
 
