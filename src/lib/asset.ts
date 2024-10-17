@@ -18,7 +18,7 @@ export class Asset {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.asset('asset_uid').includeFallback().fetch();
    */
   includeFallback(): Asset {
@@ -35,7 +35,7 @@ export class Asset {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.asset('asset_uid').includeMetadata().fetch();
    */
   includeMetadata(): Asset {
@@ -52,7 +52,7 @@ export class Asset {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.asset('asset_uid').includeDimension().fetch();
    */
   includeDimension(): Asset {
@@ -69,7 +69,7 @@ export class Asset {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.asset('asset_uid').includeBranch().fetch();
    */
   includeBranch(): Asset {
@@ -86,7 +86,7 @@ export class Asset {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.asset('asset_uid').relativeUrls().fetch();
    */
   relativeUrls(): Asset {
@@ -103,7 +103,7 @@ export class Asset {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.asset('asset_uid').version(1).fetch();
    */
   version(version: number): Asset {
@@ -120,7 +120,7 @@ export class Asset {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.asset('asset_uid').locale('en-us').fetch();
    */
   locale(locale: string): Asset {
@@ -137,11 +137,11 @@ export class Asset {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.asset('asset_uid').fetch();
    */
   async fetch<T>(): Promise<T> {
-    const response = await getData(this._client, this._urlPath, this._queryParams);
+    const response = await getData(this._client, this._urlPath, { params: this._queryParams});
 
     if (response.asset) return response.asset as T;
 

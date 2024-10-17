@@ -50,7 +50,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.where("field_UID", QueryOperation.IS_LESS_THAN, ["field1", "field2"]).find()
    * // OR
@@ -58,7 +58,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.where("field_UID", QueryOperation.MATCHES, ["field1", "field2"]).find()
    * @returns {Query}
@@ -90,7 +90,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.regex('title','^Demo').find()
    * // OR
@@ -119,7 +119,7 @@ export class Query extends BaseQuery {
    * The query retrieves all entries that satisfy the query conditions made on referenced fields
    * This method sets the '$in_query' parameter to a reference field UID and a query instance in the API request.
    * @example
-   * const stack = contentstack.Stack("apiKey", "deliveryKey", "environment");
+   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
    * const query = stack.contentType("contentTypeUid").entry().query();
    * query.whereIn("brand")
    * const res = await query.find()
@@ -144,7 +144,7 @@ export class Query extends BaseQuery {
    * This query works the opposite of $in_query and retrieves all entries that does not satisfy query conditions made on referenced fields.
    * This method sets the '$nin_query' parameter to a reference field UID and a query instance in the API request.
    * @example
-   * const stack = contentstack.Stack("apiKey", "deliveryKey", "environment");
+   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
    * const query = stack.contentType("contentTypeUid").entry().query();
    * query.whereNotIn("brand")
    * const res = await query.find()
@@ -168,7 +168,7 @@ export class Query extends BaseQuery {
    * @description In case of '$and' get entries that satisfy all the conditions provided in the '$and' query and
    * in case of '$or' query get all entries that satisfy at least one of the given conditions provided in the '$or' query.
    * @example
-   * const stack = contentstack.Stack("apiKey", "deliveryKey", "environment");
+   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
    * const query = stack.contentType("contentType1Uid").entry().query();
    * const subQuery1 = stack.contentType("contentType2Uid").query().where("price", QueryOperation.IS_LESS_THAN, fields=90);
    * const subQuery2 = stack.contentType("contentType3Uid").query().where("discount", QueryOperation.INCLUDES, fields=[20, 45]);
@@ -196,7 +196,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.query({'brand': {'$nin_query': {'title': 'Apple Inc.'}}}).getQuery()
    * // OR
@@ -215,7 +215,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.containedIn('fieldUid', ['value1', 'value2']).find()
    * 
@@ -241,7 +241,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.notContainedIn('fieldUid', ['value1', 'value2']).find()
    * 
@@ -267,7 +267,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.exists('fieldUid').find()
    * 
@@ -289,7 +289,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.notExists('fieldUid').find()
    * 
@@ -311,10 +311,10 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query1 = stack.contentType('contenttype_uid').Entry().query().containedIn('fieldUID', ['value']);
-   * const query2 = stack.contentType('contenttype_uid').Entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
-   * const query = await stack.contentType('contenttype_uid').Entry().query().or(query1, query2).find();
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const query1 = stack.contentType('contenttype_uid').entry().query().containedIn('fieldUID', ['value']);
+   * const query2 = stack.contentType('contenttype_uid').entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
+   * const query = await stack.contentType('contenttype_uid').entry().query().or(query1, query2).find();
    *  
    * @returns {Query}
    */
@@ -334,7 +334,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query1 = stack.contentType('contenttype_uid').Entry().query().containedIn('fieldUID', ['value']);
    * const query2 = stack.contentType('contenttype_uid').Entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
    * const query = await stack.contentType('contenttype_uid').Entry().query().and(query1, query2).find();
@@ -357,7 +357,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = await stack.contentType('contenttype_uid').Entry().query().equalTo('fieldUid', 'value').find();
    *  
    * @returns {Query}
@@ -382,7 +382,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = await stack.contentType('contenttype_uid').Entry().query().notEqualTo('fieldUid', 'value').find();
    *  
    * @returns {Query}
@@ -407,7 +407,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
    * const entryQuery = await stack.contentType('contenttype_uid').query().referenceIn('reference_uid', query).find();
    *  
@@ -429,7 +429,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
    * const entryQuery = await stack.contentType('contenttype_uid').query().referenceNotIn('reference_uid', query).find();
    *  
@@ -451,7 +451,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
    * const entryQuery = await stack.contentType('contenttype_uid').query().tags(['tag1']).find();
    *  
@@ -473,7 +473,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
    * const entryQuery = await stack.contentType('contenttype_uid').query().search('key').find();
    *  
@@ -495,7 +495,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
    * const entryQuery = await stack.contentType('contenttype_uid').query().lessThan('fieldUid', 'value').find();
    *  
@@ -522,7 +522,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
    * const entryQuery = await stack.contentType('contenttype_uid').query().lessThanOrEqualTo('fieldUid', 'value').find();
    *  
@@ -548,7 +548,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
    * const entryQuery = await stack.contentType('contenttype_uid').query().greaterThan('fieldUid', 'value').find();
    *  
@@ -574,7 +574,7 @@ export class Query extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
    * const entryQuery = await stack.contentType('contenttype_uid').query().greaterThanOrEqualTo('fieldUid', 'value').find();
    *  
