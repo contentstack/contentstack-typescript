@@ -10,6 +10,7 @@ export class Entries extends EntryQueryable {
     this._client = client;
     this._contentTypeUid = contentTypeUid;
     this._urlPath = `/content_types/${this._contentTypeUid}/entries`;
+    this._variants = '';
   }
 
   /**
@@ -206,11 +207,10 @@ export class Entries extends EntryQueryable {
    */
   variants(variants: string | string[]): Entries {
     if (Array.isArray(variants) && variants.length > 0) {
-      this._client.defaults.headers['x-cs-variant-uid'] = variants.join(',');
+      this._variants = variants.join(',');
     } else if (typeof variants == 'string' && variants.length > 0) {
-      this._client.defaults.headers['x-cs-variant-uid'] = variants;
+      this._variants = variants;
     }
-
     return this;
   }
 }
