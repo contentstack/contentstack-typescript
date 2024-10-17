@@ -151,6 +151,7 @@ export class Stack {
         contentTypeUid: query.contentTypeUid,
         entryUid: query.entryUid,
         preview_timestamp: query.preview_timestamp || "",
+        include_applied_variants: query.include_applied_variants || false,
       }
       this._client.stackConfig.live_preview = livePreviewParams;
     }
