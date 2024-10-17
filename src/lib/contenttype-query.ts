@@ -40,7 +40,7 @@ export class ContentTypeQuery {
    * const result = await contentTypeQuery.find();
    */
   async find<T>(): Promise<FindResponse<T>> {
-    const response = await getData(this._client, this._urlPath, this._queryParams);
+    const response = await getData(this._client, this._urlPath, { params: this._queryParams });
 
     return response as FindResponse<T>;
   }
