@@ -8,6 +8,7 @@ export class BaseQuery extends Pagination {
 
   protected _client!: AxiosInstance;
   protected _urlPath!: string;
+  protected _variants!: string;
 
   /**
    * @method includeCount
@@ -203,9 +204,21 @@ export class BaseQuery extends Pagination {
 
   async find<T>(): Promise<FindResponse<T>> {
     let requestParams: { [key: string]: any } = this._queryParams;
-    if (Object.keys(this._parameters)) requestParams = { ...this._queryParams, query: { ...this._parameters } };
 
-    const response = await getData(this._client, this._urlPath, requestParams);
+    if (Object.keys(this._parameters).length > 0) {
+      requestParams = { ...this._queryParams, query: { ...this._parameters } };
+    }
+
+    const getRequestOptions: any = { params: requestParams };
+
+    if (this._variants) {
+      getRequestOptions.headers = {
+        ...getRequestOptions.headers,
+        'x-cs-variant-uid': this._variants
+      };
+    }
+    
+    const response = await getData(this._client, this._urlPath, getRequestOptions);
 
     return response as FindResponse<T>;
   }
