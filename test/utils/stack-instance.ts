@@ -6,6 +6,7 @@ dotenv.config();
 
 function stackInstance() {
   const params: StackConfig = {
+    host: process.env.HOST || '',
     apiKey: process.env.API_KEY || '',
     deliveryToken: process.env.DELIVERY_TOKEN || '',
     environment: process.env.ENVIRONMENT || '',
