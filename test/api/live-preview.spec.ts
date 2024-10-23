@@ -129,6 +129,7 @@ describe('Live preview query Entry API tests', () => {
 
     it('should check for entry is when live preview is disabled with managemenet token', async () => {
         const stack = contentstack.stack({
+            host: process.env.HOST as string,
             apiKey: process.env.API_KEY as string,
             deliveryToken: process.env.DELIVERY_TOKEN as string,
             environment: process.env.ENVIRONMENT as string,
@@ -152,6 +153,7 @@ describe('Live preview query Entry API tests', () => {
 
     it('should check for entry is when live preview is disabled with preview token', async () => {
         const stack = contentstack.stack({
+            host: process.env.HOST as string,
             apiKey: process.env.API_KEY as string,
             deliveryToken: process.env.DELIVERY_TOKEN as string,
             environment: process.env.ENVIRONMENT as string,

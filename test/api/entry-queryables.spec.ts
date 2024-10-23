@@ -201,7 +201,7 @@ describe('Query Operators API test cases', () => {
     });
 
     it('should get entries which is lessThan the fieldUid and values', async () => {
-      const query = await makeEntries('contenttype_uid').query().lessThan('created_at', '2024-03-01T05:25:30.940Z').find<TEntry>()
+      const query = await makeEntries('contenttype_uid').query().lessThan('marks', 10).find<TEntry>()
       if (query.entries) {
         expect(query.entries.length).toBeGreaterThan(0);
         expect(query.entries[0]._version).toBeDefined();
@@ -212,7 +212,7 @@ describe('Query Operators API test cases', () => {
     });
 
     it('should get entries which is lessThanOrEqualTo the fieldUid and values', async () => {
-      const query = await makeEntries('contenttype_uid').query().lessThanOrEqualTo('created_at', '2024-03-01T05:25:30.940Z').find<TEntry>()
+      const query = await makeEntries('contenttype_uid').query().lessThanOrEqualTo('marks', 10).find<TEntry>()
       if (query.entries) {
         expect(query.entries.length).toBeGreaterThan(0);
         expect(query.entries[0]._version).toBeDefined();
