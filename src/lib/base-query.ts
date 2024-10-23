@@ -8,6 +8,7 @@ export class BaseQuery extends Pagination {
 
   protected _client!: AxiosInstance;
   protected _urlPath!: string;
+  protected _variants!: string;
 
   /**
    * @method includeCount
@@ -16,7 +17,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.includeCount().find()
    * // OR
@@ -37,7 +38,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.orderByAscending("field_uid").find()
    * // OR
@@ -58,7 +59,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.orderByDescending("field_uid").find()
    * // OR
@@ -79,7 +80,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.limit("limit_value").find()
    * // OR
@@ -100,7 +101,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.skip("skip_value").find()
    * // OR
@@ -123,7 +124,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.param("key", "value").find()
    * // OR
@@ -144,7 +145,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.addParams({"key": "value"}).find()
    * // OR
@@ -165,7 +166,7 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.removeParam("query_param_key").find()
    * // OR
@@ -187,25 +188,37 @@ export class BaseQuery extends Pagination {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.asset().find();
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType("contentType1Uid").entry().query().find();
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.asset(asset_uid).fetch();
    */
 
   async find<T>(): Promise<FindResponse<T>> {
     let requestParams: { [key: string]: any } = this._queryParams;
-    if (Object.keys(this._parameters)) requestParams = { ...this._queryParams, query: { ...this._parameters } };
 
-    const response = await getData(this._client, this._urlPath, requestParams);
+    if (Object.keys(this._parameters).length > 0) {
+      requestParams = { ...this._queryParams, query: { ...this._parameters } };
+    }
+
+    const getRequestOptions: any = { params: requestParams };
+
+    if (this._variants) {
+      getRequestOptions.headers = {
+        ...getRequestOptions.headers,
+        'x-cs-variant-uid': this._variants
+      };
+    }
+    
+    const response = await getData(this._client, this._urlPath, getRequestOptions);
 
     return response as FindResponse<T>;
   }
