@@ -26,7 +26,7 @@ export class ContentType {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const entry = stack.contentType("contentTypeUid").entry("entryUid");
    */
   entry(uid: string): Entry;
@@ -45,8 +45,8 @@ export class ContentType {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.contentType(asset_uid).fetch();
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.contentType(contenttype_uid).fetch();
    */
   async fetch<T>(): Promise<T> {
     const response = await getData(this._client, this._urlPath);

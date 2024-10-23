@@ -16,10 +16,10 @@ let version = '{{VERSION}}';
  *
  * @example
  * import contentstack from '@contentstack/delivery-sdk'
- * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+ * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
  * @example
  * import contentstack from '@contentstack/delivery-sdk'
- * const stack = contentstack.Stack({
+ * const stack = contentstack.stack({
  *   apiKey: "apiKey",
  *   deliveryToken: "deliveryToken",
  *   environment: "environment",
