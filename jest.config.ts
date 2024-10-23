@@ -1,19 +1,19 @@
 /* eslint-disable */
 export default {
-  displayName: 'contentstack-delivery',
-  preset: './jest.preset.js',
+  displayName: "contentstack-delivery",
+  preset: "./jest.preset.js",
   transform: {
-    '^.+\\.[tj]s$': ['ts-jest', {
-      tsconfig: '<rootDir>/tsconfig.spec.json',
-    }],
+    "^.+\\.[tj]s$": [
+      "ts-jest",
+      {
+        tsconfig: "<rootDir>/tsconfig.spec.json",
+      },
+    ],
   },
-  moduleFileExtensions: ['ts', 'js', 'html'],
+  moduleFileExtensions: ["ts", "js", "html"],
   collectCoverage: true,
-  coverageDirectory: './reports/contentstack-delivery/coverage/',
-   collectCoverageFrom: [
-    "src/**",
-    "!src/index.ts"
-  ],
+  coverageDirectory: "./reports/contentstack-delivery/coverage/",
+  collectCoverageFrom: ["src/**", "!src/index.ts"],
   coverageThreshold: {
     // global: {
     //   branches: 95,
@@ -23,26 +23,36 @@ export default {
     // }
   },
   reporters: [
-    'default',
+    "default",
     [
-      'jest-html-reporters',
+      "jest-html-reporter",
       {
-        publicPath: './reports/contentstack-delivery/html',
-        filename: 'index.html',
+        pageTitle: "API Test Report",
+        outputPath: "reports/sanity.html",
+        includeFailureMsg: true,
+        includeConsoleLog: true,
+      },
+    ],
+    [
+      "jest-html-reporters",
+      {
+        publicPath: "./reports/contentstack-delivery/html",
+        filename: "index.html",
         expand: true,
       },
     ],
     [
-      'jest-junit',
+      "jest-junit",
       {
-        outputDirectory: 'reports/contentstack-delivery/junit',
-        outputName: 'jest-junit.xml',
-        ancestorSeparator: ' › ',
-        uniqueOutputName: 'false',
-        suiteNameTemplate: '{filepath}',
-        classNameTemplate: '{classname}',
-        titleTemplate: '{title}',
+        outputDirectory: "reports/contentstack-delivery/junit",
+        outputName: "jest-junit.xml",
+        ancestorSeparator: " › ",
+        uniqueOutputName: "false",
+        suiteNameTemplate: "{filepath}",
+        classNameTemplate: "{classname}",
+        titleTemplate: "{title}",
       },
     ],
   ],
 };
+
