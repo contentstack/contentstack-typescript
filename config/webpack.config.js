@@ -19,17 +19,24 @@ export default {
     rules: [
       {
         test: /\.ts(x*)?$/,
-        exclude: /node_modules/,
+        exclude: path.resolve(__dirname, "node_modules"),
         use: {
           loader: 'ts-loader',
           options: {
-            configFile: 'config/tsconfig.umd.json',
+            configFile: path.resolve(__dirname, "tsconfig.umd.json"),
           },
         },
       },
+      {
+        test: /node-localstorage/,
+        use: 'ignore-loader',
+      }
     ],
   },
   resolve: {
     extensions: ['.ts', '.js', '.tsx', '.jsx'],
+    fallback: { 
+      path: path.resolve("path-browserify") 
+    }
   },
 };

@@ -6,5 +6,5 @@
       "outDir": "../dist/types" /* Redirect output structure to the directory. */
     },
     "include": ["../src/**/*.ts"], // Adjust this path based on your project structure
-    "exclude": ["../dist/types"]
+    "exclude": ["node_modules", "../dist/types"]
   }

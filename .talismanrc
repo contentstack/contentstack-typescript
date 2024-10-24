@@ -1,10 +1,10 @@
 fileignoreconfig:
+- filename: package-lock.json
+  checksum: f2a832173c4b84d2105f29c5f83adc9ffbdb017ec869f820251f7496b8ef7f9d
 - filename: test/unit/image-transform.spec.ts
   checksum: 7beabdd07bd35d620668fcd97e1a303b9cbc40170bf3008a376d75ce0895de2a
 - filename: test/utils/mocks.ts
   checksum: a1cb4b1890a584f1facd30f2a0974c97a66f91417022be79d00516338e244227
-- filename: package-lock.json
-  checksum: 6e6c9c6f379ec75ce259a49f405c49a6b24dfbfd68406d6d49642042db2bf188
 - filename: test/typescript/taxonomy.test.ts
   checksum: e4bdf633e147fd60d929d379f20c814eed5f68b11421d7b53ec8826e9142de37
 - filename: src/core/modules/taxonomy.js

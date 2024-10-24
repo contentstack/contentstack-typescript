@@ -106,7 +106,7 @@ export function stack(config: StackConfig): StackClass {
   client.interceptors.response.use(retryResponseHandler, errorHandler);
 
   if (config.plugins) {
-    client.interceptors.request.use((reqConfig: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+    client.interceptors.request.use((reqConfig: any): InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig> => {
       if (config && config.plugins)
         config.plugins.forEach((pluginInstance) => {
           reqConfig = pluginInstance.onRequest(reqConfig);
