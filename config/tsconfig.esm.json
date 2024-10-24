@@ -7,5 +7,5 @@
     "declarationDir": "../dist/esm/types",
   },
   "include": ["../src/**/*.ts"], // Adjust this path based on your project structure
-  "exclude": ["../dist/esm"]
+  "exclude": ["node_modules", "../dist/esm"]
 }
