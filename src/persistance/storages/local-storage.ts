@@ -1,5 +1,6 @@
 import { Callback, iGlobal } from '../helper/utils';
 import { Storage } from '../types/storage';
+import { LocalStorage } from 'node-localstorage';
 
 export const localStorage: Storage = {
   name: 'localStorage',
@@ -11,7 +12,7 @@ export const localStorage: Storage = {
 };
 
 function _localStorage() {
-  return iGlobal.localStorage;
+  return (iGlobal.localStorage !== undefined) ? iGlobal.localStorage : new LocalStorage('./scratch');
 }
 
 function clear() {
