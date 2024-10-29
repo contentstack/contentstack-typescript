@@ -59,7 +59,8 @@ describe('Live preview tests', () => {
             live_preview: {
               enable: true,
               preview_token: 'preview_token',
-              host: 'rest-preview.contentstack.com'
+              host: 'rest-preview.contentstack.com',
+              include_applied_variants: true,
             }
           })
         const livePreviewObject = stack.config.live_preview
@@ -68,6 +69,8 @@ describe('Live preview tests', () => {
         expect(livePreviewObject).toHaveProperty('host');
         expect(livePreviewObject).toHaveProperty('preview_token');
         expect(livePreviewObject).not.toHaveProperty('management_token');
+        expect(livePreviewObject).toHaveProperty('include_applied_variants');
+        expect(livePreviewObject?.include_applied_variants).toBe(true);
         expect(stack.config.host).toBe('cdn.contentstack.io');
     });
 
