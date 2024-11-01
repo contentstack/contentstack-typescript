@@ -16,10 +16,10 @@ let version = '{{VERSION}}';
  *
  * @example
  * import contentstack from '@contentstack/delivery-sdk'
- * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+ * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
  * @example
  * import contentstack from '@contentstack/delivery-sdk'
- * const stack = contentstack.Stack({
+ * const stack = contentstack.stack({
  *   apiKey: "apiKey",
  *   deliveryToken: "deliveryToken",
  *   environment: "environment",
@@ -106,7 +106,7 @@ export function stack(config: StackConfig): StackClass {
   client.interceptors.response.use(retryResponseHandler, errorHandler);
 
   if (config.plugins) {
-    client.interceptors.request.use((reqConfig: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+    client.interceptors.request.use((reqConfig: any): InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig> => {
       if (config && config.plugins)
         config.plugins.forEach((pluginInstance) => {
           reqConfig = pluginInstance.onRequest(reqConfig);

@@ -10,6 +10,7 @@ export class Entries extends EntryQueryable {
     this._client = client;
     this._contentTypeUid = contentTypeUid;
     this._urlPath = `/content_types/${this._contentTypeUid}/entries`;
+    this._variants = '';
   }
 
   /**
@@ -20,7 +21,7 @@ export class Entries extends EntryQueryable {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry().includeFallback().find();
    */
   includeFallback(): Entries {
@@ -37,7 +38,7 @@ export class Entries extends EntryQueryable {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry().includeMetadata().find();
    */
   includeMetadata(): Entries {
@@ -54,7 +55,7 @@ export class Entries extends EntryQueryable {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry().includeEmbeddedItems().fetch();
    */
   includeEmbeddedItems(): Entries {
@@ -71,7 +72,7 @@ export class Entries extends EntryQueryable {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry().includeContentType().fetch();
    */
   includeContentType(): Entries {
@@ -88,7 +89,7 @@ export class Entries extends EntryQueryable {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry().includeBranch().find();
    */
   includeBranch(): Entries {
@@ -104,8 +105,8 @@ export class Entries extends EntryQueryable {
    * you need to use the include[] parameter and specify the UID of the reference field as value.
    * This function sets the include parameter to a reference field UID in the API request.
    * @example
-   * const stack = contentstack.Stack("apiKey", "deliveryKey", "environment");
-   * const query = stack.contentType("contentTypeUid").entry().include_reference("brand")
+   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
+   * const query = stack.contentType("contentTypeUid").entry().includeReference("brand")
    * const res = await query.find()
    *
    * @param {string} referenceFieldUid - UID of the reference field to include.
@@ -130,7 +131,7 @@ export class Entries extends EntryQueryable {
    * @memberof Entries
    * @description This method also includes the content type UIDs of the referenced entries returned in the response.
    * @example
-   * const stack = contentstack.Stack("apiKey", "deliveryKey", "environment");
+   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
    * const query = stack.contentType("contentTypeUid").entry().includeReferenceContentTypeUID()
    * const res = await query.find()
    *
@@ -147,7 +148,7 @@ export class Entries extends EntryQueryable {
    * @memberof Entries
    * @description This method also includes the content type UIDs of the referenced entries returned in the response.
    * @example
-   * const stack = contentstack.Stack("apiKey", "deliveryKey", "environment");
+   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
    * const query = stack.contentType("contentTypeUid").entry().includeSchema()
    * const res = await query.find()
    *
@@ -167,7 +168,7 @@ export class Entries extends EntryQueryable {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType("contentTypeUid").entry().locale('en-us').find();
    */
   locale(locale: string): Entries {
@@ -184,7 +185,7 @@ export class Entries extends EntryQueryable {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType("contentTypeUid").entry().query();
    */
   query(queryObj?: { [key: string]: any }) {
@@ -201,16 +202,15 @@ export class Entries extends EntryQueryable {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.contentType('abc').entry().variant('xyz').find();
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.contentType('abc').entry().variants('xyz').find();
    */
   variants(variants: string | string[]): Entries {
     if (Array.isArray(variants) && variants.length > 0) {
-      this._client.defaults.headers['x-cs-variant-uid'] = variants.join(',');
+      this._variants = variants.join(',');
     } else if (typeof variants == 'string' && variants.length > 0) {
-      this._client.defaults.headers['x-cs-variant-uid'] = variants;
+      this._variants = variants;
     }
-
     return this;
   }
 }

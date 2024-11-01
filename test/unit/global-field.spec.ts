@@ -1,5 +1,5 @@
 import { AxiosInstance, httpClient } from '@contentstack/core';
-import { GlobalField } from 'src/lib/global-field';
+import { GlobalField } from '../../src/lib/global-field';
 import MockAdapter from 'axios-mock-adapter';
 import { gfieldFetchDataMock } from '../utils/mocks';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';

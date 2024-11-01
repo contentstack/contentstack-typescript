@@ -1,6 +1,11 @@
-const path = require('path');
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-module.exports = {
+// Replicating __dirname in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default {
   mode: 'production',
   entry: './src/index.ts',
   output: {
@@ -14,17 +19,24 @@ module.exports = {
     rules: [
       {
         test: /\.ts(x*)?$/,
-        exclude: /node_modules/,
+        exclude: path.resolve(__dirname, "node_modules"),
         use: {
           loader: 'ts-loader',
           options: {
-            configFile: 'config/tsconfig.umd.json',
+            configFile: path.resolve(__dirname, "tsconfig.umd.json"),
           },
         },
       },
+      {
+        test: /node-localstorage/,
+        use: 'ignore-loader',
+      }
     ],
   },
   resolve: {
     extensions: ['.ts', '.js', '.tsx', '.jsx'],
+    fallback: { 
+      path: path.resolve("path-browserify") 
+    }
   },
 };

@@ -1,4 +1,8 @@
-## Change log
+### Version: 4.4.0
+#### Date: October-21-2024
+Fix: getData to receive params and headers both in data
+Enh: Node version bump
+Refactor: Package type changed to be module instead of CommonJS 
 
 ### Version: 4.3.0
 #### Date: Septmber-09-2024

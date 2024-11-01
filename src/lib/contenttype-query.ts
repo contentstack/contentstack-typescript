@@ -18,7 +18,7 @@ export class ContentTypeQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const contentTypeQuery = stack.contentType();
    * const result = await contentTypeQuery.includeGlobalFieldSchema().find();
    */
@@ -35,12 +35,12 @@ export class ContentTypeQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const contentTypeQuery = stack.contentType();
    * const result = await contentTypeQuery.find();
    */
   async find<T>(): Promise<FindResponse<T>> {
-    const response = await getData(this._client, this._urlPath, this._queryParams);
+    const response = await getData(this._client, this._urlPath, { params: this._queryParams });
 
     return response as FindResponse<T>;
   }
