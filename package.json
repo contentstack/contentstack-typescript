@@ -4,13 +4,19 @@
   "type": "module",
   "main": "./dist/cjs/src/index.js",
   "module": "./dist/esm/src/index.js",
-  "types": "./dist/esm/types/src/index.d.ts",
+  "types": "./dist/types/src/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/esm/types/src/index.d.ts",
-      "import": "./dist/esm/src/index.js",
-      "require": "./dist/cjs/src/index.js"
-    }
+      "import": {
+        "types": "./dist/esm/types/src/index.d.ts",
+        "default": "./dist/esm/src/index.js"
+      },
+      "require": {
+        "types": "./dist/types/src/index.d.ts",
+        "default": "./dist/cjs/src/index.js"
+      }
+    },
+    "./package.json": "./package.json"
   },
   "scripts": {
     "prepack": "npm run test",
@@ -21,7 +27,7 @@
     "lint": "eslint . -c .eslintrc.json",
     "clean": "node tools/cleanup",
     "package": "npm run build && npm pack",
-    "build": "npm run build:cjs && npm run build:esm && npm run build:types",
+    "build": "NODE_OPTIONS='--max-old-space-size=16384' tsup",
     "build:cjs": "node tools/cleanup cjs && tsc -p config/tsconfig.cjs.json && node tools/rename-cjs.cjs",
     "build:esm": "node tools/cleanup esm && tsc -p config/tsconfig.esm.json",
     "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json"
@@ -55,6 +61,7 @@
     "ts-jest": "^29.1.1",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
+    "tsup": "^8.3.5",
     "webpack-cli": "^5.1.4"
   }
 }
