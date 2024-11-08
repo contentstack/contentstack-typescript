@@ -61,6 +61,7 @@ describe('local store', () => {
   });
 
   it('should not contain key value clear', () => {
+    iGlobal.document.cookie = ' = ; path=/';
     store.setItem('foo', 'bar');
     store.setItem('bar', 'foo');
     store.each((_, key) => {

@@ -106,7 +106,7 @@ export function stack(config: StackConfig): StackClass {
   client.interceptors.response.use(retryResponseHandler, errorHandler);
 
   if (config.plugins) {
-    client.interceptors.request.use((reqConfig: any): InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig> => {
+    client.interceptors.request.use((reqConfig: any): any => {
       if (config && config.plugins)
         config.plugins.forEach((pluginInstance) => {
           reqConfig = pluginInstance.onRequest(reqConfig);
@@ -115,7 +115,7 @@ export function stack(config: StackConfig): StackClass {
       return reqConfig;
     });
 
-    client.interceptors.response.use((response: AxiosResponse) => {
+    client.interceptors.response.use((response: any) => {
       if (config && config.plugins)
         config.plugins.forEach((pluginInstance) => {
           response = pluginInstance.onResponse(response.request, response, response.data);
