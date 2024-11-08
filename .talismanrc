@@ -1,6 +1,6 @@
 fileignoreconfig:
 - filename: package-lock.json
-  checksum: 1d579f1be1da80edc6cf44cacc402841c7eabe1b92678a0f9fc3453cd7e8fa02
+  checksum: 75e20fbd11b7dea6e9441b56f2d5f49d96a62fd5eacb6e78d055eeee3c8ab835
 - filename: test/unit/image-transform.spec.ts
   checksum: 7beabdd07bd35d620668fcd97e1a303b9cbc40170bf3008a376d75ce0895de2a
 - filename: test/utils/mocks.ts

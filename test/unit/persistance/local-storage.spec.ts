@@ -9,6 +9,7 @@ describe('local store', () => {
   });
 
   it('should create store store', () => {
+    console.log(store.setItem('foo', 'bar'));
     expect(store.name).toEqual('localStorage');
     expect(typeof store.clear).toEqual('function');
     expect(typeof store.each).toEqual('function');
@@ -61,6 +62,7 @@ describe('local store', () => {
   });
 
   it('should not contain key value clear', () => {
+    iGlobal.document.cookie = ' = ; path=/';
     store.setItem('foo', 'bar');
     store.setItem('bar', 'foo');
     store.each((_, key) => {

@@ -1,5 +1,6 @@
 /* eslint-disable */
 export default {
+  testEnvironment: 'jsdom',
   displayName: 'contentstack-delivery',
   preset: './jest.preset.js',
   transform: {
