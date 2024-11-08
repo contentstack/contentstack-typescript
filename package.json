@@ -23,7 +23,6 @@
     "prepare": "npm run build",
     "test": "jest ./test/unit",
     "test:unit": "jest ./test/unit",
-    "test:unitt": "jest ./test/unit/persistance/local-storage.spec.ts",
     "test:api": "jest ./test/api",
     "lint": "eslint . -c .eslintrc.json",
     "clean": "node tools/cleanup",
