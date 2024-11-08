@@ -5,6 +5,7 @@
     "module": "ESNext",
     "declaration": true,
     "declarationDir": "../dist/esm/types",
+    "moduleResolution": "Node"
   },
   "include": ["../src/**/*.ts"], // Adjust this path based on your project structure
   "exclude": ["node_modules", "../dist/esm"]
