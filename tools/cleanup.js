@@ -64,6 +64,5 @@ if (sanitizedFolder) {
   // console.log('No folder specified, deleting default directories...');
   deleteFolderRecursive(ensureSafePath(rootDir, 'dist/cjs'));
   deleteFolderRecursive(ensureSafePath(rootDir, 'dist/esm'));
-  deleteFolderRecursive(ensureSafePath(rootDir, 'dist/umd'));
   deleteFolderRecursive(ensureSafePath(rootDir, 'dist/types'));
 }
