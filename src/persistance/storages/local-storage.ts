@@ -12,7 +12,6 @@ export const localStorage: Storage = {
 };
 
 function _localStorage() {
-  console.log(iGlobal.localStorage)
   return iGlobal.localStorage;
 }
 
