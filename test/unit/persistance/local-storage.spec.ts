@@ -9,7 +9,6 @@ describe('local store', () => {
   });
 
   it('should create store store', () => {
-    console.log(store.setItem('foo', 'bar'));
     expect(store.name).toEqual('localStorage');
     expect(typeof store.clear).toEqual('function');
     expect(typeof store.each).toEqual('function');
