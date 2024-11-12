@@ -25,7 +25,6 @@ export class EntryQueryable extends BaseQuery {
     } else {
       this._queryParams["only[BASE][]"] = fieldUid;
     }
-
     return this;
   }
 

@@ -209,7 +209,7 @@ export class BaseQuery extends Pagination {
       requestParams = { ...this._queryParams, query: { ...this._parameters } };
     }
 
-    const getRequestOptions: any = { params: requestParams };
+    const getRequestOptions: any = requestParams;
 
     if (this._variants) {
       getRequestOptions.headers = {
@@ -217,7 +217,6 @@ export class BaseQuery extends Pagination {
         'x-cs-variant-uid': this._variants
       };
     }
-    
     const response = await getData(this._client, this._urlPath, getRequestOptions);
 
     return response as FindResponse<T>;
