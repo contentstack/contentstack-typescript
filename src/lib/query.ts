@@ -10,13 +10,14 @@ const safePatterns: RegExp[] = [
 export class Query extends BaseQuery {
   private _contentTypeUid?: string;
 
-  constructor(client: AxiosInstance, params: params, queryParams: queryParams, uid?: string, queryObj?: { [key: string]: any }) {
+  constructor(client: AxiosInstance, params: params, queryParams: queryParams, variants?: string, uid?: string, queryObj?: { [key: string]: any }) {
     super();
     this._client = client;
     this._contentTypeUid = uid;
     this._urlPath = `/content_types/${this._contentTypeUid}/entries`;
     this._parameters = params || {};
     this._queryParams = queryParams || {};
+    this._variants = variants || '';
 
     if (!uid) {
       this._urlPath = `/assets`;
