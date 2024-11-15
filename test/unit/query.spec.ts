@@ -4,6 +4,7 @@ import { HOST_URL } from '../utils/constant';
 import { Query } from '../../src/lib/query';
 import { QueryOperation, QueryOperator } from '../../src/lib/types';
 import { entryFindMock } from '../utils/mocks';
+import { Entries } from '../../src/lib/entries';
 
 describe('Query class', () => {
   let client: AxiosInstance;
@@ -90,7 +91,7 @@ describe('Query class', () => {
 });
 
 function getQueryObject(client: AxiosInstance, uid: string, queryObj?: { [key: string]: any }) {
-  if (queryObj) return new Query(client, {}, {}, uid, queryObj);
+  if (queryObj) return new Query(client, {}, {}, '', uid, queryObj);
 
-  return new Query(client, {}, {}, uid);
+  return new Query(client, {}, {}, '', uid);
 }
