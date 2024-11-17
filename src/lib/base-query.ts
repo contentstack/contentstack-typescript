@@ -209,7 +209,7 @@ export class BaseQuery extends Pagination {
       requestParams = { ...this._queryParams, query: { ...this._parameters } };
     }
 
-    const getRequestOptions: any = requestParams;
+    const getRequestOptions: any = { params: requestParams };
 
     if (this._variants) {
       getRequestOptions.headers = {
