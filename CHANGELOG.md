@@ -1,3 +1,12 @@
+### Version: 4.4.2
+#### Date: November-16-2024
+Fix: Variants reset issue fix on query call
+
+### Version: 4.4.1
+#### Date: November-08-2024
+Fix: Build via tsup lib
+Fix: removed node-localstorage
+
 ### Version: 4.4.0
 #### Date: October-21-2024
 Fix: getData to receive params and headers both in data
