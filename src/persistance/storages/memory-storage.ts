@@ -1,4 +1,4 @@
-import { Callback } from '../helper/utils';
+import type { Callback } from '../helper/utils';
 import { Storage } from '../types/storage';
 
 export const memoryStorage: Storage = {
