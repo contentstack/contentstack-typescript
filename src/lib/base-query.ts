@@ -217,7 +217,6 @@ export class BaseQuery extends Pagination {
         'x-cs-variant-uid': this._variants
       };
     }
-    
     const response = await getData(this._client, this._urlPath, getRequestOptions);
 
     return response as FindResponse<T>;
