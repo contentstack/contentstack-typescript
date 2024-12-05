@@ -258,6 +258,28 @@ describe('Query Operators API test cases', () => {
 
       }
     });
+
+    it('should check for projected fields after only filter is applied', async () => {
+      const query = makeEntries('contenttype_uid2').only(['title', 'reference'])
+      const result = await query.find<TEntry>();
+      if (result.entries) {
+        expect(result.entries.length).toBeGreaterThan(0);
+        expect(result.entries[0].reference).toBeDefined();
+        expect(result.entries[0].title).toBeDefined();
+        expect(result.entries[0]._version).toBeUndefined();
+      }
+    });
+
+    it('should ignore fields after except filter is applied', async () => {
+      const query = makeEntries('contenttype_uid2').except(['title', 'reference'])
+      const result = await query.find<TEntry>();
+      if (result.entries) {
+        expect(result.entries.length).toBeGreaterThan(0);
+        expect(result.entries[0].reference).toBeUndefined();
+        expect(result.entries[0].title).toBeUndefined();
+        expect(result.entries[0]._version).toBeDefined();
+      }
+    });
 });
   
 function makeEntries(contentTypeUid = ''): Entries {
