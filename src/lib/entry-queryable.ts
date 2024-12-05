@@ -15,9 +15,16 @@ export class EntryQueryable extends BaseQuery {
    * @param {string} fieldUid - field uid to select
    * @returns {EntryQueryable} - returns EntryQueryable object for chaining method calls
    */
-  only(fieldUid: string): EntryQueryable {
-    this._queryParams['only[BASE][]'] = fieldUid;
-
+  only(fieldUid: string|string[]): EntryQueryable {
+    if (Array.isArray(fieldUid)) {
+      let i = 0;
+      for (const uid of fieldUid) {
+        this._queryParams[`only[BASE][${i}]`] = uid;
+        i++;
+      }
+    } else {
+      this._queryParams["only[BASE][]"] = fieldUid;
+    }
     return this;
   }
 
@@ -34,8 +41,16 @@ export class EntryQueryable extends BaseQuery {
    * @param {string} fieldUid - field uid to exclude
    * @returns {EntryQueryable} - returns EntryQueryable object for chaining method calls
    */
-  except(fieldUid: string): EntryQueryable {
-    this._queryParams['except[BASE][]'] = fieldUid;
+  except(fieldUid: string|string[]): EntryQueryable {
+    if (Array.isArray(fieldUid)) {
+      let i = 0;
+      for (const uid of fieldUid) {
+        this._queryParams[`except[BASE][${i}]`] = uid;
+        i++;
+      }
+    } else {
+      this._queryParams["except[BASE][]"] = fieldUid;
+    }
 
     return this;
   }
