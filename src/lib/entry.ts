@@ -92,6 +92,33 @@ export class Entry {
   }
 
   /**
+   * @method includeReference
+   * @memberof Entry
+   * @description To include the content of the referred entry in your response,
+   * you need to use the include[] parameter and specify the UID of the reference field as value.
+   * This function sets the include parameter to a reference field UID in the API request.
+   * @example
+   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
+   * const query = stack.contentType("contentTypeUid").entry(entry_uid).includeReference("brand").fetch()
+   *
+   * @param {string} referenceFieldUid - UID of the reference field to include.
+   * @returns {Entry} - Returns the Entry instance for chaining.
+   */
+  includeReference(...referenceFieldUid: (string | string[])[]): Entry {
+    if (referenceFieldUid.length) {
+      referenceFieldUid.forEach(value => {
+        if (!Array.isArray(this._queryParams['include[]'])) {
+          this._queryParams['include[]'] = [];
+        }
+        (this._queryParams['include[]'] as string[]).push(...(Array.isArray(value) ? value : [value]));
+      });
+    } else {
+      console.error("Argument should be a String or an Array.");
+    }
+    return this;
+  }
+
+  /**
    * @method includeContentType
    * @memberof Entry
    * @description IInclude the details of the content type along with the entries details
