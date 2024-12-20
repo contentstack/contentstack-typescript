@@ -1,3 +1,7 @@
+### Version: 4.4.4
+#### Date: January-06-2025
+Enh: Include References on Entry UID
+
 ### Version: 4.4.3
 #### Date: November-30-2024
 Fix: regex method fixed for validation
