@@ -83,6 +83,82 @@ describe('Query class', () => {
     expect(mainQuery2._parameters).toHaveProperty('$and', [subQuery1._parameters, subQuery2._parameters]);
   });
 
+  it('should result in error when regex method is called with invalid regex', async () => {
+    const regexQuery = getQueryObject(client, 'your-referenced-content-type-uid');
+    expect(() => regexQuery.regex("fieldUid", "[a-z")).toThrow("Invalid regexPattern: Must be a valid regular expression");
+  });
+
+  it('should add a regex parameter to _parameters when regex method is called with valid regex', () => {
+    query.regex('fieldUid', '^ABCXYZ123');
+    expect(query._parameters['fieldUid']).toEqual({ $regex: '^ABCXYZ123' });
+  });
+
+  it('should add a containedIn parameter to _parameters', () => {
+    query.containedIn('fieldUid', ['value1', 'value2']);
+    expect(query._parameters['fieldUid']).toEqual({ '$in': ['value1', 'value2'] });
+  });
+
+  it('should add a notContainedIn parameter to _parameters', () => {
+    query.notContainedIn('fieldUid', ['value1', 'value2']);
+    expect(query._parameters['fieldUid']).toEqual({ '$nin': ['value1', 'value2'] });
+  });
+
+  it('should add an exists parameter to _parameters', () => {
+    query.exists('fieldUid');
+    expect(query._parameters['fieldUid']).toEqual({ '$exists': true });
+  });
+
+  it('should add a notExists parameter to _parameters', () => {
+    query.notExists('fieldUid');
+    expect(query._parameters['fieldUid']).toEqual({ '$exists': false });
+  });
+
+  it('should add an equalTo parameter to _parameters', () => {
+    query.equalTo('fieldUid', 'value');
+    expect(query._parameters['fieldUid']).toEqual('value');
+  });
+
+  it('should add a notEqualTo parameter to _parameters', () => {
+    query.notEqualTo('fieldUid', 'value');
+    expect(query._parameters['fieldUid']).toEqual({ '$ne': 'value' });
+  });
+
+  it('should add a lessThan parameter to _parameters', () => {
+    query.lessThan('fieldUid', 10);
+    expect(query._parameters['fieldUid']).toEqual({ '$lt': 10 });
+  });
+
+  it('should add a lessThanOrEqualTo parameter to _parameters', () => {
+    query.lessThanOrEqualTo('fieldUid', 10);
+    expect(query._parameters['fieldUid']).toEqual({ '$lte': 10 });
+  });
+
+  it('should add a greaterThan parameter to _parameters', () => {
+    query.greaterThan('fieldUid', 10);
+    expect(query._parameters['fieldUid']).toEqual({ '$gt': 10 });
+  });
+
+  it('should add a greaterThanOrEqualTo parameter to _parameters', () => {
+    query.greaterThanOrEqualTo('fieldUid', 10);
+    expect(query._parameters['fieldUid']).toEqual({ '$gte': 10 });
+  });
+
+  it('should add a tags parameter to _parameters', () => {
+    query.tags(['tag1', 'tag2']);
+    expect(query._parameters['tags']).toEqual(['tag1', 'tag2']);
+  });
+
+  it('should add a search parameter to _queryParams', () => {
+    query.search('searchKey');
+    expect(query._queryParams['typeahead']).toEqual('searchKey');
+  });
+
+  it('should provide proper response when find method is called', async () => {
+    mockClient.onGet(`/content_types/contentTypeUid/entries`).reply(200, entryFindMock);
+    const returnedValue = await query.find();
+    expect(returnedValue).toEqual(entryFindMock);
+  });
+
   it('should provide proper response when find method is called', async () => {
     mockClient.onGet(`/content_types/contentTypeUid/entries`).reply(200, entryFindMock);
     const returnedValue = await query.find();
