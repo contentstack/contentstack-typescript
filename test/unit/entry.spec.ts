@@ -37,6 +37,13 @@ describe('Entry class', () => {
     expect(entry._queryParams.include_fallback).toBe('true');
   });
 
+  it('should set the include parameter to the given reference field UID', () => {
+    const referenceFieldUid = 'referenceFieldUid';
+    const returnedValue = entry.includeReference(referenceFieldUid);
+    expect(returnedValue).toBeInstanceOf(Entry);
+    expect(entry._queryParams['include[]']).toContain(referenceFieldUid);
+  });
+
   it('should add "include_metadata" in _queryParams when includeMetadata method is called', () => {
     const returnedValue = entry.includeMetadata();
     expect(returnedValue).toBeInstanceOf(Entry);
