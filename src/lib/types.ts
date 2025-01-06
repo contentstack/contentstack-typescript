@@ -260,7 +260,9 @@ export interface FindResponse<T> {
 export interface LivePreviewQuery {
   live_preview: string
   include_applied_variants?: boolean;
-  contentTypeUid: string
+  contentTypeUid?: string
+  content_type_uid?: string
+  entry_uid?: string
   entryUid?: any;
   preview_timestamp?: string
   release_id?: string
