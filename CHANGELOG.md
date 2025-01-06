@@ -1,6 +1,7 @@
 ### Version: 4.4.4
 #### Date: January-06-2025
 Enh: Include References on Entry UID
+Fix: reset livePreviewConfig properties if not received in params
 
 ### Version: 4.4.3
 #### Date: November-30-2024
