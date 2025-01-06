@@ -145,22 +145,43 @@ export class Stack {
 
   livePreviewQuery(query: LivePreviewQuery) {
     if (this.config.live_preview) {
-      const livePreviewParams: any = {
-        ...this.config.live_preview,
-        live_preview: query.live_preview || 'init',
-        contentTypeUid: query.contentTypeUid,
-        entryUid: query.entryUid,
-        preview_timestamp: query.preview_timestamp || "",
-        include_applied_variants: query.include_applied_variants || false,
+      let livePreviewParams: any = { ...this.config.live_preview };
+
+      if (query.live_preview) {
+        livePreviewParams = {
+          ...livePreviewParams,
+          live_preview: query.live_preview,
+          contentTypeUid: query.contentTypeUid || query.content_type_uid,
+          entryUid: query.entryUid || query.entry_uid,
+          preview_timestamp: query.preview_timestamp || "",
+          include_applied_variants: query.include_applied_variants || false,
+        };
+      } else {
+        livePreviewParams = {
+          live_preview: null,
+          contentTypeUid: null,
+          entryUid: null,
+          preview_timestamp: null,
+          include_applied_variants: false,
+        };
       }
       this._client.stackConfig.live_preview = livePreviewParams;
     }
 
     if (query.hasOwnProperty('release_id')) {
       this._client.defaults.headers['release_id'] = query.release_id;
+    } else {
+      delete this._client.defaults.headers['release_id'];
     }
+
     if (query.hasOwnProperty('preview_timestamp')) {
       this._client.defaults.headers['preview_timestamp'] = query.preview_timestamp;
+    } else {
+      delete this._client.defaults.headers['preview_timestamp'];
     }
+  }
+
+  getClient(): any {
+    return this._client;
   }
 }
