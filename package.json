@@ -1,6 +1,6 @@
 {
   "name": "@contentstack/delivery-sdk",
-  "version": "4.4.4",
+  "version": "4.4.5",
   "type": "module",
   "license": "MIT",
   "main": "./dist/legacy/index.cjs",
