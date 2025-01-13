@@ -11,7 +11,7 @@ export class PersistanceStore {
 
   constructor(config?: PersistanceStoreConfig) {
     let defaultConfig: PersistanceStoreConfig = {
-      storageType: 'localStorage',
+      storeType: 'localStorage',
       maxAge: 1000 * 60 * 60 * 24,
       serializer: JSON.stringify,
       deserializer: JSON.parse,
@@ -20,7 +20,7 @@ export class PersistanceStore {
       ...defaultConfig,
       ...config,
     };
-    this.setStore(defaultConfig.storageType, (defaultConfig as unknown as Store).storage);
+    this.setStore(defaultConfig.storeType, (defaultConfig as unknown as Store).storage);
     this.config = defaultConfig;
     this.name = ''; // TODO add stack api key to name
   }
