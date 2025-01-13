@@ -17,9 +17,9 @@ export async function handleRequest(
       const apiResponse = await defaultAdapter(config);
 
       if (apiResponse.data) {
-        cacheStore.setItem(apiKey, apiResponse.data, config.contentTypeUid, cacheOptions.maxAge);
+        cacheStore.setItem(apiKey, JSON.parse(apiResponse.data), config.contentTypeUid, cacheOptions.maxAge);
 
-        return resolve(apiResponse.data);
+        return resolve({data: JSON.parse(apiResponse.data)});
       } else {
         const cacheResponse = cacheStore.getItem(apiKey, config.contentTypeUid);
         if (cacheResponse)
@@ -48,9 +48,9 @@ export async function handleRequest(
       const apiResponse = await defaultAdapter(config);
 
       if (apiResponse.data) {
-        cacheStore.setItem(apiKey, apiResponse.data, config.contentTypeUid, cacheOptions.maxAge);
+        cacheStore.setItem(apiKey, JSON.parse(apiResponse.data), config.contentTypeUid, cacheOptions.maxAge);
 
-        return resolve(apiResponse.data);
+        return resolve({data: JSON.parse(apiResponse.data)});
       } else {
         return reject(apiResponse);
       }
@@ -70,9 +70,9 @@ export async function handleRequest(
         const apiResponse = await defaultAdapter(config);
 
         if (apiResponse.data) {
-          cacheStore.setItem(apiKey, apiResponse.data, config.contentTypeUid, cacheOptions.maxAge);
+          cacheStore.setItem(apiKey, JSON.parse(apiResponse.data), config.contentTypeUid, cacheOptions.maxAge);
 
-          return resolve(apiResponse.data);
+          return resolve({data: JSON.parse(apiResponse.data)});
         } else {
           return reject(apiResponse);
         }
