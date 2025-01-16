@@ -14,3 +14,6 @@ export function getHost(region: Region = Region.US, host?: string) {
 export function isBrowser() {
   return (typeof window !== "undefined");
 }
+
+export const sanitizePath = (str: string) =>
+  str?.replace(/^(\.\.(\/|\\|$))+/, "");

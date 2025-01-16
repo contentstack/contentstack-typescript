@@ -2,6 +2,7 @@ import { AxiosInstance } from '@contentstack/core';
 import { BaseQuery } from './base-query';
 import { BaseQueryParameters, QueryOperation, QueryOperator, TaxonomyQueryOperation } from './types';
 import { params, queryParams } from './internal-types';
+import { sanitizePath } from './utils';
 
 export class Query extends BaseQuery {
   private _contentTypeUid?: string;
@@ -31,11 +32,11 @@ export class Query extends BaseQuery {
   // Validate if input matches any of the safe, pre-approved patterns
   private isValidRegexPattern(input: string): boolean {
     const validRegex = /^[a-zA-Z0-9|^$.*+?()[\]{}\\-]+$/; // Allow only safe regex characters
-    if (!validRegex.test(input)) {
+    if (!validRegex.test(sanitizePath(input))) {
         return false;
     }
     try {
-        new RegExp(input);
+        new RegExp(sanitizePath(input));
         return true;
     } catch (e) {
         return false;
