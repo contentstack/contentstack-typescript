@@ -96,10 +96,11 @@ describe('Stack class tests', () => {
     stack.livePreviewQuery(query);
   
     expect(stack.getClient().stackConfig.live_preview).toEqual({
-      live_preview: null,
-      contentTypeUid: null,
-      entryUid: null,
-      preview_timestamp: null,
+      live_preview: '',
+      contentTypeUid: '',
+      entryUid: '',
+      enable: false,
+      preview_timestamp: '',
       include_applied_variants: false,
     });
   });
