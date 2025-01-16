@@ -59,6 +59,10 @@ export function stack(config: StackConfig): StackClass {
     throw new Error('Environment for Stack is required');
   }
 
+  if (config.locale) {
+    defaultConfig.params.locale = config.locale;
+  }
+
   if (config.live_preview) {
     if (Utility.isBrowser()) {
       const params = new URL(document.location.toString()).searchParams;
