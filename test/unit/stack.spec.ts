@@ -32,6 +32,7 @@ describe('Stack class tests', () => {
     });
 
     stack = new Stack(client, config() as StackConfig);
+    client.defaults.params = {};
   });
   it('should test import of class Stack', (done) => {
     expect(stack).toBeInstanceOf(Stack);

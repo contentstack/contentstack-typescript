@@ -114,6 +114,7 @@ export class Stack {
    */
   setLocale(locale: string) {
     this.config.locale = locale;
+    this._client.defaults.params.locale = locale;
   }
 
   /**
