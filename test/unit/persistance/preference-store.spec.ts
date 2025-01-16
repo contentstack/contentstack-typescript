@@ -7,35 +7,35 @@ describe('persistance store intiialization test', () => {
     expect(persistance).toBeDefined();
     expect(persistance.config).toBeDefined();
     expect(persistance.config.maxAge).toEqual(86400000);
-    expect(persistance.config.storageType).toEqual('localStorage');
+    expect(persistance.config.storeType).toEqual('localStorage');
   });
 
   it('should initialize persistance with name and local storage type ', () => {
-    const storageType = 'localStorage';
-    const persistance = makePersistance({ storageType });
+    const storeType = 'localStorage';
+    const persistance = makePersistance({ storeType });
     expect(persistance).toBeDefined();
     expect(persistance.config).toBeDefined();
     expect(persistance.config.maxAge).toEqual(86400000);
-    expect(persistance.config.storageType).toEqual(storageType);
+    expect(persistance.config.storeType).toEqual(storeType);
   });
   it('should initialize persistance with name and memory storage type ', () => {
-    const storageType = 'memoryStorage';
-    const persistance = makePersistance({ storageType });
+    const storeType = 'memoryStorage';
+    const persistance = makePersistance({ storeType });
     expect(persistance).toBeDefined();
     expect(persistance.config).toBeDefined();
     expect(persistance.config.maxAge).toEqual(86400000);
-    expect(persistance.config.storageType).toEqual(storageType);
+    expect(persistance.config.storeType).toEqual(storeType);
   });
   it('should initialize persistance with name and local storage type ', () => {
-    const storageType = 'customStorage';
-    const persistance = makePersistance({ storageType });
+    const storeType = 'customStorage';
+    const persistance = makePersistance({ storeType });
     expect(persistance).toBeDefined();
     expect(persistance.config).toBeDefined();
     expect(persistance.config.maxAge).toEqual(86400000);
-    expect(persistance.config.storageType).toEqual(storageType);
+    expect(persistance.config.storeType).toEqual(storeType);
   });
   it('should throw error on custom storage without storage', () => {
-    const config: any = { name: 'foobar', storageType: 'customStorage' };
+    const config: any = { name: 'foobar', storeType: 'customStorage' };
     config.storage = '';
     const persistance = () => {
       new PersistanceStore(config);
@@ -162,6 +162,6 @@ describe('persistance with 0 maxAge', () => {
   });
 });
 
-function makePersistance(config: { storageType: StorageType | 'customStorage' }) {
-  return new PersistanceStore({ storageType: config.storageType, storage: memoryStorage });
+function makePersistance(config: { storeType: StorageType | 'customStorage' }) {
+  return new PersistanceStore({ storeType: config.storeType, storage: memoryStorage });
 }
