@@ -114,6 +114,7 @@ export class Stack {
    */
   setLocale(locale: string) {
     this.config.locale = locale;
+    this._client.defaults.params.locale = locale;
   }
 
   /**
@@ -158,10 +159,11 @@ export class Stack {
         };
       } else {
         livePreviewParams = {
-          live_preview: null,
-          contentTypeUid: null,
-          entryUid: null,
-          preview_timestamp: null,
+          ...livePreviewParams,
+          live_preview: "",
+          contentTypeUid: "",
+          entryUid: "",
+          preview_timestamp: "",
           include_applied_variants: false,
         };
       }

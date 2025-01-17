@@ -32,6 +32,7 @@ describe('Stack class tests', () => {
     });
 
     stack = new Stack(client, config() as StackConfig);
+    client.defaults.params = {};
   });
   it('should test import of class Stack', (done) => {
     expect(stack).toBeInstanceOf(Stack);
@@ -95,10 +96,11 @@ describe('Stack class tests', () => {
     stack.livePreviewQuery(query);
   
     expect(stack.getClient().stackConfig.live_preview).toEqual({
-      live_preview: null,
-      contentTypeUid: null,
-      entryUid: null,
-      preview_timestamp: null,
+      live_preview: '',
+      contentTypeUid: '',
+      entryUid: '',
+      enable: false,
+      preview_timestamp: '',
       include_applied_variants: false,
     });
   });
