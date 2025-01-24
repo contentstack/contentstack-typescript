@@ -86,7 +86,7 @@ export function stack(config: StackConfig): StackClass {
     defaultConfig.headers['x-header-ea'] = config.early_access.join(',');
   }
 
-  defaultConfig.headers['X-User-Agent'] = 'contentstack-delivery-typescript-{{PLATFORM}}/' + version;
+  defaultConfig.headers['X-User-Agent'] = 'contentstack-delivery-typescript/' + version;
 
 
   const client = httpClient(defaultConfig as any);
