@@ -27,6 +27,9 @@ function modernConfig(opts) {
     dts: true,
     sourcemap: true,
     clean: true,
+    replace: {
+      '{{VERSION}}': `"${packageJson.version}"`,
+    },
     esbuildPlugins: [esbuildPluginFilePathExtensions({ esmExtension: 'js' })]
   }
 }
@@ -43,6 +46,9 @@ function legacyConfig(opts) {
     dts: true,
     sourcemap: true,
     clean: true,
+    replace: {
+      '{{VERSION}}': `"${packageJson.version}"`,
+    },
     esbuildPlugins: [esbuildPluginFilePathExtensions({ esmExtension: 'js' })],
     esbuildOptions(options) {
       options.jsxImportSource = 'preact';
