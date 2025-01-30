@@ -37,7 +37,8 @@ export function stack(config: StackConfig): StackClass {
     defaultHostname: 'cdn.contentstack.io',
     headers: {} as AxiosRequestHeaders,
     params: {} as any,
-    live_preview: {} as any
+    live_preview: {} as any,
+    port: config.port as number,
   };
 
   defaultConfig.defaultHostname = config.host || Utility.getHost(config.region, config.host);
