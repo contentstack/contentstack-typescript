@@ -10,7 +10,6 @@ export class Entry {
   private _urlPath: string;
   protected _variants: string;
   _queryParams: { [key: string]: string | number | string[] } = {};
-
   constructor(client: AxiosInstance, contentTypeUid: string, entryUid: string) {
     this._client = client;
     this._contentTypeUid = contentTypeUid;
@@ -194,5 +193,26 @@ export class Entry {
     if (response.entry) return response.entry as T;
 
     return response;
+  }
+
+    /**
+   * @method addParams
+   * @memberof BaseQuery
+   * @description Adds a query parameter to the query.
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const query = stack.contentType("contentTypeUid").entry().query();
+   * const result = await query.addParams({"key": "value"}).find()
+   * // OR
+   * const asset = await stack.asset().addParams({"key": "value"}).find()
+   *
+   * @returns {Entry}
+   */
+  addParams(paramObj: { [key: string]: string | number | string[] }): Entry {
+    this._queryParams = { ...this._queryParams, ...paramObj };
+
+    return this;
   }
 }
