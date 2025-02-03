@@ -1,5 +1,5 @@
 import { StackConfig, SyncStack, SyncType, LivePreviewQuery } from './types';
-import { AxiosInstance } from '@contentstack/core';
+import { AxiosInstance, getData } from '@contentstack/core';
 import { Asset } from './asset';
 import { AssetQuery } from './asset-query';
 import { ContentType } from './content-type';
@@ -185,5 +185,19 @@ export class Stack {
 
   getClient(): any {
     return this._client;
+  }
+
+  async getLastActivities() {
+    try {
+      const result = await getData(this._client, '/content_types', {
+        params: {
+          only_last_activity: true,
+          environment: this.config.environment,
+        },
+      });
+      return result;
+    } catch (error) {
+      throw new Error("Error fetching last activities");
+    }
   }
 }
