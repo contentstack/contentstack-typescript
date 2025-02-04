@@ -144,5 +144,10 @@ describe('Stack class tests', () => {
   
     expect(stack.getClient().defaults.headers['preview_timestamp']).toBeUndefined();
   });
+
+  it('should set port to 3000', () => {
+    stack.setPort(3000);
+    expect(stack.config.port).toEqual(3000);
+  });
 });
 
