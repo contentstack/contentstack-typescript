@@ -203,10 +203,7 @@ export class Entry {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType("contentTypeUid").entry().query();
-   * const result = await query.addParams({"key": "value"}).find()
-   * // OR
-   * const asset = await stack.asset().addParams({"key": "value"}).find()
+   * const result = stack.contentType("contentTypeUid").entry().addParams({"key": "value"}).fetch()
    *
    * @returns {Entry}
    */
