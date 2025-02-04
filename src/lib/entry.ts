@@ -197,7 +197,7 @@ export class Entry {
 
     /**
    * @method addParams
-   * @memberof BaseQuery
+   * @memberof Entry
    * @description Adds a query parameter to the query.
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
