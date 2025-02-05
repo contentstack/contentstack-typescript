@@ -200,4 +200,17 @@ export class Stack {
     if (typeof port === "number") this.config.port = port;
     return this;
   }
+
+  /**
+   * @method setDebug
+   * @memberOf Stack
+   * @description Sets the debug option
+   * @param {Number} debug - Debug value
+   * @return {Stack}
+   * @instance
+   * */
+  setDebug(debug: boolean) {
+    if (typeof debug === "boolean") this.config.debug = debug;
+    return this;
+  }
 }
