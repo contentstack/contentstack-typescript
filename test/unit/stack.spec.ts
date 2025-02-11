@@ -152,5 +152,10 @@ describe('Stack class tests', () => {
     expect(response.content_types).toBeDefined();
     expect(Array.isArray(response.content_types)).toBe(true);
   });
+
+  it('should set port to 3000', () => {
+    stack.setPort(3000);
+    expect(stack.config.port).toEqual(3000);
+  });
 });
 
