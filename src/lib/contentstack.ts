@@ -1,5 +1,5 @@
 import { httpClient, retryRequestHandler, retryResponseErrorHandler, retryResponseHandler } from '@contentstack/core';
-import { InternalAxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
+import { AxiosRequestHeaders } from 'axios';
 import { handleRequest } from './cache';
 import { Stack as StackClass } from './stack';
 import { Policy, StackConfig } from './types';
