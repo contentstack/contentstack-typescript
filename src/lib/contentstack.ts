@@ -1,5 +1,5 @@
 import { httpClient, retryRequestHandler, retryResponseErrorHandler, retryResponseHandler } from '@contentstack/core';
-import { InternalAxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
+import { AxiosRequestHeaders } from 'axios';
 import { handleRequest } from './cache';
 import { Stack as StackClass } from './stack';
 import { Policy, StackConfig } from './types';
@@ -37,7 +37,8 @@ export function stack(config: StackConfig): StackClass {
     defaultHostname: 'cdn.contentstack.io',
     headers: {} as AxiosRequestHeaders,
     params: {} as any,
-    live_preview: {} as any
+    live_preview: {} as any,
+    port: config.port as number,
   };
 
   defaultConfig.defaultHostname = config.host || Utility.getHost(config.region, config.host);

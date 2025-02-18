@@ -5,7 +5,7 @@ import { Stack } from '../../src/lib/stack';
 import { Asset } from '../../src/lib/asset';
 import { ContentType } from '../../src/lib/content-type';
 import { HOST_URL, LOCALE } from '../utils/constant';
-import { syncResult } from '../utils/mocks';
+import { contentTypeQueryFindResponseDataMock, syncResult } from '../utils/mocks';
 import { synchronization } from '../../src/lib/synchronization';
 import { ContentTypeQuery } from '../../src/lib/contenttype-query';
 import { AssetQuery } from '../../src/lib/asset-query';
@@ -143,6 +143,19 @@ describe('Stack class tests', () => {
     stack.livePreviewQuery(query);
   
     expect(stack.getClient().defaults.headers['preview_timestamp']).toBeUndefined();
+  });
+
+  it('should return last activities', async () => {
+    mockClient.onGet('/content_types').reply(200, contentTypeQueryFindResponseDataMock);
+    const response = await stack.getLastActivities();
+    expect(response).toEqual(contentTypeQueryFindResponseDataMock);
+    expect(response.content_types).toBeDefined();
+    expect(Array.isArray(response.content_types)).toBe(true);
+  });
+
+  it('should set port to 3000', () => {
+    stack.setPort(3000);
+    expect(stack.config.port).toEqual(3000);
   });
 });
 
