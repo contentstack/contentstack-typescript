@@ -22,6 +22,8 @@ export interface StackConfig extends HttpClientParams {
   logHandler?: (level: string, data: any) => void;
   cacheOptions?: CacheOptions;
   live_preview?: LivePreview;
+  port?: number;
+  debug?: boolean;
 }
 export interface CacheOptions extends PersistanceStoreOptions {
   policy: Policy;
