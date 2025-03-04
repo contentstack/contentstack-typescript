@@ -1,5 +1,5 @@
 import { StackConfig, SyncStack, SyncType, LivePreviewQuery } from './types';
-import { AxiosInstance } from '@contentstack/core';
+import { AxiosInstance, getData } from '@contentstack/core';
 import { Asset } from './asset';
 import { AssetQuery } from './asset-query';
 import { ContentType } from './content-type';
@@ -78,8 +78,8 @@ export class Stack {
    * const taxonomy = stack.taxonomy() // For taxonomy query object
    */
   taxonomy(): TaxonomyQuery {
-    return new TaxonomyQuery(this._client)
-  };
+    return new TaxonomyQuery(this._client);
+  }
 
   /**
    * @method GlobalField
@@ -170,20 +170,61 @@ export class Stack {
       this._client.stackConfig.live_preview = livePreviewParams;
     }
 
-    if (query.hasOwnProperty('release_id')) {
-      this._client.defaults.headers['release_id'] = query.release_id;
+    if (query.hasOwnProperty("release_id")) {
+      this._client.defaults.headers["release_id"] = query.release_id;
     } else {
-      delete this._client.defaults.headers['release_id'];
+      delete this._client.defaults.headers["release_id"];
     }
 
-    if (query.hasOwnProperty('preview_timestamp')) {
-      this._client.defaults.headers['preview_timestamp'] = query.preview_timestamp;
+    if (query.hasOwnProperty("preview_timestamp")) {
+      this._client.defaults.headers["preview_timestamp"] =
+        query.preview_timestamp;
     } else {
-      delete this._client.defaults.headers['preview_timestamp'];
+      delete this._client.defaults.headers["preview_timestamp"];
     }
   }
 
   getClient(): any {
     return this._client;
+  }
+
+  async getLastActivities() {
+    try {
+      const result = await getData(this._client, '/content_types', {
+        params: {
+          only_last_activity: true,
+          environment: this.config.environment,
+        },
+      });
+      return result;
+    } catch (error) {
+      throw new Error("Error fetching last activities");
+    }
+  }
+
+  /**
+   * @method setPort
+   * @memberOf Stack
+   * @description Sets the port of the host
+   * @param {Number} port - Port Number
+   * @return {Stack}
+   * @instance
+   * */
+  setPort(port: number) {
+    if (typeof port === "number") this.config.port = port;
+    return this;
+  }
+
+  /**
+   * @method setDebug
+   * @memberOf Stack
+   * @description Sets the debug option
+   * @param {Number} debug - Debug value
+   * @return {Stack}
+   * @instance
+   * */
+  setDebug(debug: boolean) {
+    if (typeof debug === "boolean") this.config.debug = debug;
+    return this;
   }
 }
