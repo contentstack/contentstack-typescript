@@ -1,3 +1,7 @@
+### Version: 4.6.0
+#### Date: March-10-2025
+Enh: Added GCP-EU support
+
 ### Version: 4.4.4
 #### Date: January-06-2025
 Enh: Include References on Entry UID
