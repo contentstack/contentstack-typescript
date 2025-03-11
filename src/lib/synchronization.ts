@@ -15,7 +15,7 @@ export async function synchronization(client: AxiosInstance, params: SyncStack |
     config.params = { ...config.params, type: type.join(',') };
   }
 
-  let response: AxiosResponse = await getData(client, '/sync', { params: humps.decamelizeKeys(config) });
+  let response: AxiosResponse = await getData(client, '/stacks/sync', { params: humps.decamelizeKeys(config.params) });
   const data = response.data;
 
   while (recursive && 'pagination_token' in response.data) {
