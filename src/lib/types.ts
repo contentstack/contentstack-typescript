@@ -2,6 +2,16 @@
 import { HttpClientParams } from '@contentstack/core';
 import { PersistanceStoreOptions, StorageType } from '../persistance';
 
+// Internal Types
+export type params = {
+  [key: string]: any
+}
+
+export type queryParams = { 
+  [key: string]: string | boolean | number | string[]
+}
+
+// External Types
 export enum Region {
   US = 'us',
   EU = 'eu',
