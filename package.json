@@ -3,9 +3,8 @@
   "version": "4.6.0",
   "type": "module",
   "license": "MIT",
-  "main": "./dist/legacy/index.cjs",
-  "module": "./dist/legacy/index.js",
-  "types": "./dist/legacy/index.d.ts",
+  "main": "dist/index.es.js",
+  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
       "import": {
@@ -27,10 +26,7 @@
     "lint": "eslint . -c .eslintrc.json",
     "clean": "node tools/cleanup",
     "package": "npm run build && npm pack",
-    "build": "NODE_OPTIONS='--max-old-space-size=16384' tsup",
-    "build:cjs": "node tools/cleanup cjs && tsc -p config/tsconfig.cjs.json && node tools/rename-cjs.cjs",
-    "build:esm": "node tools/cleanup esm && tsc -p config/tsconfig.esm.json",
-    "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json"
+    "build": "tsc && rollup -c"
   },
   "dependencies": {
     "@contentstack/core": "^1.2.0",
@@ -58,10 +54,14 @@
     "jest-html-reporters": "^3.1.7",
     "jest-junit": "^16.0.0",
     "path-browserify": "^1.0.1",
+    "rollup": "^2.79.2",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-sourcemaps": "^0.6.3",
+    "rollup-plugin-typescript2": "^0.36.0",
     "ts-jest": "^29.2.6",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
-    "tsup": "^8.4.0",
-    "webpack-cli": "^5.1.4"
+    "tsup": "^8.4.0"
   }
 }

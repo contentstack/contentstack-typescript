@@ -8,9 +8,7 @@ contentstack-templates/
 js-sdk-reference/
 examples/
 mocktest.json
-webpack
 typescript-html-report
-webpack
 jest.config.js
 coverage
 CODEOWNERS
