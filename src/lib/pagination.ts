@@ -1,5 +1,4 @@
-import { PaginationObj } from './types';
-import { queryParams } from './internal-types';
+import { PaginationObj, queryParams } from './types';
 
 export class Pagination {
   _queryParams: queryParams = {};
