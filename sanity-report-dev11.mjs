@@ -51,7 +51,7 @@ const reportUrl = `http://${goCdServer}/go/files/${pipelineName}/${pipelineCount
 const tagUsers = parseInt(failedTests) > 0 ? `<@${user1}> <@${user2}> <@${user3}> <@${user4}>` : "";
 
 const slackMessage = {
-  text: `Dev11, SDK-CMA Sanity\n*Result:* ${resultMessage}. ${totalDurationMinutes}m ${totalDurationSeconds}s\n*Failed Tests:* ${failedTests}\n<${reportUrl}|View Report>\n${tagUsers}`,
+  text: `*Dev11 - SDK-Typescript-CDA Sanity*\n*Result:* ${resultMessage}\n*Duration:* ${totalDurationMinutes}\n*Failed Tests:* ${failedTests}\n<${reportUrl}|View Report>\n${tagUsers}`,
 };
 
 const app = new App({
