@@ -10,7 +10,7 @@
     "test": "jest ./test/unit",
     "test:unit": "jest ./test/unit",
     "test:api": "jest ./test/api",
-    "test:sanity-report": "jest ./test/api --config jest.config.ts && node sanity-report.mjs",
+    "test:sanity-report": "node sanity-report.mjs",
     "lint": "eslint . -c .eslintrc.json",
     "clean": "node tools/cleanup",
     "package": "npm run build && npm pack",
