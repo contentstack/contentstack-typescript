@@ -46,7 +46,7 @@ const pipelineName = process.env.GO_PIPELINE_NAME;
 const pipelineCounter = process.env.GO_PIPELINE_COUNTER;
 const goCdServer = process.env.GOCD_SERVER;
 
-const reportUrl = `http://${goCdServer}/go/files/${pipelineName}/${pipelineCounter}/sanity/1/sanity/test-results/sanity.html`;
+const reportUrl = `http://${goCdServer}/go/files/${pipelineName}/${pipelineCounter}/sanity/1/unit-api/test-results/reports/sanity.html`;
 
 const tagUsers = parseInt(failedTests) > 0 ? `<@${user1}> <@${user2}> <@${user3}> <@${user4}>` : "";
 
