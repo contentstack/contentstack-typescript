@@ -97,8 +97,12 @@ export function stack(config: StackConfig): StackClass {
     const defaultAdapter = client.defaults.adapter;
     client.defaults.adapter = (adapterConfig: any) => {
       return new Promise(async (resolve, reject) => {
-        if (config.cacheOptions)
+        if (config.cacheOptions) {
           await handleRequest(config.cacheOptions, config.apiKey, defaultAdapter, resolve, reject, adapterConfig);
+        }
+        else {
+          throw new Error('Persistance store not provided. Please provide persistance store plugin object.');
+        }
       });
     };
   }
