@@ -1,6 +1,5 @@
 // import { PersistanceStore } from '../persistance';
 
-import { PersistanceStore } from '../persistance';
 import { CacheOptions, Policy } from './types';
 
 export async function handleRequest(
@@ -11,6 +10,15 @@ export async function handleRequest(
   reject: any,
   config: any
 ) {
+
+  try {
+    var PersistancePlugin = require('contentstack-persistance-typescript');
+    var PersistanceStore = PersistancePlugin.PersistanceStore;
+
+  } catch (e) {
+    throw new Error('Persistance store not provided. Please install contentstack-persistance-typescript package.');
+  }
+
   const cacheStore = new PersistanceStore(cacheOptions);
   switch (cacheOptions.policy) {
     case Policy.NETWORK_ELSE_CACHE: {
