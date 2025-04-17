@@ -1,12 +1,14 @@
 fileignoreconfig:
-- filename: package-lock.json
-  checksum: ffe61fb2806dc761b2f8e560b3d27aa58ae2fe2bdf5a48f68d80ee0fb74ffdb6
-- filename: src/lib/types.ts
-  checksum: 1eb6d6ec971934d65017dae2f82d6d6ef1cd0e6bfd50f43a9b46f30182307230
-- filename: test/unit/image-transform.spec.ts
-  checksum: 7beabdd07bd35d620668fcd97e1a303b9cbc40170bf3008a376d75ce0895de2a
-- filename: test/utils/mocks.ts
-  checksum: a1cb4b1890a584f1facd30f2a0974c97a66f91417022be79d00516338e244227
-- filename: src/lib/query.ts
-  checksum: c4529069bc974d15c104303c5ae573c9341185a869c612ab07f0ee7f42e8b149
+  - filename: src/lib/types.ts
+    checksum: 1eb6d6ec971934d65017dae2f82d6d6ef1cd0e6bfd50f43a9b46f30182307230
+  - filename: test/unit/image-transform.spec.ts
+    checksum: 7beabdd07bd35d620668fcd97e1a303b9cbc40170bf3008a376d75ce0895de2a
+  - filename: test/utils/mocks.ts
+    checksum: a1cb4b1890a584f1facd30f2a0974c97a66f91417022be79d00516338e244227
+  - filename: src/lib/query.ts
+    checksum: c4529069bc974d15c104303c5ae573c9341185a869c612ab07f0ee7f42e8b149
+  - filename: package-lock.json
+    checksum: 785542a3fd3925cf6d6067b78580a93519e2fd4f552b0edf747aace573f4a372
+  - filename: .husky/pre-commit
+    checksum: 5baabd7d2c391648163f9371f0e5e9484f8fb90fa2284cfc378732ec3192c193
 version: ""
