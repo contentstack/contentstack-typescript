@@ -20,7 +20,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "prepare": "npm run build",
+    "prepare": "chmod +x .husky/pre-commit && npm run build",
     "test": "jest ./test/unit",
     "test:unit": "jest ./test/unit",
     "test:api": "jest ./test/api",
