@@ -20,7 +20,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "prepare": "husky && chmod +x .husky/pre-commit && npm run build",
+    "prepare": "npm run build",
     "test": "jest ./test/unit",
     "test:unit": "jest ./test/unit",
     "test:api": "jest ./test/api",
@@ -30,7 +30,8 @@
     "build": "NODE_OPTIONS='--max-old-space-size=16384' tsup",
     "build:cjs": "node tools/cleanup cjs && tsc -p config/tsconfig.cjs.json && node tools/rename-cjs.cjs",
     "build:esm": "node tools/cleanup esm && tsc -p config/tsconfig.esm.json",
-    "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json"
+    "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json",
+    "husky-check": "npm run build && husky && chmod +x .husky/pre-commit"
   },
   "dependencies": {
     "@contentstack/core": "^1.2.0",
