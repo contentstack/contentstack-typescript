@@ -55,7 +55,7 @@ describe('Entry API tests', () => {
     expect(result.title).toBeDefined();
     expect(result.author).toBeDefined();
     expect(result.title).toBeDefined();
-    expect(result.url).toBeDefined();
+    expect(result.uid).toBeDefined();
     expect(result._version).toBeDefined();
     expect(result.publish_details).toBeDefined();
   });
