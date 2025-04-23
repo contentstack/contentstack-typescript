@@ -9,15 +9,22 @@ export class EntryQueryable extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType("contentTypeUid").entry().only("fieldUID").find()
    *
    * @param {string} fieldUid - field uid to select
    * @returns {EntryQueryable} - returns EntryQueryable object for chaining method calls
    */
-  only(fieldUid: string): EntryQueryable {
-    this._queryParams['only[BASE][]'] = fieldUid;
-
+  only(fieldUid: string|string[]): this {
+    if (Array.isArray(fieldUid)) {
+      let i = 0;
+      for (const uid of fieldUid) {
+        this._queryParams[`only[BASE][${i}]`] = uid;
+        i++;
+      }
+    } else {
+      this._queryParams["only[BASE][]"] = fieldUid;
+    }
     return this;
   }
 
@@ -28,14 +35,22 @@ export class EntryQueryable extends BaseQuery {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType("contentTypeUid").entry().except("fieldUID").find()
    *
    * @param {string} fieldUid - field uid to exclude
    * @returns {EntryQueryable} - returns EntryQueryable object for chaining method calls
    */
-  except(fieldUid: string): EntryQueryable {
-    this._queryParams['except[BASE][]'] = fieldUid;
+  except(fieldUid: string|string[]): this {
+    if (Array.isArray(fieldUid)) {
+      let i = 0;
+      for (const uid of fieldUid) {
+        this._queryParams[`except[BASE][${i}]`] = uid;
+        i++;
+      }
+    } else {
+      this._queryParams["except[BASE][]"] = fieldUid;
+    }
 
     return this;
   }

@@ -37,6 +37,13 @@ describe('Entry class', () => {
     expect(entry._queryParams.include_fallback).toBe('true');
   });
 
+  it('should set the include parameter to the given reference field UID', () => {
+    const referenceFieldUid = 'referenceFieldUid';
+    const returnedValue = entry.includeReference(referenceFieldUid);
+    expect(returnedValue).toBeInstanceOf(Entry);
+    expect(entry._queryParams['include[]']).toContain(referenceFieldUid);
+  });
+
   it('should add "include_metadata" in _queryParams when includeMetadata method is called', () => {
     const returnedValue = entry.includeMetadata();
     expect(returnedValue).toBeInstanceOf(Entry);
@@ -69,8 +76,9 @@ class TestVariants extends Entry {
     this._client = client;
   }
 
-  getVariantsHeaders(): string {
-    return this._client.defaults.headers['x-cs-variant-uid'] || "";
+  setAndGetVariantsHeaders(): string {
+    this.variants(['variant1', 'variant2']); // setting the variants headers so it doesnt give empty string
+    return this._variants || "";
   }
 }
 
@@ -85,7 +93,6 @@ describe('Variants test', () => {
   it('should get the correct variant headers added to client', async () => {
     const testVariantObj = new TestVariants(httpClient(MOCK_CLIENT_OPTIONS))
 
-    testVariantObj.variants(['variant1', 'variant2']);
-    expect(testVariantObj.getVariantsHeaders()).toBe('variant1,variant2');
+    expect(testVariantObj.setAndGetVariantsHeaders()).toBe('variant1,variant2');
   });
 })

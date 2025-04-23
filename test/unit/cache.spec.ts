@@ -28,13 +28,13 @@ describe('Cache handleRequest function', () => {
   describe('NETWORK_ELSE_CACHE policy', () => {
     it('should return network response when proper response is received', async () => {
       const cacheOptions = { policy: Policy.NETWORK_ELSE_CACHE, maxAge: 3600 };
-      const defaultAdapter = jest.fn((_config) => ({ data: 'foo' }));
+      const defaultAdapter = jest.fn((_config) => ({ data: JSON.stringify('foo') }));
       const cacheStore = new PersistanceStore(cacheOptions);
 
       await handleRequest(cacheOptions, apiKey, defaultAdapter, resolve, reject, config);
 
       expect(defaultAdapter).toHaveBeenCalledWith(config);
-      expect(resolve).toBeCalledWith('foo');
+      expect(resolve).toBeCalledWith({"data": "foo"});
       expect(reject).not.toBeCalled();
 
       cacheStore.removeItem(apiKey, config.contentTypeUid);
@@ -97,14 +97,14 @@ describe('Cache handleRequest function', () => {
     });
     it('should return api response when proper cache is not available', async () => {
       const cacheOptions = { policy: Policy.CACHE_THEN_NETWORK, maxAge: 3600 };
-      const defaultAdapter = jest.fn((_config) => ({ data: 'foo' }));
+      const defaultAdapter = jest.fn((_config) => ({ data: JSON.stringify('foo') }));
 
       const cacheStore = new PersistanceStore(cacheOptions);
 
       await handleRequest(cacheOptions, apiKey, defaultAdapter, resolve, reject, config);
 
       expect(defaultAdapter).toHaveBeenCalled();
-      expect(resolve).toBeCalledWith('foo');
+      expect(resolve).toBeCalledWith({"data": "foo"});
       expect(reject).not.toBeCalled();
 
       cacheStore.removeItem(apiKey, config.contentTypeUid);
@@ -150,13 +150,13 @@ describe('Cache handleRequest function', () => {
 
     it('should return network response data when cache is not available', async () => {
       const cacheOptions = { policy: Policy.CACHE_ELSE_NETWORK, maxAge: 3600 };
-      const defaultAdapter = jest.fn((_config) => ({ data: 'foo' }));
+      const defaultAdapter = jest.fn((_config) => ({ data: JSON.stringify('foo') }));
       const cacheStore = new PersistanceStore(cacheOptions);
 
       await handleRequest(cacheOptions, apiKey, defaultAdapter, resolve, reject, config);
 
       expect(defaultAdapter).toHaveBeenCalledWith(config);
-      expect(resolve).toBeCalledWith('foo');
+      expect(resolve).toBeCalledWith({"data": "foo"});
       expect(reject).not.toBeCalled();
 
       cacheStore.removeItem(apiKey, config.contentTypeUid);

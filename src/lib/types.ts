@@ -2,12 +2,23 @@
 import { HttpClientParams } from '@contentstack/core';
 import { PersistanceStoreOptions, StorageType } from '../persistance';
 
+// Internal Types
+export type params = {
+  [key: string]: any
+}
+
+export type queryParams = { 
+  [key: string]: string | boolean | number | string[]
+}
+
+// External Types
 export enum Region {
   US = 'us',
   EU = 'eu',
   AZURE_NA = 'azure-na',
   AZURE_EU = 'azure-eu',
   GCP_NA = 'gcp-na',
+  GCP_EU = 'gcp-eu',
 }
 export interface StackConfig extends HttpClientParams {
   host?: string;
@@ -22,6 +33,8 @@ export interface StackConfig extends HttpClientParams {
   logHandler?: (level: string, data: any) => void;
   cacheOptions?: CacheOptions;
   live_preview?: LivePreview;
+  port?: number;
+  debug?: boolean;
 }
 export interface CacheOptions extends PersistanceStoreOptions {
   policy: Policy;
@@ -259,7 +272,10 @@ export interface FindResponse<T> {
 
 export interface LivePreviewQuery {
   live_preview: string
-  contentTypeUid: string
+  include_applied_variants?: boolean;
+  contentTypeUid?: string
+  content_type_uid?: string
+  entry_uid?: string
   entryUid?: any;
   preview_timestamp?: string
   release_id?: string
@@ -267,6 +283,7 @@ export interface LivePreviewQuery {
 
 export type LivePreview = {
   live_preview?: string;
+  include_applied_variants?: boolean;
   contentTypeUid?: string;
   entryUid?: any;
   host?: string;

@@ -8,13 +8,14 @@ export class Entry {
   private _contentTypeUid: string;
   private _entryUid: string;
   private _urlPath: string;
+  protected _variants: string;
   _queryParams: { [key: string]: string | number | string[] } = {};
-
   constructor(client: AxiosInstance, contentTypeUid: string, entryUid: string) {
     this._client = client;
     this._contentTypeUid = contentTypeUid;
     this._entryUid = entryUid;
     this._urlPath = `/content_types/${this._contentTypeUid}/entries/${this._entryUid}`;
+    this._variants = '';
   }
 
   /**
@@ -25,7 +26,7 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).includeFallback().fetch();
    */
   includeFallback(): Entry {
@@ -42,14 +43,14 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.contentType('abc').entry('entry_uid').variant('xyz').fetch();
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.contentType('abc').entry('entry_uid').variants('xyz').fetch();
    */
   variants(variants: string | string[]): Entry {
     if (Array.isArray(variants) && variants.length > 0) {
-      this._client.defaults.headers['x-cs-variant-uid'] = variants.join(',');
+      this._variants = variants.join(',');
     } else if (typeof variants == 'string' && variants.length > 0) {
-      this._client.defaults.headers['x-cs-variant-uid'] = variants;
+      this._variants = variants;
     }
 
     return this;
@@ -63,7 +64,7 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).includeMetadata().fetch();
    */
   includeMetadata(): Entry {
@@ -80,12 +81,39 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).includeEmbeddedItems().fetch();
    */
   includeEmbeddedItems(): Entry {
     this._queryParams['include_embedded_items[]'] = 'BASE';
 
+    return this;
+  }
+
+  /**
+   * @method includeReference
+   * @memberof Entry
+   * @description To include the content of the referred entry in your response,
+   * you need to use the include[] parameter and specify the UID of the reference field as value.
+   * This function sets the include parameter to a reference field UID in the API request.
+   * @example
+   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
+   * const query = stack.contentType("contentTypeUid").entry(entry_uid).includeReference("brand").fetch()
+   *
+   * @param {string} referenceFieldUid - UID of the reference field to include.
+   * @returns {Entry} - Returns the Entry instance for chaining.
+   */
+  includeReference(...referenceFieldUid: (string | string[])[]): Entry {
+    if (referenceFieldUid.length) {
+      referenceFieldUid.forEach(value => {
+        if (!Array.isArray(this._queryParams['include[]'])) {
+          this._queryParams['include[]'] = [];
+        }
+        (this._queryParams['include[]'] as string[]).push(...(Array.isArray(value) ? value : [value]));
+      });
+    } else {
+      console.error("Argument should be a String or an Array.");
+    }
     return this;
   }
 
@@ -97,7 +125,7 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).includeContentType().fetch();
    */
   includeContentType(): Entry {
@@ -114,7 +142,7 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).includeBranch().fetch();
    */
   includeBranch(): Entry {
@@ -131,7 +159,7 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.assetQuery().locale('en-us').fetch();
    */
   locale(locale: string): Entry {
@@ -148,14 +176,40 @@ export class Entry {
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
-   * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).fetch();
    */
   async fetch<T>(): Promise<T> {
-    const response = await getData(this._client, this._urlPath, this._queryParams);
+    const getRequestOptions: any = { params: this._queryParams};
+    if (this._variants) {
+      getRequestOptions.headers = {
+        ...getRequestOptions.headers,
+        'x-cs-variant-uid': this._variants
+      };
+    }
+
+    const response = await getData(this._client, this._urlPath, getRequestOptions);
 
     if (response.entry) return response.entry as T;
 
     return response;
+  }
+
+    /**
+   * @method addParams
+   * @memberof Entry
+   * @description Adds a query parameter to the query.
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = stack.contentType("contentTypeUid").entry().addParams({"key": "value"}).fetch()
+   *
+   * @returns {Entry}
+   */
+  addParams(paramObj: { [key: string]: string | number | string[] }): Entry {
+    this._queryParams = { ...this._queryParams, ...paramObj };
+
+    return this;
   }
 }

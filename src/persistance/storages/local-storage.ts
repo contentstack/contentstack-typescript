@@ -1,4 +1,5 @@
-import { Callback, iGlobal } from '../helper/utils';
+import type { Callback } from '../helper/utils';
+import { iGlobal } from '../helper/utils';
 import { Storage } from '../types/storage';
 
 export const localStorage: Storage = {

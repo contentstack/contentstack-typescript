@@ -3,10 +3,10 @@ import { StorageType } from '../types/storage-type';
 
 export type PersistanceStoreConfig =
   | (Store & PersistanceStoreOptions)
-  | ({ storageType?: StorageType } & PersistanceStoreOptions);
+  | ({ storeType?: StorageType } & PersistanceStoreOptions);
 export interface Store {
   storage: Storage;
-  storageType: 'customStorage';
+  storeType: 'customStorage';
 }
 export interface PersistanceStoreOptions {
   maxAge?: number; // default 24 hrs

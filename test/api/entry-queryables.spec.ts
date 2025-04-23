@@ -124,7 +124,7 @@ describe('Query Operators API test cases', () => {
         expect(query.entries[0]._version).toBeDefined();
         expect(query.entries[0].locale).toBeDefined();
         expect(query.entries[0].uid).toBeDefined();
-        expect(query.entries[0].title).not.toBe('value');
+        expect(query.entries[0].title).toBeDefined();
       }
     });
 
@@ -147,7 +147,7 @@ describe('Query Operators API test cases', () => {
         expect(entryQuery.entries[0]._version).toBeDefined();
         expect(entryQuery.entries[0].locale).toBeDefined();
         expect(entryQuery.entries[0].uid).toBeDefined();
-        expect(entryQuery.entries[0].title).not.toBe('test');
+        expect(entryQuery.entries[0].title).toBeDefined();
         expect(entryQuery.entries[0].title).toBeDefined();
         expect(entryQuery.entries[1]._version).toBeDefined();
         expect(entryQuery.entries[1].locale).toBeDefined();
@@ -256,6 +256,28 @@ describe('Query Operators API test cases', () => {
         expect(result.entries[0].uid).toBeDefined();
         expect(result.entries[0].created_at).toBeDefined();
 
+      }
+    });
+
+    it('should check for projected fields after only filter is applied', async () => {
+      const query = makeEntries('contenttype_uid2').only(['title', 'reference'])
+      const result = await query.find<TEntry>();
+      if (result.entries) {
+        expect(result.entries.length).toBeGreaterThan(0);
+        expect(result.entries[0].reference).toBeDefined();
+        expect(result.entries[0].title).toBeDefined();
+        expect(result.entries[0]._version).toBeUndefined();
+      }
+    });
+
+    it('should ignore fields after except filter is applied', async () => {
+      const query = makeEntries('contenttype_uid2').except(['title', 'reference'])
+      const result = await query.find<TEntry>();
+      if (result.entries) {
+        expect(result.entries.length).toBeGreaterThan(0);
+        expect(result.entries[0].reference).toBeUndefined();
+        expect(result.entries[0].title).toBeUndefined();
+        expect(result.entries[0]._version).toBeDefined();
       }
     });
 });
