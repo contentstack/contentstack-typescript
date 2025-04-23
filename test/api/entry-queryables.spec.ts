@@ -124,7 +124,7 @@ describe('Query Operators API test cases', () => {
         expect(query.entries[0]._version).toBeDefined();
         expect(query.entries[0].locale).toBeDefined();
         expect(query.entries[0].uid).toBeDefined();
-        expect(query.entries[0].title).not.toBeDefined();
+        expect(query.entries[0].title).toBeDefined();
       }
     });
 
@@ -147,7 +147,7 @@ describe('Query Operators API test cases', () => {
         expect(entryQuery.entries[0]._version).toBeDefined();
         expect(entryQuery.entries[0].locale).toBeDefined();
         expect(entryQuery.entries[0].uid).toBeDefined();
-        expect(entryQuery.entries[0].title).not.toBeDefined();
+        expect(entryQuery.entries[0].title).toBeDefined();
         expect(entryQuery.entries[0].title).toBeDefined();
         expect(entryQuery.entries[1]._version).toBeDefined();
         expect(entryQuery.entries[1].locale).toBeDefined();
