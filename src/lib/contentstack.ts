@@ -4,7 +4,6 @@ import { handleRequest } from './cache';
 import { Stack as StackClass } from './stack';
 import { Policy, StackConfig } from './types';
 import * as Utility from './utils';
-export * as Utils from '@contentstack/utils';
 
 let version = '{{VERSION}}';
 
