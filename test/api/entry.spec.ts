@@ -50,6 +50,15 @@ describe('Entry API tests', () => {
     expect(result.created_by).toBeDefined();
     expect(result.updated_by).toBeDefined();
   });
+  it('should check for include reference', async () => {
+    const result = await makeEntry(entryUid).includeReference('author').fetch<TEntry>();
+    expect(result.title).toBeDefined();
+    expect(result.author).toBeDefined();
+    expect(result.title).toBeDefined();
+    expect(result.uid).toBeDefined();
+    expect(result._version).toBeDefined();
+    expect(result.publish_details).toBeDefined();
+  });
 });
 function makeEntry(uid = ''): Entry {
   const entry = stack.contentType('blog_post').entry(uid);

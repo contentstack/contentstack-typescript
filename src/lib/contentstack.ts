@@ -1,10 +1,9 @@
 import { httpClient, retryRequestHandler, retryResponseErrorHandler, retryResponseHandler } from '@contentstack/core';
-import { InternalAxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios';
+import { AxiosRequestHeaders } from 'axios';
 import { handleRequest } from './cache';
 import { Stack as StackClass } from './stack';
 import { Policy, StackConfig } from './types';
 import * as Utility from './utils';
-export * as Utils from '@contentstack/utils';
 
 let version = '{{VERSION}}';
 
@@ -16,10 +15,10 @@ let version = '{{VERSION}}';
  *
  * @example
  * import contentstack from '@contentstack/delivery-sdk'
- * const stack = contentstack.Stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+ * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
  * @example
  * import contentstack from '@contentstack/delivery-sdk'
- * const stack = contentstack.Stack({
+ * const stack = contentstack.stack({
  *   apiKey: "apiKey",
  *   deliveryToken: "deliveryToken",
  *   environment: "environment",
@@ -37,7 +36,8 @@ export function stack(config: StackConfig): StackClass {
     defaultHostname: 'cdn.contentstack.io',
     headers: {} as AxiosRequestHeaders,
     params: {} as any,
-    live_preview: {} as any
+    live_preview: {} as any,
+    port: config.port as number,
   };
 
   defaultConfig.defaultHostname = config.host || Utility.getHost(config.region, config.host);
@@ -57,6 +57,10 @@ export function stack(config: StackConfig): StackClass {
     defaultConfig.params.environment = config.environment;
   } else {
     throw new Error('Environment for Stack is required');
+  }
+
+  if (config.locale) {
+    defaultConfig.params.locale = config.locale;
   }
 
   if (config.live_preview) {
@@ -82,7 +86,7 @@ export function stack(config: StackConfig): StackClass {
     defaultConfig.headers['x-header-ea'] = config.early_access.join(',');
   }
 
-  defaultConfig.headers['X-User-Agent'] = 'contentstack-delivery-typescript-{{PLATFORM}}/' + version;
+  defaultConfig.headers['X-User-Agent'] = 'contentstack-delivery-typescript/' + version;
 
 
   const client = httpClient(defaultConfig as any);
@@ -106,7 +110,7 @@ export function stack(config: StackConfig): StackClass {
   client.interceptors.response.use(retryResponseHandler, errorHandler);
 
   if (config.plugins) {
-    client.interceptors.request.use((reqConfig: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
+    client.interceptors.request.use((reqConfig: any): any => {
       if (config && config.plugins)
         config.plugins.forEach((pluginInstance) => {
           reqConfig = pluginInstance.onRequest(reqConfig);
@@ -115,7 +119,7 @@ export function stack(config: StackConfig): StackClass {
       return reqConfig;
     });
 
-    client.interceptors.response.use((response: AxiosResponse) => {
+    client.interceptors.response.use((response: any) => {
       if (config && config.plugins)
         config.plugins.forEach((pluginInstance) => {
           response = pluginInstance.onResponse(response.request, response, response.data);

@@ -9,6 +9,7 @@ jest.mock('@contentstack/core');
 const getDataMock = <jest.Mock<typeof core.getData>>(<unknown>core.getData);
 
 describe('Synchronization function', () => {
+  const SYNC_URL = '/stacks/sync';
   beforeEach(() => {
     getDataMock.mockImplementation((_client, _url, params) => {
       const resp: any = axiosGetMock;
@@ -28,14 +29,14 @@ describe('Synchronization function', () => {
   };
   it('should have valid init and environment params as req params when no request params is passed', async () => {
     await await synchronization(httpClient({}));
-    expect(getDataMock.mock.calls[0][1]).toBe('/sync');
+    expect(getDataMock.mock.calls[0][1]).toBe(SYNC_URL);
     expect(getDataMock.mock.calls[0][2].params).toHaveProperty('init');
     expect(getDataMock.mock.calls[0][2].params).toEqual({ init: true });
   });
 
   it('should have only pagination_token param when sync is called with pagination_token.', async () => {
     await syncCall({ paginationToken: '<page_tkn>' });
-    expect(getDataMock.mock.calls[0][1]).toBe('/sync');
+    expect(getDataMock.mock.calls[0][1]).toBe(SYNC_URL);
     expect(getDataMock.mock.calls[0][2].params).not.toHaveProperty('init');
     expect(getDataMock.mock.calls[0][2].params).not.toHaveProperty('environment');
     expect(getDataMock.mock.calls[0][2].params).toHaveProperty('pagination_token');
@@ -43,7 +44,7 @@ describe('Synchronization function', () => {
   });
   it('should have only sync_token param when sync is called with sync_token.', async () => {
     await syncCall({ syncToken: '<sync_tkn>' });
-    expect(getDataMock.mock.calls[0][1]).toBe('/sync');
+    expect(getDataMock.mock.calls[0][1]).toBe(SYNC_URL);
     expect(getDataMock.mock.calls[0][2].params).not.toHaveProperty('init');
     expect(getDataMock.mock.calls[0][2].params).not.toHaveProperty('environment');
     expect(getDataMock.mock.calls[0][2].params).toHaveProperty('sync_token');
@@ -51,7 +52,7 @@ describe('Synchronization function', () => {
   });
   it('should have valid content_type_uid when content_type_uid is passed as param', async () => {
     await syncCall({ contentTypeUid: 'session' });
-    expect(getDataMock.mock.calls[0][1]).toBe('/sync');
+    expect(getDataMock.mock.calls[0][1]).toBe(SYNC_URL);
     expect(getDataMock.mock.calls[0][2].params).toHaveProperty('init');
     expect(getDataMock.mock.calls[0][2].params).toHaveProperty('content_type_uid');
     expect(getDataMock.mock.calls[0][2].params).toEqual({
@@ -61,7 +62,7 @@ describe('Synchronization function', () => {
   });
   it('should have valid locale when a locale is passed as param', async () => {
     await syncCall({ locale: LOCALE });
-    expect(getDataMock.mock.calls[0][1]).toBe('/sync');
+    expect(getDataMock.mock.calls[0][1]).toBe(SYNC_URL);
     expect(getDataMock.mock.calls[0][2].params).toHaveProperty('init');
     expect(getDataMock.mock.calls[0][2].params).toHaveProperty('locale');
     expect(getDataMock.mock.calls[0][2].params).toEqual({
@@ -71,7 +72,7 @@ describe('Synchronization function', () => {
   });
   it('should have valid date structure and other required params when start_date is passed as param', async () => {
     await syncCall({ startDate: '2018-10-22' });
-    expect(getDataMock.mock.calls[0][1]).toBe('/sync');
+    expect(getDataMock.mock.calls[0][1]).toBe(SYNC_URL);
     expect(getDataMock.mock.calls[0][2].params).toHaveProperty('init');
     expect(getDataMock.mock.calls[0][2].params).toHaveProperty('start_date');
     expect(getDataMock.mock.calls[0][2].params).toEqual({
@@ -81,7 +82,7 @@ describe('Synchronization function', () => {
   });
   it('should have valid publish_type when type is passed as param', async () => {
     await syncCall({ type: [PublishType.ENTRY_PUBLISHED] });
-    expect(getDataMock.mock.calls[0][1]).toBe('/sync');
+    expect(getDataMock.mock.calls[0][1]).toBe(SYNC_URL);
     expect(getDataMock.mock.calls[0][2].params).toHaveProperty('init');
     expect(getDataMock.mock.calls[0][2].params).toHaveProperty('type');
     expect(getDataMock.mock.calls[0][2].params).toEqual({
@@ -95,7 +96,7 @@ describe('Synchronization function', () => {
       startDate: '2018-10-22',
       type: [PublishType.ENTRY_PUBLISHED, PublishType.CONTENT_TYPE_DELETED],
     });
-    expect(getDataMock.mock.calls[0][1]).toBe('/sync');
+    expect(getDataMock.mock.calls[0][1]).toBe(SYNC_URL);
     expect(getDataMock.mock.calls[0][2].params).toHaveProperty('init');
     expect(getDataMock.mock.calls[0][2].params).toHaveProperty('type');
     expect(getDataMock.mock.calls[0][2].params).toEqual({

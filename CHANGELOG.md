@@ -1,4 +1,35 @@
-## Change log
+### Version: 4.6.1
+#### Date: March-24-2025
+Fix: Update imports and dependencies
+Fix: Unit test cases
+
+### Version: 4.6.0
+#### Date: March-10-2025
+Enh: Added GCP-EU support
+
+### Version: 4.4.4
+#### Date: January-06-2025
+Enh: Include References on Entry UID
+Fix: reset livePreviewConfig properties if not received in params
+
+### Version: 4.4.3
+#### Date: November-30-2024
+Fix: regex method fixed for validation
+
+### Version: 4.4.2
+#### Date: November-16-2024
+Fix: Variants reset issue fix on query call
+
+### Version: 4.4.1
+#### Date: November-08-2024
+Fix: Build via tsup lib
+Fix: removed node-localstorage
+
+### Version: 4.4.0
+#### Date: October-21-2024
+Fix: getData to receive params and headers both in data
+Enh: Node version bump
+Refactor: Package type changed to be module instead of CommonJS 
 
 ### Version: 4.3.0
 #### Date: Septmber-09-2024
