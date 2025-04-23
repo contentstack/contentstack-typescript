@@ -399,7 +399,7 @@ export class Query extends BaseQuery {
       return this;
     }
     this._parameters[key] = { '$ne': value };
-    return this;;
+    return this;
   }
 
   /**
