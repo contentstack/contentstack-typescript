@@ -1,4 +1,4 @@
-import { BaseEntry } from 'src';
+import { BaseEntry } from '../../src';
 import { Entry } from '../../src/lib/entry';
 import { stackInstance } from '../utils/stack-instance';
 import { TEntry } from './types';
@@ -55,13 +55,13 @@ describe('Entry API tests', () => {
     expect(result.title).toBeDefined();
     expect(result.author).toBeDefined();
     expect(result.title).toBeDefined();
-    expect(result.url).toBeDefined();
+    expect(result.uid).toBeDefined();
     expect(result._version).toBeDefined();
     expect(result.publish_details).toBeDefined();
   });
 });
 function makeEntry(uid = ''): Entry {
-  const entry = stack.contentType('author').entry(uid);
+  const entry = stack.contentType('blog_post').entry(uid);
 
   return entry;
 }

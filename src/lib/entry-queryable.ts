@@ -15,7 +15,7 @@ export class EntryQueryable extends BaseQuery {
    * @param {string} fieldUid - field uid to select
    * @returns {EntryQueryable} - returns EntryQueryable object for chaining method calls
    */
-  only(fieldUid: string|string[]): EntryQueryable {
+  only(fieldUid: string|string[]): this {
     if (Array.isArray(fieldUid)) {
       let i = 0;
       for (const uid of fieldUid) {
@@ -41,7 +41,7 @@ export class EntryQueryable extends BaseQuery {
    * @param {string} fieldUid - field uid to exclude
    * @returns {EntryQueryable} - returns EntryQueryable object for chaining method calls
    */
-  except(fieldUid: string|string[]): EntryQueryable {
+  except(fieldUid: string|string[]): this {
     if (Array.isArray(fieldUid)) {
       let i = 0;
       for (const uid of fieldUid) {
