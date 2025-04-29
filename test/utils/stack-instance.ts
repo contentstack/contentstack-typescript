@@ -6,13 +6,14 @@ dotenv.config();
 
 function stackInstance() {
   const params: StackConfig = {
+    host: process.env.HOST || '',
     apiKey: process.env.API_KEY || '',
     deliveryToken: process.env.DELIVERY_TOKEN || '',
     environment: process.env.ENVIRONMENT || '',
     live_preview: {
-      enable: true,
-      preview_token: "abcda",
-      host: "xyz,contentstack.com",
+      enable: false,
+      preview_token: process.env.PREVIEW_TOKEN || '',
+      host: process.env.HOST || '',
     }
   };
 
