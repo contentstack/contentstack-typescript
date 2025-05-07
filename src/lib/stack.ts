@@ -1,5 +1,5 @@
 import { StackConfig, SyncStack, SyncType, LivePreviewQuery } from './types';
-import { AxiosInstance, getData } from '@contentstack/core';
+import { HttpClient } from './http-client';
 import { Asset } from './asset';
 import { AssetQuery } from './asset-query';
 import { ContentType } from './content-type';
@@ -8,14 +8,16 @@ import { synchronization } from './synchronization';
 import {TaxonomyQuery} from './taxonomy-query';
 import { GlobalFieldQuery } from './global-field-query';
 import { GlobalField } from './global-field';
+import { Entry } from './entry';
+import { Query } from './query';
 
 export class Stack {
+  private _client: HttpClient;
   readonly config: StackConfig;
-  private _client: AxiosInstance;
-  constructor(client: AxiosInstance, config: StackConfig) {
-    this._client = client;
+
+  constructor(config: StackConfig) {
+    this._client = new HttpClient(config);
     this.config = config;
-    this._client.stackConfig = this.config;
   }
 
   /**
@@ -34,12 +36,8 @@ export class Stack {
    * const asset = stack.asset('assetUid') // For a single asset with uid 'assetUid'
    *
    */
-  asset(uid: string): Asset;
-  asset(): AssetQuery;
-  asset(uid?: string): Asset | AssetQuery {
-    if (uid) return new Asset(this._client, uid);
-
-    return new AssetQuery(this._client);
+  asset(uid: string): Asset {
+    return new Asset(this._client, uid);
   }
 
   /**
@@ -57,12 +55,8 @@ export class Stack {
    * // OR
    * const contentType = stack.contentType('contentTypeUid') // For a single contentType with uid 'contentTypeUid'
    */
-  contentType(): ContentTypeQuery;
-  contentType(uid: string): ContentType;
-  contentType(uid?: string): ContentType | ContentTypeQuery {
-    if (uid) return new ContentType(this._client, uid);
-
-    return new ContentTypeQuery(this._client);
+  contentType(uid: string): Query {
+    return new Query(this._client, uid);
   }
 
   /**
@@ -121,7 +115,7 @@ export class Stack {
    * @method sync
    * @memberOf Stack
    * @description Syncs your Contentstack data with your app and ensures that the data is always up-to-date by providing delta updates
-   * @param {object} params - params is an object that supports ‘locale’, ‘start_date’, ‘content_type_uid’, and ‘type’ queries.
+   * @param {object} params - params is an object that supports 'locale', 'start_date', 'content_type_uid', and 'type' queries.
    * @example
    * Stack.sync()        // For initializing sync
    * @example
@@ -167,7 +161,7 @@ export class Stack {
           include_applied_variants: false,
         };
       }
-      this._client.stackConfig.live_preview = livePreviewParams;
+      (this._client as any).stackConfig.live_preview = livePreviewParams;
     }
 
     if (query.hasOwnProperty("release_id")) {
@@ -184,21 +178,16 @@ export class Stack {
     }
   }
 
-  getClient(): any {
+  getClient(): HttpClient {
     return this._client;
   }
 
   async getLastActivities() {
     try {
-      const result = await getData(this._client, '/content_types', {
-        params: {
-          only_last_activity: true,
-          environment: this.config.environment,
-        },
-      });
-      return result;
+      const response = await this._client.get('/last_activities');
+      return response.data;
     } catch (error) {
-      throw new Error("Error fetching last activities");
+      throw error;
     }
   }
 
@@ -211,8 +200,7 @@ export class Stack {
    * @instance
    * */
   setPort(port: number) {
-    if (typeof port === "number") this.config.port = port;
-    return this;
+    this.config.port = port;
   }
 
   /**
@@ -224,7 +212,64 @@ export class Stack {
    * @instance
    * */
   setDebug(debug: boolean) {
-    if (typeof debug === "boolean") this.config.debug = debug;
-    return this;
+    this.config.debug = debug;
+  }
+
+  entry(contentTypeUid: string, entryUid: string): Entry {
+    return new Entry(this._client, contentTypeUid, entryUid);
+  }
+
+  async getContentTypes() {
+    try {
+      const response = await this._client.get('/content_types');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getContentType(uid: string) {
+    try {
+      const response = await this._client.get(`/content_types/${uid}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getAssets() {
+    try {
+      const response = await this._client.get('/assets');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getAsset(uid: string) {
+    try {
+      const response = await this._client.get(`/assets/${uid}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getEntries(contentTypeUid: string) {
+    try {
+      const response = await this._client.get(`/content_types/${contentTypeUid}/entries`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getEntry(contentTypeUid: string, entryUid: string) {
+    try {
+      const response = await this._client.get(`/content_types/${contentTypeUid}/entries/${entryUid}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   }
 }

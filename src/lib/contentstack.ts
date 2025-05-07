@@ -1,11 +1,12 @@
-import { httpClient, retryRequestHandler, retryResponseErrorHandler, retryResponseHandler } from '@contentstack/core';
-import { AxiosRequestHeaders } from 'axios';
+import { httpClient } from './http-client';
 import { Stack as StackClass } from './stack';
 import { Policy, StackConfig } from './types';
 import * as Utility from './utils';
 export * as Utils from '@contentstack/utils';
 
 let version = '{{VERSION}}';
+
+type Headers = Record<string, string>;
 
 /**
  * @method stack
@@ -30,13 +31,12 @@ let version = '{{VERSION}}';
  *   }
  * }
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function stack(config: StackConfig): StackClass {
   let defaultConfig = {
     defaultHostname: 'cdn.contentstack.io',
-    headers: {} as AxiosRequestHeaders,
-    params: {} as any,
-    live_preview: {} as any,
+    headers: {} as Headers,
+    params: {} as Record<string, any>,
+    live_preview: {} as Record<string, any>,
     port: config.port as number,
   };
 
@@ -70,10 +70,10 @@ export function stack(config: StackConfig): StackClass {
           config.live_preview.live_preview = params.get('live_preview') || config.live_preview.live_preview;
       }
       if (params.has('release_id')) {
-          defaultConfig.headers['release_id'] = params.get('release_id');
+          defaultConfig.headers['release_id'] = params.get('release_id') || '';
       }
       if (params.has('preview_timestamp')) {
-          defaultConfig.headers['preview_timestamp'] = params.get('preview_timestamp');
+          defaultConfig.headers['preview_timestamp'] = params.get('preview_timestamp') || '';
       }
     }
   }
@@ -88,17 +88,18 @@ export function stack(config: StackConfig): StackClass {
 
   defaultConfig.headers['X-User-Agent'] = 'contentstack-delivery-typescript/' + version;
 
-
   const client = httpClient(defaultConfig as any);
 
-  if (config.logHandler) client.defaults.logHandler = config.logHandler;
+  if (config.logHandler) {
+    (client as any).defaults.logHandler = config.logHandler;
+  }
 
   if (config.cacheOptions && config.cacheOptions.policy !== Policy.IGNORE_CACHE) {
     if (!config.cacheOptions.persistanceStore) {
       throw new Error('Persistance store not provided. Please provide persistance store plugin object.');
     }
-    const defaultAdapter = client.defaults.adapter;
-    client.defaults.adapter = (adapterConfig: any) => {
+    const defaultAdapter = (client as any).defaults.adapter;
+    (client as any).defaults.adapter = (adapterConfig: any) => {
       return new Promise(async (resolve, reject) => {
         if (config.cacheOptions && config.cacheOptions.persistanceStore) {
           await config.cacheOptions.persistanceStore.handleRequest(
@@ -116,12 +117,6 @@ export function stack(config: StackConfig): StackClass {
       });
     };
   }
-  // Retry policy handlers
-  const errorHandler = (error: any) => {
-    return retryResponseErrorHandler(error, config, client);
-  };
-  client.interceptors.request.use(retryRequestHandler);
-  client.interceptors.response.use(retryResponseHandler, errorHandler);
 
   if (config.plugins) {
     client.interceptors.request.use((reqConfig: any): any => {

@@ -1,13 +1,13 @@
-import { AxiosInstance, getData } from '@contentstack/core';
+import { HTTPClient } from './types';
 
 export class Asset {
-  private _client: AxiosInstance;
-  private _urlPath: string;
+  private _client: HTTPClient;
+  private _uid: string;
   _queryParams: { [key: string]: string | number } = {};
 
-  constructor(client: AxiosInstance, assetUid: string) {
+  constructor(client: HTTPClient, uid: string) {
     this._client = client;
-    this._urlPath = `/assets/${assetUid}`;
+    this._uid = uid;
   }
 
   /**
@@ -140,11 +140,12 @@ export class Asset {
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.asset('asset_uid').fetch();
    */
-  async fetch<T>(): Promise<T> {
-    const response = await getData(this._client, this._urlPath, { params: this._queryParams});
-
-    if (response.asset) return response.asset as T;
-
-    return response;
+  async fetch() {
+    try {
+      const response = await this._client.get(`/assets/${this._uid}`, { params: this._queryParams });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   }
 }

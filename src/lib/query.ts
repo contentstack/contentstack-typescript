@@ -1,26 +1,20 @@
-import { AxiosInstance } from '@contentstack/core';
-import { BaseQuery } from './base-query';
+import { HttpClient } from './http-client';
+import { BaseQuery, FindResponse } from './base-query';
 import { BaseQueryParameters, QueryOperation, QueryOperator, TaxonomyQueryOperation, params, queryParams } from './types';
 
 export class Query extends BaseQuery {
-  private _contentTypeUid?: string;
+  private _contentTypeUid: string;
 
-  constructor(client: AxiosInstance, params: params, queryParams: queryParams, variants?: string, uid?: string, queryObj?: { [key: string]: any }) {
-    super();
-    this._client = client;
-    this._contentTypeUid = uid;
+  constructor(client: HttpClient, contentTypeUid: string) {
+    super(client);
+    this._contentTypeUid = contentTypeUid;
     this._urlPath = `/content_types/${this._contentTypeUid}/entries`;
-    this._parameters = params || {};
-    this._queryParams = queryParams || {};
-    this._variants = variants || '';
-
-    if (!uid) {
-      this._urlPath = `/assets`;
-    }
-    if (queryObj) {
-      this._parameters = { ...this._parameters, ...queryObj };
-    }
   }
+
+  override async find<T>(): Promise<FindResponse<T>> {
+    return super.find<T>();
+  }
+
   // Validate if input is alphanumeric 
   private isValidAlphanumeric(input: string): boolean {
     const alphanumericRegex = /^[a-zA-Z0-9_.-]+$/;

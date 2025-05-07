@@ -1,5 +1,5 @@
 /* eslint-disable @cspell/spellchecker */
-import { HttpClientParams } from '@contentstack/core';
+import { HttpClient } from './http-client';
 
 // Internal Types
 export type params = {
@@ -19,54 +19,58 @@ export enum Region {
   GCP_NA = 'gcp-na',
   GCP_EU = 'gcp-eu',
 }
-export interface StackConfig extends HttpClientParams {
-  host?: string;
+export interface StackConfig {
   apiKey: string;
   deliveryToken: string;
   environment: string;
+  region?: string;
+  host?: string;
+  port?: number;
+  locale?: string;
   branch?: string;
   early_access?: string[];
-  region?: Region;
-  locale?: string;
+  live_preview?: {
+    enable?: boolean;
+    host?: string;
+    live_preview?: string;
+    preview_token?: string;
+  };
+  cacheOptions?: {
+    policy: Policy;
+    storeType?: string;
+    persistanceStore?: any;
+  };
   plugins?: any[];
-  logHandler?: (level: string, data: any) => void;
-  cacheOptions?: CacheOptions;
-  live_preview?: LivePreview;
-  port?: number;
+  logHandler?: any;
   debug?: boolean;
-}
-export interface CacheOptions {
-  policy: Policy;
-  persistanceStore?: any;
 }
 
 export enum Policy {
   IGNORE_CACHE = 'IGNORE_CACHE',
   CACHE_THEN_NETWORK = 'CACHE_THEN_NETWORK',
-  CACHE_ELSE_NETWORK = 'CACHE_ELSE_NETWORK',
-  NETWORK_ELSE_CACHE = 'NETWORK_ELSE_CACHE',
+  NETWORK_THEN_CACHE = 'NETWORK_THEN_CACHE',
+  CACHE_ONLY = 'CACHE_ONLY',
+  NETWORK_ONLY = 'NETWORK_ONLY'
+}
+
+export interface SyncType {
+  locale?: string;
+  start_date?: string;
+  content_type_uid?: string;
+  type?: string;
+  pagination_token?: string;
+  sync_token?: string;
 }
 
 export interface SyncStack {
-  paginationToken?: string;
-  syncToken?: string;
-}
-export enum PublishType {
-  ENTRY_PUBLISHED = 'entry_published',
-  ENTRY_UNPUBLISHED = 'entry_unpublished',
-  ENTRY_DELETED = 'entry_deleted',
-  ASSET_PUBLISHED = 'asset_published',
-  ASSET_UNPUBLISHED = 'asset_unpublished',
-  ASSET_DELETED = 'asset_deleted',
-  CONTENT_TYPE_DELETED = 'content_type_deleted',
-}
-export interface SyncType {
-  environment?: string;
-  contentTypeUid?: string;
-  type?: PublishType[] | PublishType | string;
   locale?: string;
-  startDate?: string;
+  start_date?: string;
+  content_type_uid?: string;
+  type?: string;
+  pagination_token?: string;
+  sync_token?: string;
 }
+
 export type TransformData = { [key: string]: string | string[] };
 
 export enum Format {
@@ -270,14 +274,14 @@ export interface FindResponse<T> {
 }
 
 export interface LivePreviewQuery {
-  live_preview: string
+  live_preview?: string;
+  contentTypeUid?: string;
+  content_type_uid?: string;
+  entryUid?: string;
+  entry_uid?: string;
+  preview_timestamp?: string;
   include_applied_variants?: boolean;
-  contentTypeUid?: string
-  content_type_uid?: string
-  entry_uid?: string
-  entryUid?: any;
-  preview_timestamp?: string
-  release_id?: string
+  release_id?: string;
 }
 
 export type LivePreview = {

@@ -3,7 +3,7 @@
   "version": "4.7.0",
   "type": "module",
   "description": "Contentstack Delivery SDK for TypeScript",
-  "homepage": "https://www.contentstack.com/",
+  "homepage": "https://github.com/contentstack/contentstack-typescript",
   "author": {
     "name": "Contentstack",
     "url": "https://www.contentstack.com/"
@@ -42,12 +42,13 @@
     "build:cjs": "node tools/cleanup cjs && tsc -p config/tsconfig.cjs.json && node tools/rename-cjs.cjs",
     "build:esm": "node tools/cleanup esm && tsc -p config/tsconfig.esm.json",
     "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json",
-    "husky-check": "npm run build && husky && chmod +x .husky/pre-commit"
+    "husky-check": "npm run build && husky && chmod +x .husky/pre-commit",
+    "analyze": "node build-analyze.js"
   },
   "dependencies": {
     "@contentstack/core": "^1.2.0",
     "@contentstack/utils": "^1.4.0",
-    "axios": "^1.8.4",
+    "isomorphic-unfetch": "^4.0.0",
     "humps": "^2.0.1"
   },
   "files": [
@@ -57,6 +58,10 @@
   ],
   "devDependencies": {
     "@nrwl/jest": "^17.3.2",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.2",
     "@slack/bolt": "^4.0.1",
     "@types/humps": "^2.0.6",
     "@types/jest": "^29.5.14",
@@ -73,11 +78,12 @@
     "jest-html-reporters": "^3.1.7",
     "jest-junit": "^16.0.0",
     "path-browserify": "^1.0.1",
+    "rollup": "^4.40.2",
+    "rollup-plugin-visualizer": "^5.14.0",
     "ts-jest": "^29.2.6",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "tsup": "^8.4.0",
     "webpack-cli": "^5.1.4"
-  },
-  "homepage": "https://github.com/contentstack/contentstack-typescript"
+  }
 }

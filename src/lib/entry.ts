@@ -1,21 +1,22 @@
-import { AxiosInstance, getData } from '@contentstack/core';
+import { HttpClient } from './http-client';
 
 interface EntryResponse<T> {
   entry: T;
 }
+
 export class Entry {
-  protected _client: AxiosInstance;
+  private _client: HttpClient;
   private _contentTypeUid: string;
   private _entryUid: string;
   private _urlPath: string;
-  protected _variants: string;
+  protected _variants: string = '';
   _queryParams: { [key: string]: string | number | string[] } = {};
-  constructor(client: AxiosInstance, contentTypeUid: string, entryUid: string) {
+
+  constructor(client: HttpClient, contentTypeUid: string, entryUid: string) {
     this._client = client;
     this._contentTypeUid = contentTypeUid;
     this._entryUid = entryUid;
     this._urlPath = `/content_types/${this._contentTypeUid}/entries/${this._entryUid}`;
-    this._variants = '';
   }
 
   /**
@@ -180,19 +181,15 @@ export class Entry {
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).fetch();
    */
   async fetch<T>(): Promise<T> {
-    const getRequestOptions: any = { params: this._queryParams};
-    if (this._variants) {
-      getRequestOptions.headers = {
-        ...getRequestOptions.headers,
-        'x-cs-variant-uid': this._variants
-      };
+    try {
+      const response = await this._client.get<EntryResponse<T>>(this._urlPath, {
+        params: this._queryParams,
+        headers: this._variants ? { 'x-cs-variant-uid': this._variants } : undefined
+      });
+      return response.data.entry;
+    } catch (error) {
+      throw error;
     }
-
-    const response = await getData(this._client, this._urlPath, getRequestOptions);
-
-    if (response.entry) return response.entry as T;
-
-    return response;
   }
 
     /**

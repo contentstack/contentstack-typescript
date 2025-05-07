@@ -8,7 +8,11 @@ fileignoreconfig:
   - filename: src/lib/query.ts
     checksum: c4529069bc974d15c104303c5ae573c9341185a869c612ab07f0ee7f42e8b149
   - filename: package-lock.json
-    checksum: 815fd2251550d87a0f113dd2e14266879be37af3a264041e871436a1cc84ae1c
+    checksum: 47826d66cb551daafe0f321c5febddd69532afb50d5857b30fe64eddd121ac06
   - filename: .husky/pre-commit
     checksum: 5baabd7d2c391648163f9371f0e5e9484f8fb90fa2284cfc378732ec3192c193
+  - filename: src/lib/http-client.ts
+    checksum: 7adbfbe58d2ddbdacb26b2c8d7eaa774946b83c0cc6037492bdc0069d8c656e1
+  - filename: src/lib/base-query.ts
+    checksum: 5a4d939bc25f43eb301e0df2a51ae32a92cd48a02bd0280b10b028f2bda8e910
 version: ""

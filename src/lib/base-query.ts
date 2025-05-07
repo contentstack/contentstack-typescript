@@ -1,13 +1,20 @@
-import { AxiosInstance, getData } from '@contentstack/core';
-import { Pagination } from './pagination';
-import { FindResponse, params } from './types';
+import { HttpClient } from './http-client';
 
-export class BaseQuery extends Pagination {
-  _parameters: params = {}; // Params of query class ?query={}
+export interface FindResponse<T> {
+  entries: T[];
+  total: number;
+}
 
-  protected _client!: AxiosInstance;
-  protected _urlPath!: string;
-  protected _variants!: string;
+export class BaseQuery {
+  protected _client: HttpClient;
+  protected _urlPath: string = '';
+  protected _parameters: { [key: string]: any } = {};
+  protected _queryParams: { [key: string]: any } = {};
+  protected _variants: string = '';
+
+  constructor(client: HttpClient) {
+    this._client = client;
+  }
 
   /**
    * @method includeCount
@@ -114,8 +121,6 @@ export class BaseQuery extends Pagination {
     return this;
   }
 
-
-
   /**
    * @method param
    * @memberof BaseQuery
@@ -202,22 +207,14 @@ export class BaseQuery extends Pagination {
    */
 
   async find<T>(): Promise<FindResponse<T>> {
-    let requestParams: { [key: string]: any } = this._queryParams;
-
-    if (Object.keys(this._parameters).length > 0) {
-      requestParams = { ...this._queryParams, query: { ...this._parameters } };
+    try {
+      const response = await this._client.get<FindResponse<T>>(this._urlPath, {
+        params: this._queryParams,
+        headers: this._variants ? { 'x-cs-variant-uid': this._variants } : undefined
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
     }
-
-    const getRequestOptions: any = { params: requestParams };
-
-    if (this._variants) {
-      getRequestOptions.headers = {
-        ...getRequestOptions.headers,
-        'x-cs-variant-uid': this._variants
-      };
-    }
-    const response = await getData(this._client, this._urlPath, getRequestOptions);
-
-    return response as FindResponse<T>;
   }
 }
