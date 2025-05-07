@@ -37,7 +37,7 @@ export interface StackConfig extends HttpClientParams {
 }
 export interface CacheOptions {
   policy: Policy;
-  storeType?: any;
+  persistanceStore?: any;
 }
 
 export enum Policy {
