@@ -1,6 +1,5 @@
 import { httpClient, retryRequestHandler, retryResponseErrorHandler, retryResponseHandler } from '@contentstack/core';
 import { AxiosRequestHeaders } from 'axios';
-import { handleRequest } from './cache';
 import { Stack as StackClass } from './stack';
 import { Policy, StackConfig } from './types';
 import * as Utility from './utils';
@@ -95,11 +94,25 @@ export function stack(config: StackConfig): StackClass {
   if (config.logHandler) client.defaults.logHandler = config.logHandler;
 
   if (config.cacheOptions && config.cacheOptions.policy !== Policy.IGNORE_CACHE) {
+    if (!config.cacheOptions.persistanceStore) {
+      throw new Error('Persistance store not provided. Please provide persistance store plugin object.');
+    }
     const defaultAdapter = client.defaults.adapter;
     client.defaults.adapter = (adapterConfig: any) => {
       return new Promise(async (resolve, reject) => {
-        if (config.cacheOptions)
-          await handleRequest(config.cacheOptions, config.apiKey, defaultAdapter, resolve, reject, adapterConfig);
+        if (config.cacheOptions && config.cacheOptions.persistanceStore) {
+          await config.cacheOptions.persistanceStore.handleRequest(
+            config.cacheOptions.policy, 
+            config.apiKey, 
+            defaultAdapter, 
+            resolve, 
+            reject, 
+            adapterConfig
+          );
+        }
+        else {
+          throw new Error('Persistance store not provided. Please provide persistance store plugin object.');
+        }
       });
     };
   }
