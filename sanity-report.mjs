@@ -44,8 +44,16 @@ console.log(`Failed Tests: ${failedTests}`);
 console.log(`Skipped Tests: ${skippedTests}`);
 console.log(`Total Duration: ${totalDurationMinutes}m ${totalDurationSeconds.toFixed(0)}s`);
 
+const host = process.env.HOST || ''
+let region = 'UNKNOWN REGION'
+
+const match = host.match(/^([^-]+(?:-[^-]+)*)-api/)
+if (match && match[1]) {
+  region = match[1].toUpperCase()
+}
+
 const slackMessage = `
-*Typescript CDA Report*
+*Typescript CDA Report - ${region}*
 • Total Suites: *${totalSuites}*
 • Total Tests: *${totalTests}*
 • Passed Tests: *${passedTests}*
