@@ -45,7 +45,7 @@ console.log(`Skipped Tests: ${skippedTests}`);
 console.log(`Total Duration: ${totalDurationMinutes}m ${totalDurationSeconds.toFixed(0)}s`);
 
 const host = process.env.HOST || ''
-let region = 'UNKNOWN REGION'
+let region = 'AWS-NA'
 
 const match = host.match(/^([^-]+(?:-[^-]+)*)-cdn/)
 if (match && match[1]) {
