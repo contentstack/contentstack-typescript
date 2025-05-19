@@ -13,7 +13,7 @@ const user3 = process.env.USER3;
 const user4 = process.env.USER4;
 
 const reportPath = path.resolve('reports/sanity.html');
-const reportHtml = fs.readFileSync(reportPath, 'utf-8');
+const reportHtml = fs.readFileSync(reportPath, 'utf8');
 const dom = new JSDOM(reportHtml);
 const document = dom.window.document;
 
