@@ -61,6 +61,36 @@ describe('Entry class', () => {
     expect(returnedValue).toBeInstanceOf(Entry);
     expect(entry._queryParams.include_content_type).toBe('true');
   });
+  
+  it('should add a fieldUid to the _queryParams object', () => {
+    entry.only('fieldUid');
+    expect(entry._queryParams).toEqual({ 'only[BASE][]': 'fieldUid' });
+  });
+
+  it('should return an instance of Entry', () => {
+    const result = entry.only('fieldUid');
+    expect(result).toBeInstanceOf(Entry);
+  });
+
+  it('should allow chaining of multiple calls', () => {
+    entry.only('fieldUid1').only('fieldUid2');
+    expect(entry._queryParams).toEqual({ 'only[BASE][]': 'fieldUid2' });
+  });
+
+  it('should add a fieldUid to the _queryParams object', () => {
+    entry.except('fieldUid');
+    expect(entry._queryParams).toEqual({ 'except[BASE][]': 'fieldUid' });
+  });
+
+  it('should return an instance of Entry', () => {
+    const result = entry.except('fieldUid');
+    expect(result).toBeInstanceOf(Entry);
+  });
+
+  it('should allow chaining of multiple calls', () => {
+    entry.except('fieldUid1').except('fieldUid2');
+    expect(entry._queryParams).toEqual({ 'except[BASE][]': 'fieldUid2' });
+  });
 
   it('should get the API response when fetch method is called', async () => {
     mockClient.onGet(`/content_types/contentTypeUid/entries/entryUid`).reply(200, entryFetchMock);
