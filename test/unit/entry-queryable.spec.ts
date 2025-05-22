@@ -39,15 +39,15 @@ describe('Query Operators API test cases', () => {
       }
     });
     it('should return entries matching any of the conditions - or', async () => {
-      const query1: Query = await contentType.entry().query().containedIn('fieldUID', ['value']);
-      const query2: Query = await contentType.entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
-      const query = await contentType.entry().query().or(query1, query2);
+      const query1: Query = contentType.entry().query().containedIn('fieldUID', ['value']);
+      const query2: Query = contentType.entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
+      const query = contentType.entry().query().or(query1, query2);
       expect(query._parameters).toEqual({ '$or': [ {'fieldUID': {'$in': ['value']}}, { 'fieldUID': 'value2' } ] });
     });
     it('should return entry when both conditions are matching - and', async () => {
-      const query1: Query = await contentType.entry().query().containedIn('fieldUID', ['value']);
-      const query2: Query = await contentType.entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
-      const query = await contentType.entry().query().and(query1, query2);
+      const query1: Query = contentType.entry().query().containedIn('fieldUID', ['value']);
+      const query2: Query = contentType.entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
+      const query = contentType.entry().query().and(query1, query2);
       expect(query._parameters).toEqual({ '$and': [ {'fieldUID': {'$in': ['value']}}, { 'fieldUID': 'value2' } ] });
     });
     it('should return entry equal to the condition - equalTo', async () => {
@@ -60,14 +60,14 @@ describe('Query Operators API test cases', () => {
     });
     it('should return entry for referenceIn query', async () => {
       const query1 = contentType.entry().query().where('fieldUID', QueryOperation.EQUALS, 'value');
-      const entryQuery = await contentType.entry().query().referenceIn('reference_uid', query1);
+      const entryQuery = contentType.entry().query().referenceIn('reference_uid', query1);
       if (entryQuery) {
         expect(entryQuery._parameters).toEqual({ reference_uid: { '$in_query': { fieldUID: 'value' } } });
       }
     });
     it('should return entry for referenceNotIn query', async () => {
       const query1 = contentType.entry().query().where('fieldUID', QueryOperation.EQUALS, 'value');
-      const entryQuery = await contentType.entry().query().referenceNotIn('reference_uid', query1);
+      const entryQuery = contentType.entry().query().referenceNotIn('reference_uid', query1);
       if (entryQuery) {
         expect(entryQuery._parameters).toEqual({ reference_uid: { '$nin_query': { fieldUID: 'value' } } });
       }
