@@ -46,7 +46,6 @@
   },
   "dependencies": {
     "@contentstack/core": "^1.2.0",
-    "@contentstack/utils": "^1.4.0",
     "axios": "^1.8.4",
     "humps": "^2.0.1"
   },
