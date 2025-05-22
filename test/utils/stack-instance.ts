@@ -13,7 +13,7 @@ function stackInstance() {
     live_preview: {
       enable: false,
       preview_token: process.env.PREVIEW_TOKEN || '',
-      host: process.env.HOST || '',
+      host: process.env.LIVE_PREVIEW_HOST || '',
     }
   };
 
