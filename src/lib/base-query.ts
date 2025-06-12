@@ -201,11 +201,17 @@ export class BaseQuery extends Pagination {
    * const result = await stack.asset(asset_uid).fetch();
    */
 
-  async find<T>(): Promise<FindResponse<T>> {
+  async find<T>(encode: boolean = false): Promise<FindResponse<T>> {
     let requestParams: { [key: string]: any } = this._queryParams;
 
     if (Object.keys(this._parameters).length > 0) {
-      requestParams = { ...this._queryParams, query: { ...this._parameters } };
+      let queryParams = { ...this._parameters };
+      
+      if (encode) {
+        queryParams = this.encodeQueryParams(queryParams);
+      }
+      
+      requestParams = { ...this._queryParams, query: queryParams };
     }
 
     const getRequestOptions: any = { params: requestParams };
@@ -219,5 +225,30 @@ export class BaseQuery extends Pagination {
     const response = await getData(this._client, this._urlPath, getRequestOptions);
 
     return response as FindResponse<T>;
+  }
+
+  /**
+   * @private
+   * @method encodeQueryParams
+   * @description Encodes query parameters to handle special characters
+   * @param {params} params - Parameters to encode
+   * @returns {params} Encoded parameters
+   */
+  private encodeQueryParams(params: params): params {
+    const encodedParams: params = {};
+    
+    for (const [key, value] of Object.entries(params)) {
+      if (typeof value === 'string') {
+        encodedParams[key] = encodeURIComponent(value);
+      } else if (typeof value === 'object' && value !== null) {
+        // Handle nested objects recursively
+        encodedParams[key] = this.encodeQueryParams(value as params);
+      } else {
+        // Keep non-string values as is (numbers, booleans, etc.)
+        encodedParams[key] = value;
+      }
+    }
+    
+    return encodedParams;
   }
 }
