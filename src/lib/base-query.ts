@@ -1,6 +1,7 @@
 import { AxiosInstance, getData } from '@contentstack/core';
 import { Pagination } from './pagination';
 import { FindResponse, params } from './types';
+import { encodeQueryParams } from './utils';
 
 export class BaseQuery extends Pagination {
   _parameters: params = {}; // Params of query class ?query={}
@@ -208,7 +209,7 @@ export class BaseQuery extends Pagination {
       let queryParams = { ...this._parameters };
       
       if (encode) {
-        queryParams = this.encodeQueryParams(queryParams);
+        queryParams = encodeQueryParams(queryParams);
       }
       
       requestParams = { ...this._queryParams, query: queryParams };
@@ -225,30 +226,5 @@ export class BaseQuery extends Pagination {
     const response = await getData(this._client, this._urlPath, getRequestOptions);
 
     return response as FindResponse<T>;
-  }
-
-  /**
-   * @private
-   * @method encodeQueryParams
-   * @description Encodes query parameters to handle special characters
-   * @param {params} params - Parameters to encode
-   * @returns {params} Encoded parameters
-   */
-  private encodeQueryParams(params: params): params {
-    const encodedParams: params = {};
-    
-    for (const [key, value] of Object.entries(params)) {
-      if (typeof value === 'string') {
-        encodedParams[key] = encodeURIComponent(value);
-      } else if (typeof value === 'object' && value !== null) {
-        // Handle nested objects recursively
-        encodedParams[key] = this.encodeQueryParams(value as params);
-      } else {
-        // Keep non-string values as is (numbers, booleans, etc.)
-        encodedParams[key] = value;
-      }
-    }
-    
-    return encodedParams;
   }
 }
