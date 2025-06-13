@@ -36,8 +36,7 @@ describe('Entries class', () => {
     const referenceFieldUid = 'referenceFieldUid';
     entry.includeReference(referenceFieldUid);
     expect(entry._queryParams['include[]']).toContain(referenceFieldUid);
-});
-
+  });
 
   it('should add "include_fallback" in _queryParams when includeFallback method is called', () => {
     const returnedValue = entry.includeFallback();
@@ -80,62 +79,90 @@ describe('Entries class', () => {
     expect(returnedValue).toBeInstanceOf(Query);
   });
 
+  it('should add a fieldUid to the _queryParams object', () => {
+    entry.only('fieldUid');
+    expect(entry._queryParams).toEqual({ 'only[BASE][]': 'fieldUid' });
+  });
+
+  it('should return an instance of Entries', () => {
+    const result = entry.only('fieldUid');
+    expect(result).toBeInstanceOf(Entries);
+  });
+
+  it('should allow chaining of multiple calls', () => {
+    entry.only('fieldUid1').only('fieldUid2');
+    expect(entry._queryParams).toEqual({ 'only[BASE][]': 'fieldUid2' });
+  });
+
+  it('should add a fieldUid to the _queryParams object', () => {
+    entry.except('fieldUid');
+    expect(entry._queryParams).toEqual({ 'except[BASE][]': 'fieldUid' });
+  });
+
+  it('should return an instance of Entries', () => {
+    const result = entry.except('fieldUid');
+    expect(result).toBeInstanceOf(Entries);
+  });
+
+  it('should allow chaining of multiple calls', () => {
+    entry.except('fieldUid1').except('fieldUid2');
+    expect(entry._queryParams).toEqual({ 'except[BASE][]': 'fieldUid2' });
+  });
+
   it('should provide proper response when find method is called', async () => {
     mockClient.onGet(`/content_types/contentTypeUid/entries`).reply(200, entryFindMock);
     const returnedValue = await entry.find();
     expect(returnedValue).toEqual(entryFindMock);
   });
 
-  // // ###########################################################
+  it('CT Taxonomy Query: Get entries with one term', () => {
+      const query = entry.query().where("taxonomies.taxonomy_uid", QueryOperation.EQUALS, "term_uid");
+      expect(query._parameters).toEqual({"taxonomies.taxonomy_uid": "term_uid"});
+  });
 
-    it('CT Taxonomy Query: Get entries with one term', () => {
-        const query = entry.query().where("taxonomies.taxonomy_uid", QueryOperation.EQUALS, "term_uid");
-        expect(query._parameters).toEqual({"taxonomies.taxonomy_uid": "term_uid"});
-    });
+  test('CT Taxonomy Query: Get entries with any term ($in)', () => {
+    const query = entry.query().where("taxonomies.taxonomy_uid", QueryOperation.INCLUDES, ["term_uid1", "term_uid2"]).getQuery();
+    expect(query).toEqual({"taxonomies.taxonomy_uid": { "$in": ["term_uid1", "term_uid2"] }});
+  });
 
-    test('CT Taxonomy Query: Get entries with any term ($in)', () => {
-      const query = entry.query().where("taxonomies.taxonomy_uid", QueryOperation.INCLUDES, ["term_uid1", "term_uid2"]).getQuery();
-      expect(query).toEqual({"taxonomies.taxonomy_uid": { "$in": ["term_uid1", "term_uid2"] }});
-    });
+  test('CT Taxonomy Query: Get entries with any term ($or)', () => {
+    const query1 = new Entries(client, 'contentTypeUid').query().where("taxonomies.taxonomy_uid1",QueryOperation.EQUALS, "term_uid1");
+    const query2 = new Entries(client, 'contentTypeUid').query().where("taxonomies.taxonomy_uid2",QueryOperation.EQUALS, "term_uid2");
+    const query = entry.query().queryOperator(QueryOperator.OR, query1, query2);
+    expect(query._parameters).toEqual({ $or: [ {"taxonomies.taxonomy_uid1": "term_uid1"}, {"taxonomies.taxonomy_uid2": "term_uid2"} ] });
+  });
 
-    test('CT Taxonomy Query: Get entries with any term ($or)', () => {
-      const query1 = new Entries(client, 'contentTypeUid').query().where("taxonomies.taxonomy_uid1",QueryOperation.EQUALS, "term_uid1");
-      const query2 = new Entries(client, 'contentTypeUid').query().where("taxonomies.taxonomy_uid2",QueryOperation.EQUALS, "term_uid2");
-      const query = entry.query().queryOperator(QueryOperator.OR, query1, query2);
-      expect(query._parameters).toEqual({ $or: [ {"taxonomies.taxonomy_uid1": "term_uid1"}, {"taxonomies.taxonomy_uid2": "term_uid2"} ] });
-    });
+  test('CT Taxonomy Query: Get entries with all term ($and)', () => {
+    const query1 = new Entries(client, 'contentTypeUid').query().where("taxonomies.taxonomy_uid1", QueryOperation.EQUALS, "term_uid1");
+    const query2 = new Entries(client, 'contentTypeUid').query().where("taxonomies.taxonomy_uid2", QueryOperation.EQUALS, "term_uid2");
+    const query = entry.query().queryOperator(QueryOperator.AND, query1, query2);
+    expect(query._parameters).toEqual({$and: [ {"taxonomies.taxonomy_uid1": "term_uid1"}, {"taxonomies.taxonomy_uid2": "term_uid2"} ]});
+  });
 
-    test('CT Taxonomy Query: Get entries with all term ($and)', () => {
-      const query1 = new Entries(client, 'contentTypeUid').query().where("taxonomies.taxonomy_uid1", QueryOperation.EQUALS, "term_uid1");
-      const query2 = new Entries(client, 'contentTypeUid').query().where("taxonomies.taxonomy_uid2", QueryOperation.EQUALS, "term_uid2");
-      const query = entry.query().queryOperator(QueryOperator.AND, query1, query2);
-      expect(query._parameters).toEqual({$and: [ {"taxonomies.taxonomy_uid1": "term_uid1"}, {"taxonomies.taxonomy_uid2": "term_uid2"} ]});
-    });
+  test('CT Taxonomy Query: Get entries with any taxonomy terms ($exists)', () => {
+    const query = entry.query().where("taxonomies.taxonomy_uid", QueryOperation.EXISTS, true);
+    expect(query._parameters).toEqual({"taxonomies.taxonomy_uid": {$exists: true}});
+  });
 
-    test('CT Taxonomy Query: Get entries with any taxonomy terms ($exists)', () => {
-      const query = entry.query().where("taxonomies.taxonomy_uid", QueryOperation.EXISTS, true);
-      expect(query._parameters).toEqual({"taxonomies.taxonomy_uid": {$exists: true}});
-    });
+  test('CT Taxonomy Query: Get entries with taxonomy terms and also matching its children terms ($eq_below, level)', () => {
+    const query = entry.query().where("taxonomies.taxonomy_uid", TaxonomyQueryOperation.EQ_BELOW, "term_uid", {"levels": 4});
+    expect(query._parameters).toEqual({"taxonomies.taxonomy_uid": {"$eq_below": "term_uid", "levels": 4 }});
+  });
 
-    test('CT Taxonomy Query: Get entries with taxonomy terms and also matching its children terms ($eq_below, level)', () => {
-      const query = entry.query().where("taxonomies.taxonomy_uid", TaxonomyQueryOperation.EQ_BELOW, "term_uid", {"levels": 4});
-      expect(query._parameters).toEqual({"taxonomies.taxonomy_uid": {"$eq_below": "term_uid", "levels": 4 }});
-    });
+  test('CT Taxonomy Query: Get Entries With Taxonomy Terms Children\'s and Excluding the term itself ($below, level) ', () => {
+    const query = entry.query().where("taxonomies.taxonomy_uid", TaxonomyQueryOperation.BELOW, "term_uid");
+    expect(query._parameters).toEqual({"taxonomies.taxonomy_uid": {"$below": "term_uid" }});
+  });
 
-    test('CT Taxonomy Query: Get Entries With Taxonomy Terms Children\'s and Excluding the term itself ($below, level) ', () => {
-      const query = entry.query().where("taxonomies.taxonomy_uid", TaxonomyQueryOperation.BELOW, "term_uid");
-      expect(query._parameters).toEqual({"taxonomies.taxonomy_uid": {"$below": "term_uid" }});
-    });
+  test('CT Taxonomy Query: Get Entries With Taxonomy Terms and Also Matching Its Parent Term ($eq_above, level)', () => {
+    const query = entry.query().where("taxonomies.taxonomy_uid", TaxonomyQueryOperation.EQ_ABOVE, "term_uid", {"levels": 4});
+    expect(query._parameters).toEqual({"taxonomies.taxonomy_uid": {"$eq_above": "term_uid", "levels": 4 }});
+  });
 
-    test('CT Taxonomy Query: Get Entries With Taxonomy Terms and Also Matching Its Parent Term ($eq_above, level)', () => {
-      const query = entry.query().where("taxonomies.taxonomy_uid", TaxonomyQueryOperation.EQ_ABOVE, "term_uid", {"levels": 4});
-      expect(query._parameters).toEqual({"taxonomies.taxonomy_uid": {"$eq_above": "term_uid", "levels": 4 }});
-    });
-
-    test('CT Taxonomy Query: Get Entries With Taxonomy Terms Parent and Excluding the term itself ($above, level)', () => {
-      const query = entry.query().where("taxonomies.taxonomy_uid", TaxonomyQueryOperation.ABOVE, "term_uid", {"levels": 4});
-      expect(query._parameters).toEqual({"taxonomies.taxonomy_uid": {"$above": "term_uid", "levels": 4 }});
-    });
+  test('CT Taxonomy Query: Get Entries With Taxonomy Terms Parent and Excluding the term itself ($above, level)', () => {
+    const query = entry.query().where("taxonomies.taxonomy_uid", TaxonomyQueryOperation.ABOVE, "term_uid", {"levels": 4});
+    expect(query._parameters).toEqual({"taxonomies.taxonomy_uid": {"$above": "term_uid", "levels": 4 }});
+  });
 });
 
 class TestVariants extends Entries {

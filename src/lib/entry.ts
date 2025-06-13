@@ -29,7 +29,7 @@ export class Entry {
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).includeFallback().fetch();
    */
-  includeFallback(): Entry {
+  includeFallback(): this {
     this._queryParams.include_fallback = 'true';
 
     return this;
@@ -46,7 +46,7 @@ export class Entry {
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType('abc').entry('entry_uid').variants('xyz').fetch();
    */
-  variants(variants: string | string[]): Entry {
+  variants(variants: string | string[]): this {
     if (Array.isArray(variants) && variants.length > 0) {
       this._variants = variants.join(',');
     } else if (typeof variants == 'string' && variants.length > 0) {
@@ -67,7 +67,7 @@ export class Entry {
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).includeMetadata().fetch();
    */
-  includeMetadata(): Entry {
+  includeMetadata(): this {
     this._queryParams.include_metadata = 'true';
 
     return this;
@@ -84,7 +84,7 @@ export class Entry {
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).includeEmbeddedItems().fetch();
    */
-  includeEmbeddedItems(): Entry {
+  includeEmbeddedItems(): this {
     this._queryParams['include_embedded_items[]'] = 'BASE';
 
     return this;
@@ -103,7 +103,7 @@ export class Entry {
    * @param {string} referenceFieldUid - UID of the reference field to include.
    * @returns {Entry} - Returns the Entry instance for chaining.
    */
-  includeReference(...referenceFieldUid: (string | string[])[]): Entry {
+  includeReference(...referenceFieldUid: (string | string[])[]): this {
     if (referenceFieldUid.length) {
       referenceFieldUid.forEach(value => {
         if (!Array.isArray(this._queryParams['include[]'])) {
@@ -128,7 +128,7 @@ export class Entry {
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).includeContentType().fetch();
    */
-  includeContentType(): Entry {
+  includeContentType(): this {
     this._queryParams.include_content_type = 'true';
 
     return this;
@@ -145,7 +145,7 @@ export class Entry {
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).includeBranch().fetch();
    */
-  includeBranch(): Entry {
+  includeBranch(): this {
     this._queryParams.include_branch = 'true';
 
     return this;
@@ -162,7 +162,7 @@ export class Entry {
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.assetQuery().locale('en-us').fetch();
    */
-  locale(locale: string): Entry {
+  locale(locale: string): this {
     this._queryParams.locale = locale;
 
     return this;
@@ -195,7 +195,7 @@ export class Entry {
     return response;
   }
 
-    /**
+  /**
    * @method addParams
    * @memberof Entry
    * @description Adds a query parameter to the query.
@@ -207,9 +207,62 @@ export class Entry {
    *
    * @returns {Entry}
    */
-  addParams(paramObj: { [key: string]: string | number | string[] }): Entry {
+  addParams(paramObj: { [key: string]: string | number | string[] }): this {
     this._queryParams = { ...this._queryParams, ...paramObj };
 
+    return this;
+  }
+
+  /**
+   * @method except
+   * @memberof Entry
+   * @description Excludes specific field/fields of an entry
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.contentType("contentTypeUid").entry().except("fieldUID").find()
+   *
+   * @param {string} fieldUid - field uid to exclude
+   * @returns {Entry} - returns Entry object for chaining method calls
+   */
+  except(fieldUid: string|string[]): this {
+    if (Array.isArray(fieldUid)) {
+      let i = 0;
+      for (const uid of fieldUid) {
+        this._queryParams[`except[BASE][${i}]`] = uid;
+        i++;
+      }
+    } else {
+      this._queryParams["except[BASE][]"] = fieldUid;
+    }
+
+    return this;
+  }
+
+  /**
+   * @method only
+   * @memberof Entry
+   * @description Selects specific field/fields of an entry
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.contentType("contentTypeUid").entry().only("fieldUID").find()
+   *
+   * @param {string} fieldUid - field uid to select
+   * @returns {Entry} - returns Entry object for chaining method calls
+   */
+  only(fieldUid: string|string[]): this {
+    if (Array.isArray(fieldUid)) {
+      let i = 0;
+      for (const uid of fieldUid) {
+        this._queryParams[`only[BASE][${i}]`] = uid;
+        i++;
+      }
+    } else {
+      this._queryParams["only[BASE][]"] = fieldUid;
+    }
     return this;
   }
 }

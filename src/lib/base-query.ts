@@ -1,6 +1,7 @@
 import { AxiosInstance, getData } from '@contentstack/core';
 import { Pagination } from './pagination';
 import { FindResponse, params } from './types';
+import { encodeQueryParams } from './utils';
 
 export class BaseQuery extends Pagination {
   _parameters: params = {}; // Params of query class ?query={}
@@ -201,11 +202,17 @@ export class BaseQuery extends Pagination {
    * const result = await stack.asset(asset_uid).fetch();
    */
 
-  async find<T>(): Promise<FindResponse<T>> {
+  async find<T>(encode: boolean = false): Promise<FindResponse<T>> {
     let requestParams: { [key: string]: any } = this._queryParams;
 
     if (Object.keys(this._parameters).length > 0) {
-      requestParams = { ...this._queryParams, query: { ...this._parameters } };
+      let queryParams = { ...this._parameters };
+      
+      if (encode) {
+        queryParams = encodeQueryParams(queryParams);
+      }
+      
+      requestParams = { ...this._queryParams, query: queryParams };
     }
 
     const getRequestOptions: any = { params: requestParams };
