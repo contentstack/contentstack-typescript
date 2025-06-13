@@ -1,4 +1,7 @@
 fileignoreconfig:
+- filename: .github/workflows/secrets-scan.yml
+  ignore_detectors:
+    - filecontent
   - filename: src/lib/types.ts
     checksum: 1eb6d6ec971934d65017dae2f82d6d6ef1cd0e6bfd50f43a9b46f30182307230
   - filename: test/unit/image-transform.spec.ts
