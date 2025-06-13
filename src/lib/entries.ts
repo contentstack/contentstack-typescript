@@ -1,8 +1,8 @@
 import { AxiosInstance, getData } from '@contentstack/core';
-import { EntryQueryable } from './entry-queryable';
 import { Query } from './query';
+import { BaseQuery } from './base-query';
 
-export class Entries extends EntryQueryable {
+export class Entries extends BaseQuery {
   private _contentTypeUid: string;
 
   constructor(client: AxiosInstance, contentTypeUid: string) {
@@ -11,6 +11,84 @@ export class Entries extends EntryQueryable {
     this._contentTypeUid = contentTypeUid;
     this._urlPath = `/content_types/${this._contentTypeUid}/entries`;
     this._variants = '';
+  }
+
+  /**
+   * @method except
+   * @memberof Entries
+   * @description Excludes specific field/fields of an entry
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.contentType("contentTypeUid").entry().except("fieldUID").find()
+   *
+   * @param {string} fieldUid - field uid to exclude
+   * @returns {Entries} - returns Entries object for chaining method calls
+   */
+  except(fieldUid: string|string[]): this {
+    if (Array.isArray(fieldUid)) {
+      let i = 0;
+      for (const uid of fieldUid) {
+        this._queryParams[`except[BASE][${i}]`] = uid;
+        i++;
+      }
+    } else {
+      this._queryParams["except[BASE][]"] = fieldUid;
+    }
+
+    return this;
+  }
+
+  /**
+   * @method includeBranch
+   * @memberof Entries
+   * @description Includes the branch in result
+   * @returns {Entries}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.contentType(contentType_uid).entry().includeBranch().find();
+   */
+  includeBranch(): Entries {
+    this._queryParams.include_branch = 'true';
+
+    return this;
+  }
+
+  /**
+   * @method includeContentType
+   * @memberof Entries
+   * @description IInclude the details of the content type along with the entries details
+   * @returns {Entries}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.contentType(contentType_uid).entry().includeContentType().fetch();
+   */
+  includeContentType(): Entries {
+    this._queryParams.include_content_type = 'true';
+
+    return this;
+  }
+
+  /**
+   * @method includeEmbeddedItems
+   * @memberof Entries
+   * @description Include Embedded Objects (Entries and Assets) along with entry/entries details.
+   * @returns {Entries}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.contentType(contentType_uid).entry().includeEmbeddedItems().fetch();
+   */
+  includeEmbeddedItems(): Entries {
+    this._queryParams['include_embedded_items[]'] = 'BASE';
+
+    return this;
   }
 
   /**
@@ -43,57 +121,6 @@ export class Entries extends EntryQueryable {
    */
   includeMetadata(): Entries {
     this._queryParams.include_metadata = 'true';
-
-    return this;
-  }
-
-  /**
-   * @method includeEmbeddedItems
-   * @memberof Entries
-   * @description Include Embedded Objects (Entries and Assets) along with entry/entries details.
-   * @returns {Entries}
-   * @example
-   * import contentstack from '@contentstack/delivery-sdk'
-   *
-   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.contentType(contentType_uid).entry().includeEmbeddedItems().fetch();
-   */
-  includeEmbeddedItems(): Entries {
-    this._queryParams['include_embedded_items[]'] = 'BASE';
-
-    return this;
-  }
-
-  /**
-   * @method includeContentType
-   * @memberof Entries
-   * @description IInclude the details of the content type along with the entries details
-   * @returns {Entries}
-   * @example
-   * import contentstack from '@contentstack/delivery-sdk'
-   *
-   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.contentType(contentType_uid).entry().includeContentType().fetch();
-   */
-  includeContentType(): Entries {
-    this._queryParams.include_content_type = 'true';
-
-    return this;
-  }
-
-  /**
-   * @method includeBranch
-   * @memberof Entries
-   * @description Includes the branch in result
-   * @returns {Entries}
-   * @example
-   * import contentstack from '@contentstack/delivery-sdk'
-   *
-   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.contentType(contentType_uid).entry().includeBranch().find();
-   */
-  includeBranch(): Entries {
-    this._queryParams.include_branch = 'true';
 
     return this;
   }
@@ -174,6 +201,32 @@ export class Entries extends EntryQueryable {
   locale(locale: string): Entries {
     this._queryParams.locale = locale;
 
+    return this;
+  }
+
+  /**
+   * @method only
+   * @memberof Entries
+   * @description Selects specific field/fields of an entry
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.contentType("contentTypeUid").entry().only("fieldUID").find()
+   *
+   * @param {string} fieldUid - field uid to select
+   * @returns {Entries} - returns Entries object for chaining method calls
+   */
+  only(fieldUid: string|string[]): this {
+    if (Array.isArray(fieldUid)) {
+      let i = 0;
+      for (const uid of fieldUid) {
+        this._queryParams[`only[BASE][${i}]`] = uid;
+        i++;
+      }
+    } else {
+      this._queryParams["only[BASE][]"] = fieldUid;
+    }
     return this;
   }
 
