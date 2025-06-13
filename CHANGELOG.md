@@ -1,3 +1,12 @@
+### Version: 4.7.1
+#### Date: June-13-2025
+- Add encode option on find method to encode query params
+
+### Version: 4.7.0
+#### Date: Apr-29-2025
+- Added return type for entry-querable method
+- Added support of top-level export of Stack type in @contentstack/delivery-sdk for compatibility with "moduleResolution": "Bundler".
+
 ### Version: 4.6.1
 #### Date: March-24-2025
 Fix: Update imports and dependencies
