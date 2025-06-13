@@ -69,4 +69,4 @@ describe('BaseQuery class', () => {
     baseQuery.removeParam('key2');
     expect(baseQuery._queryParams).toEqual({ key1: 'value1' });
   });
-});
+}); 
