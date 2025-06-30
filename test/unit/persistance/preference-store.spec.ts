@@ -29,8 +29,8 @@ beforeAll(() => {
   (iGlobal as any).localStorage = mockLocalStorage;
 });
 
-describe("persistance store intiialization test", () => {
-  it("should initialize default persistance ", () => {
+describe("persistence store initialization test", () => {
+  it("should initialize default persistence ", () => {
     const persistance = new PersistanceStore();
     expect(persistance).toBeDefined();
     expect(persistance.config).toBeDefined();
