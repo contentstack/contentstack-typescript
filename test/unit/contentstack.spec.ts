@@ -1,18 +1,26 @@
-import exp = require('constants');
-import * as core from '@contentstack/core';
-import * as Contentstack from '../../src/lib/contentstack';
-import { Stack } from '../../src/lib/stack';
-import { Policy, Region, StackConfig } from '../../src/lib/types';
-import { CUSTOM_HOST, DUMMY_URL, HOST_EU_REGION, HOST_URL } from '../utils/constant';
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import exp = require("constants");
+import * as core from "@contentstack/core";
+import * as Contentstack from "../../src/lib/contentstack";
+import { Stack } from "../../src/lib/stack";
+import { Policy, Region, StackConfig } from "../../src/lib/types";
+import {
+  CUSTOM_HOST,
+  DUMMY_URL,
+  HOST_AU_REGION,
+  HOST_EU_REGION,
+  HOST_URL,
+} from "../utils/constant";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 
-jest.mock('@contentstack/core');
-const createHttpClientMock = <jest.Mock<typeof core.httpClient>>(<unknown>core.httpClient);
+jest.mock("@contentstack/core");
+const createHttpClientMock = <jest.Mock<typeof core.httpClient>>(
+  (<unknown>core.httpClient)
+);
 
 const reqInterceptor = jest.fn();
 const resInterceptor = jest.fn();
 
-describe('Contentstack', () => {
+describe("Contentstack", () => {
   beforeEach(() =>
     createHttpClientMock.mockReturnValue({
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -34,70 +42,75 @@ describe('Contentstack', () => {
     createHttpClientMock.mockReset();
   });
 
-  const createStackInstance = (config: StackConfig) => Contentstack.stack(config);
+  const createStackInstance = (config: StackConfig) =>
+    Contentstack.stack(config);
 
-  it('should throw error when api key is empty', (done) => {
+  it("should throw error when api key is empty", (done) => {
     const config = {
-      apiKey: '',
-      deliveryToken: '',
-      environment: '',
+      apiKey: "",
+      deliveryToken: "",
+      environment: "",
     };
 
-    expect(() => createStackInstance(config)).toThrow('API key for Stack is required.');
+    expect(() => createStackInstance(config)).toThrow(
+      "API key for Stack is required."
+    );
     done();
   });
 
-  it('should throw error when Delivery Token is empty', (done) => {
+  it("should throw error when Delivery Token is empty", (done) => {
     expect(() => {
       const config = {
-        apiKey: 'apiKey',
-        deliveryToken: '',
-        environment: '',
+        apiKey: "apiKey",
+        deliveryToken: "",
+        environment: "",
       };
       createStackInstance(config);
-    }).toThrow('Delivery token for Stack is required.');
+    }).toThrow("Delivery token for Stack is required.");
     done();
   });
 
-  it('should throw error when Environment is empty', (done) => {
+  it("should throw error when Environment is empty", (done) => {
     const config = {
-      apiKey: 'apiKey',
-      deliveryToken: 'delivery_token',
-      environment: '',
+      apiKey: "apiKey",
+      deliveryToken: "delivery_token",
+      environment: "",
     };
-    expect(() => createStackInstance(config)).toThrow('Environment for Stack is required');
+    expect(() => createStackInstance(config)).toThrow(
+      "Environment for Stack is required"
+    );
     done();
   });
 
-  it('should create stack instance when the mandatory params are passed', (done) => {
+  it("should create stack instance when the mandatory params are passed", (done) => {
     const config = {
-      apiKey: 'apiKey',
-      deliveryToken: 'delivery',
-      environment: 'env',
-    };
-    const stackInstance = createStackInstance(config);
-    expect(stackInstance).toBeInstanceOf(Stack);
-    done();
-  });
-
-  it('should create stack instance when the mandatory params are passed', (done) => {
-    const config = {
-      apiKey: 'apiKey',
-      deliveryToken: 'delivery',
-      environment: 'env',
-      early_access: ['newCDA', 'taxonomy'],
+      apiKey: "apiKey",
+      deliveryToken: "delivery",
+      environment: "env",
     };
     const stackInstance = createStackInstance(config);
     expect(stackInstance).toBeInstanceOf(Stack);
     done();
   });
 
-  it('should set defaultHost, header and params when stack instance is created', (done) => {
+  it("should create stack instance when the mandatory params are passed", (done) => {
     const config = {
-      apiKey: 'apiKey',
-      deliveryToken: 'delivery',
-      environment: 'env',
-      branch: 'branch',
+      apiKey: "apiKey",
+      deliveryToken: "delivery",
+      environment: "env",
+      early_access: ["newCDA", "taxonomy"],
+    };
+    const stackInstance = createStackInstance(config);
+    expect(stackInstance).toBeInstanceOf(Stack);
+    done();
+  });
+
+  it("should set defaultHost, header and params when stack instance is created", (done) => {
+    const config = {
+      apiKey: "apiKey",
+      deliveryToken: "delivery",
+      environment: "env",
+      branch: "branch",
     };
     const stackInstance = createStackInstance(config);
     expect(stackInstance).toBeInstanceOf(Stack);
@@ -108,11 +121,11 @@ describe('Contentstack', () => {
     done();
   });
 
-  it('should change default host when host config is passed', (done) => {
+  it("should change default host when host config is passed", (done) => {
     const config = {
-      apiKey: 'apiKey',
-      deliveryToken: 'delivery',
-      environment: 'env',
+      apiKey: "apiKey",
+      deliveryToken: "delivery",
+      environment: "env",
       host: HOST_EU_REGION,
     };
     const stackInstance = createStackInstance(config);
@@ -120,11 +133,23 @@ describe('Contentstack', () => {
     done();
   });
 
-  it('should change the host when custom host config is passed', (done) => {
+  it("should change default host to AU when AU host config is passed", (done) => {
     const config = {
-      apiKey: 'apiKey',
-      deliveryToken: 'delivery',
-      environment: 'env',
+      apiKey: "apiKey",
+      deliveryToken: "delivery",
+      environment: "env",
+      host: HOST_AU_REGION,
+    };
+    const stackInstance = createStackInstance(config);
+    expect(stackInstance).toBeInstanceOf(Stack);
+    done();
+  });
+
+  it("should change the host when custom host config is passed", (done) => {
+    const config = {
+      apiKey: "apiKey",
+      deliveryToken: "delivery",
+      environment: "env",
       host: CUSTOM_HOST,
     };
     const stackInstance = createStackInstance(config);
@@ -132,11 +157,11 @@ describe('Contentstack', () => {
     done();
   });
 
-  it('should change default host to config host when region and host in config passed', (done) => {
+  it("should change default host to config host when region and host in config passed", (done) => {
     const config = {
-      apiKey: 'apiKey',
-      deliveryToken: 'delivery',
-      environment: 'env',
+      apiKey: "apiKey",
+      deliveryToken: "delivery",
+      environment: "env",
       host: DUMMY_URL,
       region: Region.EU,
     };
@@ -145,22 +170,22 @@ describe('Contentstack', () => {
     done();
   });
 
-  it('should change default host to EU when EU region in config is passed', (done) => {
+  it("should change default host to US when US region in config is passed", (done) => {
     const config = {
-      apiKey: 'apiKey',
-      deliveryToken: 'delivery',
-      environment: 'env',
+      apiKey: "apiKey",
+      deliveryToken: "delivery",
+      environment: "env",
       region: Region.US,
     };
     const stackInstance = createStackInstance(config);
     expect(stackInstance).toBeInstanceOf(Stack);
     done();
   });
-  it('should change default host to EU when EU region in config is passed', (done) => {
+  it("should change default host to EU when EU region in config is passed", (done) => {
     const config = {
-      apiKey: 'apiKey',
-      deliveryToken: 'delivery',
-      environment: 'env',
+      apiKey: "apiKey",
+      deliveryToken: "delivery",
+      environment: "env",
       region: Region.EU,
     };
     const stackInstance = createStackInstance(config);
@@ -168,11 +193,23 @@ describe('Contentstack', () => {
     done();
   });
 
-  it('should change default host to azure-na when AZURE_NA region in config is passed', (done) => {
+  it("should change default host to AU when AU region in config is passed", (done) => {
     const config = {
-      apiKey: 'apiKey',
-      deliveryToken: 'delivery',
-      environment: 'env',
+      apiKey: "apiKey",
+      deliveryToken: "delivery",
+      environment: "env",
+      region: Region.AU,
+    };
+    const stackInstance = createStackInstance(config);
+    expect(stackInstance).toBeInstanceOf(Stack);
+    done();
+  });
+
+  it("should change default host to azure-na when AZURE_NA region in config is passed", (done) => {
+    const config = {
+      apiKey: "apiKey",
+      deliveryToken: "delivery",
+      environment: "env",
       region: Region.AZURE_NA,
     };
 
@@ -181,17 +218,17 @@ describe('Contentstack', () => {
     done();
   });
 
-  it('should add logHandler', async () => {
+  it("should add logHandler", async () => {
     const mockLogHandler = jest.fn();
     const config = {
-      apiKey: 'apiKey',
-      deliveryToken: 'delivery',
-      environment: 'env',
+      apiKey: "apiKey",
+      deliveryToken: "delivery",
+      environment: "env",
       region: Region.AZURE_NA,
       logHandler: mockLogHandler,
       cacheOptions: {
-        policy: Policy.IGNORE_CACHE
-      }
+        policy: Policy.IGNORE_CACHE,
+      },
     };
 
     const stackInstance = createStackInstance(config);
@@ -200,17 +237,16 @@ describe('Contentstack', () => {
     mockLogHandler.mockReset();
   });
 
-  it('should add plugins onRequest and onResponse as req and res interceptors when plugin is passed', (done) => {
-
+  it("should add plugins onRequest and onResponse as req and res interceptors when plugin is passed", (done) => {
     const mockPlugin = {
       onRequest: jest.fn((request) => request),
       onResponse: jest.fn((response) => response),
     };
 
     const stackInstance = createStackInstance({
-      apiKey: 'apiKey',
-      deliveryToken: 'delivery',
-      environment: 'env',
+      apiKey: "apiKey",
+      deliveryToken: "delivery",
+      environment: "env",
       plugins: [mockPlugin],
     });
 
