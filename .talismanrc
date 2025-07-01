@@ -18,6 +18,8 @@ fileignoreconfig:
   checksum: 8826fe3147a2c640b0780dae02345611ed24e562562e7df7b3785cb0fa6f1f14
 - filename: .husky/pre-commit
   checksum: 5baabd7d2c391648163f9371f0e5e9484f8fb90fa2284cfc378732ec3192c193
+- filename: test/api/live-preview.spec.ts
+  checksum: 34f8b01b1e3804023f71768f9c6a67860f192abd70eb22c7d2260d3a80d9e500
 version: ""
 fileignoreconfig:
 - filename: package-lock.json
