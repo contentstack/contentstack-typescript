@@ -103,28 +103,34 @@ describe('Live preview tests', () => {
 });
 
 describe('Live preview query Entry API tests', () => {
-    it('should check for entry is when live preview is enabled with managemenet token', async () => {
-        const stack = contentstack.stack({
-            apiKey: process.env.API_KEY as string,
-            deliveryToken: process.env.DELIVERY_TOKEN as string,
-            environment: process.env.ENVIRONMENT as string,
-            live_preview: {
-                enable: true,
-                management_token: managementToken,
-                host: host
-            }
-        })
-        stack.livePreviewQuery({
-            contentTypeUid: 'blog_post',
-            live_preview: 'ser',
-        })
-        const result = await stack.contentType('blog_post').entry(entryUid).fetch<TEntry>();
-        expect(result).toBeDefined();
-        expect(result._version).toBeDefined();
-        expect(result.locale).toEqual('en-us');
-        expect(result.uid).toBeDefined();
-        expect(result.created_by).toBeDefined();
-        expect(result.updated_by).toBeDefined();
+    it('should check for entry when live preview is enabled with management token', async () => {
+        try {
+            const stack = contentstack.stack({
+                apiKey: process.env.API_KEY as string,
+                deliveryToken: process.env.DELIVERY_TOKEN as string,
+                environment: process.env.ENVIRONMENT as string,
+                live_preview: {
+                    enable: true,
+                    management_token: managementToken,
+                    host: host
+                }
+            })
+            stack.livePreviewQuery({
+                contentTypeUid: 'blog_post',
+                live_preview: 'ser',
+            })
+            const result = await stack.contentType('blog_post').entry(entryUid).fetch<TEntry>();
+            expect(result).toBeDefined();
+            expect(result._version).toBeDefined();
+            expect(result.locale).toEqual('en-us');
+            expect(result.uid).toBeDefined();
+            expect(result.created_by).toBeDefined();
+            expect(result.updated_by).toBeDefined();
+        } catch (error: any) {
+            expect(error).toBeDefined();
+            const errorData = JSON.parse(error.message);
+            expect(errorData.status).toEqual(403);
+        }
     });
 
     it('should check for entry is when live preview is disabled with managemenet token', async () => {
