@@ -137,7 +137,7 @@ describe("Live preview query Entry API tests", () => {
     }
   });
 
-  it("should check for entry is when live preview is disabled with managemenet token", async () => {
+  it("should check for entry is when live preview is disabled with management token", async () => {
     const stack = contentstack.stack({
       host: process.env.HOST as string,
       apiKey: process.env.API_KEY as string,
