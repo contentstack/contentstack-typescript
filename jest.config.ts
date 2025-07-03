@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
-  displayName: 'contentstack-delivery',
-  preset: './jest.preset.js',
+  displayName: "contentstack-delivery",
+  preset: "./jest.preset.js",
   transform: {
     "^.+\\.[tj]s$": [
       "ts-jest",
