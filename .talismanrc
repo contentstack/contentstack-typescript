@@ -5,8 +5,6 @@ fileignoreconfig:
     checksum: cadf177ffc4ce8c271e8b49fd227947351afa7cade5c7cd902cda78d0f91ba5b
   - filename: test/unit/persistance/preference-store.spec.ts
     checksum: 0f3457f8ea8b149c5de1d6585c78eb4cea0d2ac00ca69cdc294c44fe29ea3c11
-  - filename: test/api/live-preview.spec.ts
-    checksum: acdb1bd25dc81cfd9ea16e8a3e3960930c9e6e6034defd8552421e0d25e8afc4
   - filename: test/unit/contentstack.spec.ts
     checksum: 267e4857af531bd3e5f080c3630922169a0c161355a6b185f1ee2716c5e60c45
   - filename: test/unit/utils.spec.ts
@@ -15,4 +13,6 @@ fileignoreconfig:
     checksum: a5e87bfe625b8cef8714545c07cfbe3ea05b07c8cb495fef532c610b37d82140
   - filename: test/unit/persistance/preference-store.spec.ts
     checksum: 5d31522fb28b95b0b243b8f3d8499dcf4c5c80c0ea24f895802a724136985e37
+  - filename: test/api/live-preview.spec.ts
+    checksum: 42b72f54a8c51fc9f98c6044a78d1435388972522763af6bf36f066ff2dc555c
 version: "1.0"
