@@ -1,27 +1,10 @@
 fileignoreconfig:
-- filename: .github/workflows/secrets-scan.yml
-  ignore_detectors:
-    - filecontent
-- filename: src/lib/types.ts
-  checksum: 1eb6d6ec971934d65017dae2f82d6d6ef1cd0e6bfd50f43a9b46f30182307230
-- filename: test/unit/image-transform.spec.ts
-  checksum: 7beabdd07bd35d620668fcd97e1a303b9cbc40170bf3008a376d75ce0895de2a
-- filename: test/utils/mocks.ts
-  checksum: a1cb4b1890a584f1facd30f2a0974c97a66f91417022be79d00516338e244227
-- filename: src/lib/query.ts
-  checksum: c4529069bc974d15c104303c5ae573c9341185a869c612ab07f0ee7f42e8b149
-- filename: package-lock.json
-  checksum: f9c5af529a2c4c6576d67bd6c25dc6c3088ddedf2482757d382953f2d4521995
-- filename: src/lib/entries.ts
-  checksum: 1c9a58570f26d3e53526e89b404581a523d3f035234bc099fda96d144dee40f6
-- filename: src/lib/entry.ts
-  checksum: 8826fe3147a2c640b0780dae02345611ed24e562562e7df7b3785cb0fa6f1f14
-- filename: .husky/pre-commit
-  checksum: 5baabd7d2c391648163f9371f0e5e9484f8fb90fa2284cfc378732ec3192c193
-- filename: test/api/live-preview.spec.ts
-  checksum: 34f8b01b1e3804023f71768f9c6a67860f192abd70eb22c7d2260d3a80d9e500
-version: ""
-fileignoreconfig:
-- filename: package-lock.json
-  checksum: be08fac0b5e580b7dd66f5dc2b2f7bdefeef89b98ce60df1fe31ad33adb96172
+  - filename: test/unit/persistance/local-storage.spec.ts
+    checksum: da6638b676c34274279d80539983a5dfcf5e729ec65d6a535d7939b6ba7c9b58
+  - filename: test/unit/cache.spec.ts
+    checksum: cadf177ffc4ce8c271e8b49fd227947351afa7cade5c7cd902cda78d0f91ba5b
+  - filename: test/unit/persistance/preference-store.spec.ts
+    checksum: 0f3457f8ea8b149c5de1d6585c78eb4cea0d2ac00ca69cdc294c44fe29ea3c11
+  - filename: test/api/live-preview.spec.ts
+    checksum: acdb1bd25dc81cfd9ea16e8a3e3960930c9e6e6034defd8552421e0d25e8afc4
 version: "1.0"
