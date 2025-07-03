@@ -128,6 +128,8 @@ describe('Live preview query Entry API tests', () => {
             expect(result.updated_by).toBeDefined();
         } catch (error: any) {
             expect(error).toBeDefined();
+            const errorData = JSON.parse(error.message);
+            expect(errorData.status).toEqual(403);
         }
     });
 
