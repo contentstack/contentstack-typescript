@@ -1,3 +1,7 @@
+### Version: 4.8.0
+#### Date: June-30-2025
+Enh: Added AWS-EU support
+
 ### Version: 4.7.1
 #### Date: June-13-2025
 - Add encode option on find method to encode query params
@@ -38,11 +42,11 @@ Fix: removed node-localstorage
 #### Date: October-21-2024
 Fix: getData to receive params and headers both in data
 Enh: Node version bump
-Refactor: Package type changed to be module instead of CommonJS 
+Refactor: Package type changed to be module instead of CommonJS
 
 ### Version: 4.3.0
 #### Date: Septmber-09-2024
-Feat: Include refernce accepts array of values 
+Feat: Include refernce accepts array of values
 
 ### Version: 4.2.0
 #### Date: Septmber-04-2024
@@ -75,7 +79,7 @@ Custom host implementation
 
 ### Version: 4.0.1
 #### Date: May-20-2024
-Fixed SRE vulnerabilities 
+Fixed SRE vulnerabilities
 
 ### Version: 4.0.0
 #### Date: April-23-2024
