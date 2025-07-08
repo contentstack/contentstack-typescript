@@ -14,5 +14,5 @@ fileignoreconfig:
   - filename: test/unit/persistance/preference-store.spec.ts
     checksum: 5d31522fb28b95b0b243b8f3d8499dcf4c5c80c0ea24f895802a724136985e37
   - filename: test/api/live-preview.spec.ts
-    checksum: 42b72f54a8c51fc9f98c6044a78d1435388972522763af6bf36f066ff2dc555c
+    checksum: 577c1407bfd80d2e6a7717f55b02eb0b93e37050d7c985b85f2bb4bf99f430f0
 version: "1.0"
