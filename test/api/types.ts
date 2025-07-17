@@ -52,6 +52,18 @@ export interface TAsset {
   };
 }
 
+export interface TGlobalField {
+  uid: string;
+  title: string;
+  schema: any[];
+  _version: number;
+  created_at: string;
+  updated_at: string;
+  created_by: string;
+  updated_by: string;
+  _branch?: string;
+}
+
 export interface TAssets {
   assets: TAsset[];
 }
