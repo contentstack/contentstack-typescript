@@ -32,7 +32,8 @@
     "build:cjs": "node tools/cleanup cjs && tsc -p config/tsconfig.cjs.json && node tools/rename-cjs.cjs",
     "build:esm": "node tools/cleanup esm && tsc -p config/tsconfig.esm.json",
     "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json",
-    "husky-check": "npm run build && husky && chmod +x .husky/pre-commit"
+    "husky-check": "npm run build && husky && chmod +x .husky/pre-commit",
+    "test:api:sanity": "jest ./test/api --testPathIgnorePatterns=synchronization.spec.ts"
   },
   "dependencies": {
     "@contentstack/core": "^1.2.0",
