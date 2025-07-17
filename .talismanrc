@@ -1,18 +1,4 @@
 fileignoreconfig:
-  - filename: test/unit/persistance/local-storage.spec.ts
-    checksum: da6638b676c34274279d80539983a5dfcf5e729ec65d6a535d7939b6ba7c9b58
-  - filename: test/unit/cache.spec.ts
-    checksum: cadf177ffc4ce8c271e8b49fd227947351afa7cade5c7cd902cda78d0f91ba5b
-  - filename: test/unit/persistance/preference-store.spec.ts
-    checksum: 0f3457f8ea8b149c5de1d6585c78eb4cea0d2ac00ca69cdc294c44fe29ea3c11
-  - filename: test/unit/contentstack.spec.ts
-    checksum: 267e4857af531bd3e5f080c3630922169a0c161355a6b185f1ee2716c5e60c45
-  - filename: test/unit/utils.spec.ts
-    checksum: b447bcd7d3b4ff83846dc0f492f1c7f52f80c46f341aabbf7570a16ed17d8232
-  - filename: src/lib/types.ts
-    checksum: a5e87bfe625b8cef8714545c07cfbe3ea05b07c8cb495fef532c610b37d82140
-  - filename: test/unit/persistance/preference-store.spec.ts
-    checksum: 5d31522fb28b95b0b243b8f3d8499dcf4c5c80c0ea24f895802a724136985e37
-  - filename: test/api/live-preview.spec.ts
-    checksum: 577c1407bfd80d2e6a7717f55b02eb0b93e37050d7c985b85f2bb4bf99f430f0
+- filename: test/unit/query-optimization-comprehensive.spec.ts
+  checksum: f5aaf6c784d7c101a05ca513c584bbd6e95f963d1e42779f2596050d9bcbac96
 version: "1.0"
