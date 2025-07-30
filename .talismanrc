@@ -1,4 +1,4 @@
 fileignoreconfig:
-- filename: test/unit/query-optimization-comprehensive.spec.ts
-  checksum: f5aaf6c784d7c101a05ca513c584bbd6e95f963d1e42779f2596050d9bcbac96
-version: "1.0"
+- filename: package-lock.json
+  checksum: 93d1e963e54db601a3a6342852815f45d1a650a09ead4b6873b2e10ad15855f2
+version: ""
