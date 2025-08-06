@@ -5,3 +5,6 @@
 *.log
 dist/
 coverage/
+.dccache
+dist/*
+.nx/
