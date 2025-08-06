@@ -57,7 +57,7 @@
     "prepare": "npm run build",
     "test": "jest ./test/unit",
     "test:unit": "jest ./test/unit",
-    "test:api": "jest ./test/api",
+    "test:api": "jest ./test/api --silent --testPathIgnorePatterns=\"(synchronization|metadata-branch-operations|entry-variants|global-fields-comprehensive|index).spec.ts\" --silent",
     "test:all": "jest ./test/unit && jest ./test/api",
     "test:watch": "jest ./test/unit --watch",
     "test:coverage": "jest ./test/unit --coverage",
