@@ -1,6 +1,6 @@
 {
   "name": "@contentstack/delivery-sdk",
-  "version": "4.8.1",
+  "version": "5.0.0",
   "type": "module",
   "description": "Contentstack Delivery SDK for TypeScript",
   "homepage": "https://github.com/contentstack/contentstack-typescript",
@@ -69,7 +69,7 @@
   },
   "dependencies": {
     "@contentstack/core": "^1.2.2",
-    "axios": "^1.8.4",
+    "axios": "^1.11.0",
     "humps": "^2.0.1"
   },
   "files": [
