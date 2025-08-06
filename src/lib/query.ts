@@ -131,7 +131,6 @@ export class Query extends BaseQuery {
    * @returns {Query} - Returns the Query instance for chaining.
    */
   whereIn(referenceUid: string, queryInstance: Query): Query {
-    // eslint-disable-next-line @typescript-eslint/naming-convention, prettier/prettier
     if (!this.isValidAlphanumeric(referenceUid)) {
       throw new Error("Invalid referenceUid: Must be alphanumeric.");
     }
@@ -156,7 +155,6 @@ export class Query extends BaseQuery {
    * @returns {Query} - Returns the Query instance for chaining.
    */
   whereNotIn(referenceUid: string, queryInstance: Query): Query {
-    // eslint-disable-next-line @typescript-eslint/naming-convention, prettier/prettier
     if (!this.isValidAlphanumeric(referenceUid)) {
       throw new Error("Invalid referenceUid: Must be alphanumeric.");
     }

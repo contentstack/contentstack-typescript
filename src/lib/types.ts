@@ -1,6 +1,4 @@
-/* eslint-disable @cspell/spellchecker */
-import { HttpClientParams } from "@contentstack/core";
-import { PersistanceStoreOptions, StorageType } from "../persistance";
+import { HttpClientParams } from '@contentstack/core';
 
 // Internal Types
 export type params = {
@@ -37,9 +35,9 @@ export interface StackConfig extends HttpClientParams {
   port?: number;
   debug?: boolean;
 }
-export interface CacheOptions extends PersistanceStoreOptions {
+export interface CacheOptions {
   policy: Policy;
-  storeType?: StorageType;
+  persistanceStore?: any;
 }
 
 export enum Policy {
