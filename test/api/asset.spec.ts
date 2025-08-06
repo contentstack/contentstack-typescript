@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable promise/always-return */
-import { BaseAsset } from 'src';
+import { BaseAsset } from '../../src/lib/types';
 import { Asset } from '../../src/lib/asset';
 import { stackInstance } from '../utils/stack-instance';
 import { TAsset } from './types';
