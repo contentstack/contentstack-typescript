@@ -22,7 +22,7 @@ fileignoreconfig:
   - filename: src/lib/query.ts
     checksum: c4529069bc974d15c104303c5ae573c9341185a869c612ab07f0ee7f42e8b149
   - filename: package-lock.json
-    checksum: da870e7d8b343b746fc0d65226366da0d38c520f9b232249b85f132f9b07c33f
+    checksum: 3ee976a8e2374d96054708eefb9fafda17d4e98a48ae6d665e4f9b5d7111dd39
   - filename: src/lib/entries.ts
     checksum: 1c9a58570f26d3e53526e89b404581a523d3f035234bc099fda96d144dee40f6
   - filename: src/lib/entry.ts
