@@ -3,7 +3,7 @@
   "version": "4.7.0",
   "type": "module",
   "description": "Contentstack Delivery SDK for TypeScript",
-  "homepage": "https://www.contentstack.com/",
+  "homepage": "https://github.com/contentstack/contentstack-typescript",
   "author": {
     "name": "Contentstack",
     "url": "https://www.contentstack.com/"
@@ -13,35 +13,58 @@
     "url": "https://github.com/contentstack/contentstack-typescript"
   },
   "license": "MIT",
-  "main": "./dist/legacy/index.cjs",
-  "module": "./dist/legacy/index.js",
-  "types": "./dist/legacy/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/modern/index.d.ts",
-        "default": "./dist/modern/index.js"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.esm.js"
       },
       "require": {
-        "types": "./dist/modern/index.d.cts",
-        "default": "./dist/modern/index.cjs"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./lib/*": {
+      "import": {
+        "types": "./dist/types/lib/*.d.ts",
+        "default": "./dist/esm/lib/*.js"
+      },
+      "require": {
+        "types": "./dist/types/lib/*.d.ts",
+        "default": "./dist/cjs/lib/*.js"
+      }
+    },
+    "./*": {
+      "import": {
+        "types": "./dist/types/*.d.ts",
+        "default": "./dist/esm/*.js"
+      },
+      "require": {
+        "types": "./dist/types/*.d.ts",
+        "default": "./dist/cjs/*.js"
       }
     },
     "./package.json": "./package.json"
   },
   "scripts": {
+    "build": "rollup -c",
+    "build:dev": "rollup -c --watch",
+    "build:prod": "NODE_ENV=production rollup -c",
+    "clean": "rm -rf dist",
     "prepare": "npm run build",
     "test": "jest ./test/unit",
     "test:unit": "jest ./test/unit",
     "test:api": "jest ./test/api",
+    "test:all": "jest ./test/unit && jest ./test/api",
+    "test:watch": "jest ./test/unit --watch",
+    "test:coverage": "jest ./test/unit --coverage",
     "test:sanity-report": "node sanity-report.mjs",
-    "lint": "eslint . -c .eslintrc.json",
-    "clean": "node tools/cleanup",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
     "package": "npm run build && npm pack",
-    "build": "NODE_OPTIONS='--max-old-space-size=16384' tsup",
-    "build:cjs": "node tools/cleanup cjs && tsc -p config/tsconfig.cjs.json && node tools/rename-cjs.cjs",
-    "build:esm": "node tools/cleanup esm && tsc -p config/tsconfig.esm.json",
-    "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json",
     "husky-check": "npm run build && husky && chmod +x .husky/pre-commit"
   },
   "dependencies": {
@@ -55,28 +78,24 @@
     "README.md"
   ],
   "devDependencies": {
-    "@nrwl/jest": "^17.3.2",
-    "@slack/bolt": "^4.0.1",
+    "@eslint/js": "^9.32.0",
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-replace": "^6.0.2",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.4",
     "@types/humps": "^2.0.6",
-    "@types/jest": "^29.5.14",
-    "@types/node-localstorage": "^1.3.3",
-    "axios-mock-adapter": "^1.22.0",
-    "babel-jest": "^29.7.0",
-    "dotenv": "^16.4.7",
-    "esbuild-plugin-file-path-extensions": "^2.1.4",
-    "husky": "^9.1.7",
-    "ignore-loader": "^0.1.2",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "jest-html-reporter": "^3.10.2",
-    "jest-html-reporters": "^3.1.7",
-    "jest-junit": "^16.0.0",
-    "path-browserify": "^1.0.1",
-    "ts-jest": "^29.2.6",
-    "ts-loader": "^9.5.2",
-    "ts-node": "^10.9.2",
-    "tsup": "^8.4.0",
-    "webpack-cli": "^5.1.4"
-  },
-  "homepage": "https://github.com/contentstack/contentstack-typescript"
+    "@types/jest": "^30.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.39.0",
+    "@typescript-eslint/parser": "^8.39.0",
+    "axios-mock-adapter": "^2.1.0",
+    "dotenv": "^17.2.1",
+    "eslint": "^9.32.0",
+    "glob": "^11.0.3",
+    "jest": "^30.0.5",
+    "rollup": "^4.46.2",
+    "rollup-plugin-dts": "^6.2.1",
+    "ts-jest": "^29.4.1",
+    "typescript": "^5.9.2"
+  }
 }
