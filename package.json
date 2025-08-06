@@ -61,6 +61,7 @@
     "test:all": "jest ./test/unit && jest ./test/api",
     "test:watch": "jest ./test/unit --watch",
     "test:coverage": "jest ./test/unit --coverage",
+    "test:sanity-report": "node sanity-report.mjs",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "package": "npm run build && npm pack",
