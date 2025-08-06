@@ -29,7 +29,7 @@ let version = '{{VERSION}}';
  *   }
  * }
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 export function stack(config: StackConfig): StackClass {
   let defaultConfig = {
     defaultHostname: 'cdn.contentstack.io',

@@ -8,7 +8,7 @@ fileignoreconfig:
   - filename: src/lib/query.ts
     checksum: c4529069bc974d15c104303c5ae573c9341185a869c612ab07f0ee7f42e8b149
   - filename: package-lock.json
-    checksum: 1d24430d6f7fc3a22ac4613bff8909d0e10236becea7aa5ec0ea506beedf9a07
+    checksum: a990bf5e52a42728ef1f85d4b005efe6c1c76e9fb8461e11d82f062cb5851e37
   - filename: src/lib/entries.ts
     checksum: 1c9a58570f26d3e53526e89b404581a523d3f035234bc099fda96d144dee40f6
   - filename: src/lib/entry.ts
