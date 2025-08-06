@@ -8,3 +8,4 @@ coverage/
 .dccache
 dist/*
 .nx/
+reports/*
