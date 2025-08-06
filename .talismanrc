@@ -1,6 +1,20 @@
 fileignoreconfig:
   - filename: src/lib/types.ts
-    checksum: 1eb6d6ec971934d65017dae2f82d6d6ef1cd0e6bfd50f43a9b46f30182307230
+    checksum: 35552b058b74a59a58c0deafd62c0d9b72e7c679cda803c7da3d1e55d9d4c508
+  - filename: .github/workflows/secrets-scan.yml
+    checksum: d79ec3f3288964f7d117b9ad319a54c0ebc152e35f69be8fde95522034fdfb2a
+  - filename: src/lib/utils.ts
+    checksum: d24a8d861d497776cd788ffe62cd6b24dbf5e9f695c263a0b0af6b9e1860fa77
+  - filename: test/unit/cache.spec.ts
+    checksum: cadf177ffc4ce8c271e8b49fd227947351afa7cade5c7cd902cda78d0f91ba5b
+  - filename: test/unit/contentstack.spec.ts
+    checksum: 267e4857af531bd3e5f080c3630922169a0c161355a6b185f1ee2716c5e60c45
+  - filename: test/unit/utils.spec.ts
+    checksum: b447bcd7d3b4ff83846dc0f492f1c7f52f80c46f341aabbf7570a16ed17d8232
+  - filename: test/api/live-preview.spec.ts
+    checksum: 577c1407bfd80d2e6a7717f55b02eb0b93e37050d7c985b85f2bb4bf99f430f0
+  - filename: test/unit/query-optimization-comprehensive.spec.ts
+    checksum: f5aaf6c784d7c101a05ca513c584bbd6e95f963d1e42779f2596050d9bcbac96
   - filename: test/unit/image-transform.spec.ts
     checksum: 7beabdd07bd35d620668fcd97e1a303b9cbc40170bf3008a376d75ce0895de2a
   - filename: test/utils/mocks.ts
@@ -8,7 +22,7 @@ fileignoreconfig:
   - filename: src/lib/query.ts
     checksum: c4529069bc974d15c104303c5ae573c9341185a869c612ab07f0ee7f42e8b149
   - filename: package-lock.json
-    checksum: a990bf5e52a42728ef1f85d4b005efe6c1c76e9fb8461e11d82f062cb5851e37
+    checksum: da870e7d8b343b746fc0d65226366da0d38c520f9b232249b85f132f9b07c33f
   - filename: src/lib/entries.ts
     checksum: 1c9a58570f26d3e53526e89b404581a523d3f035234bc099fda96d144dee40f6
   - filename: src/lib/entry.ts
@@ -16,3 +30,4 @@ fileignoreconfig:
   - filename: .husky/pre-commit
     checksum: 5baabd7d2c391648163f9371f0e5e9484f8fb90fa2284cfc378732ec3192c193
 version: ""
+

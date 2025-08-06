@@ -2,21 +2,22 @@ import { HttpClientParams } from '@contentstack/core';
 
 // Internal Types
 export type params = {
-  [key: string]: any
-}
+  [key: string]: any;
+};
 
-export type queryParams = { 
-  [key: string]: string | boolean | number | string[]
-}
+export type queryParams = {
+  [key: string]: string | boolean | number | string[];
+};
 
 // External Types
 export enum Region {
-  US = 'us',
-  EU = 'eu',
-  AZURE_NA = 'azure-na',
-  AZURE_EU = 'azure-eu',
-  GCP_NA = 'gcp-na',
-  GCP_EU = 'gcp-eu',
+  US = "us",
+  EU = "eu",
+  AU = "au",
+  AZURE_NA = "azure-na",
+  AZURE_EU = "azure-eu",
+  GCP_NA = "gcp-na",
+  GCP_EU = "gcp-eu",
 }
 export interface StackConfig extends HttpClientParams {
   host?: string;
@@ -40,10 +41,10 @@ export interface CacheOptions {
 }
 
 export enum Policy {
-  IGNORE_CACHE = 'IGNORE_CACHE',
-  CACHE_THEN_NETWORK = 'CACHE_THEN_NETWORK',
-  CACHE_ELSE_NETWORK = 'CACHE_ELSE_NETWORK',
-  NETWORK_ELSE_CACHE = 'NETWORK_ELSE_CACHE',
+  IGNORE_CACHE = "IGNORE_CACHE",
+  CACHE_THEN_NETWORK = "CACHE_THEN_NETWORK",
+  CACHE_ELSE_NETWORK = "CACHE_ELSE_NETWORK",
+  NETWORK_ELSE_CACHE = "NETWORK_ELSE_CACHE",
 }
 
 export interface SyncStack {
@@ -51,13 +52,13 @@ export interface SyncStack {
   syncToken?: string;
 }
 export enum PublishType {
-  ENTRY_PUBLISHED = 'entry_published',
-  ENTRY_UNPUBLISHED = 'entry_unpublished',
-  ENTRY_DELETED = 'entry_deleted',
-  ASSET_PUBLISHED = 'asset_published',
-  ASSET_UNPUBLISHED = 'asset_unpublished',
-  ASSET_DELETED = 'asset_deleted',
-  CONTENT_TYPE_DELETED = 'content_type_deleted',
+  ENTRY_PUBLISHED = "entry_published",
+  ENTRY_UNPUBLISHED = "entry_unpublished",
+  ENTRY_DELETED = "entry_deleted",
+  ASSET_PUBLISHED = "asset_published",
+  ASSET_UNPUBLISHED = "asset_unpublished",
+  ASSET_DELETED = "asset_deleted",
+  CONTENT_TYPE_DELETED = "content_type_deleted",
 }
 export interface SyncType {
   environment?: string;
@@ -69,25 +70,25 @@ export interface SyncType {
 export type TransformData = { [key: string]: string | string[] };
 
 export enum Format {
-  GIF = 'gif',
-  PNG = 'png',
-  JPG = 'jpg',
-  PJPG = 'pjpg',
-  WEBP = 'webp',
-  WEBPLL = 'webpll',
-  WEBPLY = 'webply',
+  GIF = "gif",
+  PNG = "png",
+  JPG = "jpg",
+  PJPG = "pjpg",
+  WEBP = "webp",
+  WEBPLL = "webpll",
+  WEBPLY = "webply",
 }
 
 export enum CropBy {
-  DEFAULT = 'default',
-  ASPECTRATIO = 'aspectRatio',
-  REGION = 'region',
-  OFFSET = 'offset',
+  DEFAULT = "default",
+  ASPECTRATIO = "aspectRatio",
+  REGION = "region",
+  OFFSET = "offset",
 }
 
 export enum FitBy {
-  BOUNDS = 'bounds',
-  CROP = 'crop',
+  BOUNDS = "bounds",
+  CROP = "crop",
 }
 
 export enum Orientation {
@@ -102,53 +103,53 @@ export enum Orientation {
 }
 
 export enum OverlayAlign {
-  TOP = 'top',
-  BOTTOM = 'bottom',
-  LEFT = 'left',
-  RIGHT = 'right',
-  MIDDLE = 'middle',
-  CENTER = 'center',
+  TOP = "top",
+  BOTTOM = "bottom",
+  LEFT = "left",
+  RIGHT = "right",
+  MIDDLE = "middle",
+  CENTER = "center",
 }
 
 export enum OverlayRepeat {
-  X = 'x',
-  Y = 'y',
-  BOTH = 'both',
+  X = "x",
+  Y = "y",
+  BOTH = "both",
 }
 
 export enum ResizeFilter {
-  NEAREST = 'nearest',
-  BILINEAR = 'bilinear',
-  BICUBIC = 'bicubic',
-  LANCZOS2 = 'lanczos2',
-  LANCZOS3 = 'lanczos3',
+  NEAREST = "nearest",
+  BILINEAR = "bilinear",
+  BICUBIC = "bicubic",
+  LANCZOS2 = "lanczos2",
+  LANCZOS3 = "lanczos3",
 }
 
 export enum CanvasBy {
-  DEFAULT = 'default',
-  ASPECTRATIO = 'aspectRatio',
-  REGION = 'region',
-  OFFSET = 'offset',
+  DEFAULT = "default",
+  ASPECTRATIO = "aspectRatio",
+  REGION = "region",
+  OFFSET = "offset",
 }
 
 export enum QueryOperation {
-  EQUALS = '',
-  NOT_EQUALS = '$ne',
-  INCLUDES = '$in',
-  EXCLUDES = '$nin',
-  IS_LESS_THAN = '$lt',
-  IS_LESS_THAN_OR_EQUAL = '$lte',
-  IS_GREATER_THAN = '$gt',
-  IS_GREATER_THAN_OR_EQUAL = '$gte',
-  EXISTS = '$exists',
-  MATCHES = '$regex',
+  EQUALS = "",
+  NOT_EQUALS = "$ne",
+  INCLUDES = "$in",
+  EXCLUDES = "$nin",
+  IS_LESS_THAN = "$lt",
+  IS_LESS_THAN_OR_EQUAL = "$lte",
+  IS_GREATER_THAN = "$gt",
+  IS_GREATER_THAN_OR_EQUAL = "$gte",
+  EXISTS = "$exists",
+  MATCHES = "$regex",
 }
 
 export enum TaxonomyQueryOperation {
-  ABOVE = '$above',
-  BELOW = '$below',
-  EQ_ABOVE = '$eq_above',
-  EQ_BELOW = '$eq_below'
+  ABOVE = "$above",
+  BELOW = "$below",
+  EQ_ABOVE = "$eq_above",
+  EQ_BELOW = "$eq_below",
 }
 
 export type BaseQueryParameters = {
@@ -160,8 +161,8 @@ export type BaseQueryParameters = {
 };
 
 export enum QueryOperator {
-  AND = '$and',
-  OR = '$or',
+  AND = "$and",
+  OR = "$or",
 }
 
 export type PaginationObj = {
@@ -265,18 +266,18 @@ export interface FindResponse<T> {
   content_types?: T[];
   assets?: T[];
   global_fields?: T[];
-  count?: number
+  count?: number;
 }
 
 export interface LivePreviewQuery {
-  live_preview: string
+  live_preview: string;
   include_applied_variants?: boolean;
-  contentTypeUid?: string
-  content_type_uid?: string
-  entry_uid?: string
+  contentTypeUid?: string;
+  content_type_uid?: string;
+  entry_uid?: string;
   entryUid?: any;
-  preview_timestamp?: string
-  release_id?: string
+  preview_timestamp?: string;
+  release_id?: string;
 }
 
 export type LivePreview = {
@@ -288,4 +289,4 @@ export type LivePreview = {
   enable: boolean;
   management_token?: string;
   preview_token?: string;
-}
+};
