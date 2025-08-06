@@ -79,11 +79,13 @@
   ],
   "devDependencies": {
     "@eslint/js": "^9.32.0",
+    "@nrwl/jest": "^19.8.4",
     "@rollup/plugin-commonjs": "^28.0.6",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.4",
+    "@slack/bolt": "^4.4.0",
     "@types/humps": "^2.0.6",
     "@types/jest": "^30.0.0",
     "@typescript-eslint/eslint-plugin": "^8.39.0",
@@ -93,9 +95,14 @@
     "eslint": "^9.32.0",
     "glob": "^11.0.3",
     "jest": "^30.0.5",
+    "jest-html-reporter": "^4.3.0",
+    "jest-html-reporters": "^3.1.7",
+    "jest-junit": "^16.0.0",
+    "jsdom": "^26.1.0",
     "rollup": "^4.46.2",
     "rollup-plugin-dts": "^6.2.1",
     "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   }
 }
