@@ -1,7 +1,7 @@
 import {  ImageTransform } from './image-transform';
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
+   
   interface String {
     transform(imageTransform: ImageTransform): string;
   }
