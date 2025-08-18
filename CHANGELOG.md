@@ -1,3 +1,7 @@
+### Version: 4.8.1
+#### Date: Aug-18-2025
+Enh: Dependency update for core package
+
 ### Version: 4.8.0
 #### Date: June-30-2025
 Enh: Added AWS-EU support
