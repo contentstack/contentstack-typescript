@@ -39,11 +39,15 @@ export function stack(config: StackConfig): StackClass {
     params: {} as any,
     live_preview: {} as any,
     port: config.port as number,
+    ...config
   };
 
   defaultConfig.defaultHostname = config.host || Utility.getHost(config.region, config.host);
   config.host = defaultConfig.defaultHostname;
 
+  // if (typeof config.timeout !== 'undefined') {
+  //   defaultConfig.timeout = config.timeout;
+  // }
   if (config.apiKey) {
     defaultConfig.headers.api_key = config.apiKey;
   } else {
