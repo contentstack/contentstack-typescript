@@ -45,9 +45,6 @@ export function stack(config: StackConfig): StackClass {
   defaultConfig.defaultHostname = config.host || Utility.getHost(config.region, config.host);
   config.host = defaultConfig.defaultHostname;
 
-  // if (typeof config.timeout !== 'undefined') {
-  //   defaultConfig.timeout = config.timeout;
-  // }
   if (config.apiKey) {
     defaultConfig.headers.api_key = config.apiKey;
   } else {
