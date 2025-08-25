@@ -39,6 +39,7 @@ export function stack(config: StackConfig): StackClass {
     params: {} as any,
     live_preview: {} as any,
     port: config.port as number,
+    ...config
   };
 
   defaultConfig.defaultHostname = config.host || Utility.getHost(config.region, config.host);
