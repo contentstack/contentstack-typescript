@@ -1,3 +1,7 @@
+### Version: 4.9.0
+#### Date: Aug-25-2025
+Fix: Fixed Timeout parameter which is being ignored & Removed custom error object
+
 ### Version: 4.8.1
 #### Date: Aug-18-2025
 Enh: Dependency update for core package
