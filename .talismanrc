@@ -1,6 +1,6 @@
 fileignoreconfig:
 - filename: package-lock.json
-  checksum: dffbcb14c5761976a9b6ab90b96c7e4fc5784eebe381cf48014618cc93355dbc
+  checksum: 2f932522b599050c23c6a2490897301a3efd9258f0c8bef512d099960c76617f
 - filename: test/unit/query-optimization-comprehensive.spec.ts
   checksum: f5aaf6c784d7c101a05ca513c584bbd6e95f963d1e42779f2596050d9bcbac96
 version: ""

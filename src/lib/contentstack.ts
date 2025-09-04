@@ -1,10 +1,11 @@
 import { httpClient, retryRequestHandler, retryResponseErrorHandler, retryResponseHandler } from '@contentstack/core';
-import { AxiosRequestHeaders } from 'axios';
+import { AxiosRequestHeaders, InternalAxiosRequestConfig } from 'axios';
 import { handleRequest } from './cache';
 import { Stack as StackClass } from './stack';
 import { Policy, StackConfig } from './types';
 import * as Utility from './utils';
-export * as Utils from '@contentstack/utils';
+import * as Utils from '@contentstack/utils';
+export { Utils };
 
 let version = '{{VERSION}}';
 
@@ -34,7 +35,6 @@ let version = '{{VERSION}}';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function stack(config: StackConfig): StackClass {
   let defaultConfig = {
-    defaultHostname: 'cdn.contentstack.io',
     headers: {} as AxiosRequestHeaders,
     params: {} as any,
     live_preview: {} as any,
@@ -42,8 +42,8 @@ export function stack(config: StackConfig): StackClass {
     ...config
   };
 
-  defaultConfig.defaultHostname = config.host || Utility.getHost(config.region, config.host);
-  config.host = defaultConfig.defaultHostname;
+  // defaultConfig.defaultHostname = config.host || Utility.getHost(config.region, config.host);
+  // config.host = defaultConfig.defaultHostname;
 
   if (config.apiKey) {
     defaultConfig.headers.api_key = config.apiKey;
@@ -110,6 +110,24 @@ export function stack(config: StackConfig): StackClass {
   };
   client.interceptors.request.use(retryRequestHandler);
   client.interceptors.response.use(retryResponseHandler, errorHandler);
+
+  client.interceptors.request.use(
+    async (reqConfig: InternalAxiosRequestConfig<any>): Promise<InternalAxiosRequestConfig> => {
+      if (config.region) {
+        const hostt = await Utils.getContentstackEndpoint(config.region, 'CDA', true);
+        config.defaultHostname = hostt as string;
+        const protocol = config.insecure ? 'http' : 'https';
+        const hostname = config.defaultHostname;
+        const port = config.port || 443;
+        const version = config.version || 'v3';
+
+        reqConfig.baseURL = config.endpoint || `${protocol}://${hostname}:${port}/${version}`;
+      } else {
+        reqConfig.baseURL = 'https://cdn.contentstack.io:443/v3';
+      }
+
+    return reqConfig;
+  });
 
   if (config.plugins) {
     client.interceptors.request.use((reqConfig: any): any => {
