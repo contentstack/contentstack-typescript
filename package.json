@@ -35,8 +35,8 @@
     "husky-check": "npm run build && husky && chmod +x .husky/pre-commit"
   },
   "dependencies": {
-    "@contentstack/core": "^1.3.0",
-    "@contentstack/utils": "^1.4.1",
+    "@contentstack/core": "file:../contentstack-js-core/contentstack-core-1.2.4.tgz",
+    "@contentstack/utils": "file:../../contentstack-utils-javascript/contentstack-utils-1.5.0.tgz",
     "axios": "^1.11.0",
     "humps": "^2.0.1"
   },
