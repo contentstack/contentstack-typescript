@@ -2,7 +2,7 @@ import { httpClient, retryRequestHandler, retryResponseErrorHandler, retryRespon
 import { AxiosRequestHeaders } from 'axios';
 import { handleRequest } from './cache';
 import { Stack as StackClass } from './stack';
-import { Policy, StackConfig } from './types';
+import { Policy, StackConfig, ContentstackPlugin } from './types';
 import * as Utility from './utils';
 export * as Utils from '@contentstack/utils';
 
@@ -114,7 +114,7 @@ export function stack(config: StackConfig): StackClass {
   if (config.plugins) {
     client.interceptors.request.use((reqConfig: any): any => {
       if (config && config.plugins)
-        config.plugins.forEach((pluginInstance) => {
+        config.plugins.forEach((pluginInstance: ContentstackPlugin) => {
           reqConfig = pluginInstance.onRequest(reqConfig);
         });
       
@@ -123,7 +123,7 @@ export function stack(config: StackConfig): StackClass {
 
     client.interceptors.response.use((response: any) => {
       if (config && config.plugins)
-        config.plugins.forEach((pluginInstance) => {
+        config.plugins.forEach((pluginInstance: ContentstackPlugin) => {
           response = pluginInstance.onResponse(response.request, response, response.data);
         });
 
