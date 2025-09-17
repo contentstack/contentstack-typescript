@@ -180,7 +180,12 @@ export class Entry {
    * const result = await stack.contentType(contentType_uid).entry(entry_uid).fetch();
    */
   async fetch<T>(): Promise<T> {
-    const getRequestOptions: any = { params: this._queryParams};
+    const getRequestOptions: any = { 
+      params: this._queryParams,
+      // Add contentTypeUid and entryUid to config for improved caching
+      contentTypeUid: this._contentTypeUid,
+      entryUid: this._entryUid
+    };
     if (this._variants) {
       getRequestOptions.headers = {
         ...getRequestOptions.headers,
