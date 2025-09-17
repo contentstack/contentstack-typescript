@@ -73,7 +73,9 @@ describe("Cache handleRequest function", () => {
       expect(resolve).toBeCalledWith({ data: "foo" });
       expect(reject).not.toBeCalled();
 
-      cacheStore.removeItem(apiKey, config.contentTypeUid);
+      // Use enhanced cache key format: contentTypeUid + apiKey
+      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
+      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
 
     it("should return cache data when proper network response is not received", async () => {
@@ -84,8 +86,10 @@ describe("Cache handleRequest function", () => {
       });
       const cacheStore = new PersistanceStore(cacheOptions);
 
+      // Use enhanced cache key format: contentTypeUid + apiKey
+      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
       cacheStore.setItem(
-        apiKey,
+        enhancedCacheKey,
         "cacheData",
         config.contentTypeUid,
         cacheOptions.maxAge
@@ -109,7 +113,7 @@ describe("Cache handleRequest function", () => {
       });
       expect(reject).not.toBeCalled();
 
-      cacheStore.removeItem(apiKey, config.contentTypeUid);
+      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
 
     it("should return error data when network response has error", async () => {
@@ -136,7 +140,9 @@ describe("Cache handleRequest function", () => {
         baz: "quux",
       });
 
-      cacheStore.removeItem(apiKey, config.contentTypeUid);
+      // Use enhanced cache key format: contentTypeUid + apiKey
+      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
+      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
   });
 
@@ -146,8 +152,10 @@ describe("Cache handleRequest function", () => {
       const defaultAdapter = jest.fn((_config) => ({ data: "foo" }));
 
       const cacheStore = new PersistanceStore(cacheOptions);
+      // Use enhanced cache key format: contentTypeUid + apiKey
+      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
       cacheStore.setItem(
-        apiKey,
+        enhancedCacheKey,
         "cacheData",
         config.contentTypeUid,
         cacheOptions.maxAge
@@ -172,7 +180,7 @@ describe("Cache handleRequest function", () => {
       });
       expect(reject).not.toBeCalled();
 
-      cacheStore.removeItem(apiKey, config.contentTypeUid);
+      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
     it("should return api response when proper cache is not available", async () => {
       const cacheOptions = { policy: Policy.CACHE_THEN_NETWORK, maxAge: 3600 };
@@ -195,7 +203,9 @@ describe("Cache handleRequest function", () => {
       expect(resolve).toBeCalledWith({ data: "foo" });
       expect(reject).not.toBeCalled();
 
-      cacheStore.removeItem(apiKey, config.contentTypeUid);
+      // Use enhanced cache key format: contentTypeUid + apiKey
+      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
+      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
     it("should return error api response when data is not available in network or cache", async () => {
       const cacheOptions = { policy: Policy.CACHE_THEN_NETWORK, maxAge: 3600 };
@@ -222,7 +232,9 @@ describe("Cache handleRequest function", () => {
         baz: "quux",
       });
 
-      cacheStore.removeItem(apiKey, config.contentTypeUid);
+      // Use enhanced cache key format: contentTypeUid + apiKey
+      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
+      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
   });
 
@@ -232,8 +244,10 @@ describe("Cache handleRequest function", () => {
       const defaultAdapter = jest.fn((_config) => ({ data: "foo" }));
 
       const cacheStore = new PersistanceStore(cacheOptions);
+      // Use enhanced cache key format: contentTypeUid + apiKey
+      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
       cacheStore.setItem(
-        apiKey,
+        enhancedCacheKey,
         "cacheData",
         config.contentTypeUid,
         cacheOptions.maxAge
@@ -258,7 +272,7 @@ describe("Cache handleRequest function", () => {
       });
       expect(reject).not.toBeCalled();
 
-      cacheStore.removeItem(apiKey, config.contentTypeUid);
+      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
 
     it("should return network response data when cache is not available", async () => {
@@ -281,7 +295,9 @@ describe("Cache handleRequest function", () => {
       expect(resolve).toBeCalledWith({ data: "foo" });
       expect(reject).not.toBeCalled();
 
-      cacheStore.removeItem(apiKey, config.contentTypeUid);
+      // Use enhanced cache key format: contentTypeUid + apiKey
+      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
+      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
 
     it("should return error data when network response has error", async () => {
@@ -308,7 +324,9 @@ describe("Cache handleRequest function", () => {
         baz: "quux",
       });
 
-      cacheStore.removeItem(apiKey, config.contentTypeUid);
+      // Use enhanced cache key format: contentTypeUid + apiKey
+      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
+      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
   });
 });

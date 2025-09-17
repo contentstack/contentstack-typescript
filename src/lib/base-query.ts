@@ -215,7 +215,11 @@ export class BaseQuery extends Pagination {
       requestParams = { ...this._queryParams, query: queryParams };
     }
 
-    const getRequestOptions: any = { params: requestParams };
+    const getRequestOptions: any = { 
+      params: requestParams,
+      // Add contentTypeUid to config for improved caching (extract from URL if possible)
+      contentTypeUid: this.extractContentTypeUidFromUrl()
+    };
 
     if (this._variants) {
       getRequestOptions.headers = {
@@ -226,5 +230,19 @@ export class BaseQuery extends Pagination {
     const response = await getData(this._client, this._urlPath, getRequestOptions);
 
     return response as FindResponse<T>;
+  }
+
+  /**
+   * Extracts content type UID from the URL path
+   * @returns content type UID if found, null otherwise
+   */
+  private extractContentTypeUidFromUrl(): string | null {
+    if (!this._urlPath) return null;
+    
+    // Match patterns like: /content_types/{content_type_uid}/entries
+    const contentTypePattern = /\/content_types\/([^\/]+)/;
+    const match = this._urlPath.match(contentTypePattern);
+    
+    return match ? match[1] : null;
   }
 }

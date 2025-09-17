@@ -1,6 +1,8 @@
 import { AxiosInstance, getData } from '@contentstack/core';
 import { Query } from './query';
 import { BaseQuery } from './base-query';
+import { FindResponse } from './types';
+import { encodeQueryParams } from './utils';
 
 export class Entries extends BaseQuery {
   private _contentTypeUid: string;
@@ -265,5 +267,38 @@ export class Entries extends BaseQuery {
       this._variants = variants;
     }
     return this;
+  }
+
+  /**
+   * Override find method to include content type UID directly for better caching
+   */
+  override async find<T>(encode: boolean = false): Promise<FindResponse<T>> {
+    let requestParams: { [key: string]: any } = this._queryParams;
+
+    if (Object.keys(this._parameters).length > 0) {
+      let queryParams = { ...this._parameters };
+      
+      if (encode) {
+        queryParams = encodeQueryParams(queryParams);
+      }
+      
+      requestParams = { ...this._queryParams, query: queryParams };
+    }
+
+    const getRequestOptions: any = { 
+      params: requestParams,
+      // Add contentTypeUid directly for improved caching
+      contentTypeUid: this._contentTypeUid
+    };
+
+    if (this._variants) {
+      getRequestOptions.headers = {
+        ...getRequestOptions.headers,
+        'x-cs-variant-uid': this._variants
+      };
+    }
+    const response = await getData(this._client, this._urlPath, getRequestOptions);
+
+    return response as FindResponse<T>;
   }
 }
