@@ -3,4 +3,12 @@ fileignoreconfig:
   checksum: dffbcb14c5761976a9b6ab90b96c7e4fc5784eebe381cf48014618cc93355dbc
 - filename: test/unit/query-optimization-comprehensive.spec.ts
   checksum: f5aaf6c784d7c101a05ca513c584bbd6e95f963d1e42779f2596050d9bcbac96
+- filename: src/lib/types.ts
+  checksum: 57d2f7eede6ab19ff92db9799e752e7dfa44c1368314525a41ab1a241778a230
+- filename: examples/custom-plugin.ts
+  checksum: 51a4b01f7c5f76c97c588bb0575cefd1f9462b28d88b24bb9f7dc2780aa323c5
+- filename: test/unit/plugin-comprehensive.spec.ts
+  checksum: d508f95f4a7eb5bed873ca91a5e1914aa4d5261f27593edb568502cb5855042e
+- filename: test/unit/plugin-interceptor-comprehensive.spec.ts
+  checksum: b9fbe9da166fd209853307f9f60464d25f805f82e9dbe09d5f476fdd5eb05d47
 version: ""
