@@ -1,3 +1,8 @@
+### Version: 4.10.0
+#### Date: Sep-22-2025
+Fix: Enhance retry logic to use configured retryDelay
+Enhancement: Caching logic to use combination of content type uid and entry uid
+
 ### Version: 4.9.0
 #### Date: Aug-25-2025
 Fix: Fixed Timeout parameter which is being ignored & Removed custom error object
