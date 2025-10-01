@@ -156,9 +156,9 @@ export function stack(config: StackConfig): StackClass {
   function getLogLevelFromStatus(status: number): string {
     if (status >= 200 && status < 300) {
       return 'info';
-    } else if (status >= 300 && status < 500) {
+    } else if (status >= 300 && status < 400) {
       return 'warn';
-    } else if (status >= 500) {
+    } else if (status >= 400) {
       return 'error';
     } else {
       return 'debug';
