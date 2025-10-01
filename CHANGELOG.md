@@ -1,3 +1,7 @@
+### Version: 4.10.1
+#### Date: Oct-01-2025
+Enhancement: Added logHandler interceptors for request and response logging
+
 ### Version: 4.10.0
 #### Date: Sep-22-2025
 Fix: Enhance retry logic to use configured retryDelay
