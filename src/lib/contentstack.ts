@@ -104,6 +104,67 @@ export function stack(config: StackConfig): StackClass {
       });
     };
   }
+  // LogHandler interceptors
+  if (config.debug) {
+    // Request interceptor for logging
+    client.interceptors.request.use((requestConfig: any) => {
+      config.logHandler!('info', {
+        type: 'request',
+        method: requestConfig.method?.toUpperCase(),
+        url: requestConfig.url,
+        headers: requestConfig.headers,
+        params: requestConfig.params,
+        timestamp: new Date().toISOString()
+      });
+      return requestConfig;
+    });
+
+    // Response interceptor for logging
+    client.interceptors.response.use(
+      (response: any) => {
+        const level = getLogLevelFromStatus(response.status);
+        config.logHandler!(level, {
+          type: 'response',
+          status: response.status,
+          statusText: response.statusText,
+          url: response.config?.url,
+          method: response.config?.method?.toUpperCase(),
+          headers: response.headers,
+          data: response.data,
+          timestamp: new Date().toISOString()
+        });
+        return response;
+      },
+      (error: any) => {
+        const status = error.response?.status || 0;
+        const level = getLogLevelFromStatus(status);
+        config.logHandler!(level, {
+          type: 'response_error',
+          status: status,
+          statusText: error.response?.statusText || error.message,
+          url: error.config?.url,
+          method: error.config?.method?.toUpperCase(),
+          error: error.message,
+          timestamp: new Date().toISOString()
+        });
+        throw error;
+      }
+    );
+  }
+
+  // Helper function to determine log level based on HTTP status code
+  function getLogLevelFromStatus(status: number): string {
+    if (status >= 200 && status < 300) {
+      return 'info';
+    } else if (status >= 300 && status < 400) {
+      return 'warn';
+    } else if (status >= 400) {
+      return 'error';
+    } else {
+      return 'debug';
+    }
+  }
+
   // Retry policy handlers
   const errorHandler = (error: any) => {
     return retryResponseErrorHandler(error, config, client);
