@@ -11,5 +11,6 @@ export type { ImageTransform } from './lib/image-transform';
 export type { AssetQuery } from './lib/asset-query';
 export type { TaxonomyQuery } from './lib/taxonomy-query';
 export type { ContentTypeQuery } from './lib/contenttype-query';
+export type { Taxonomy } from './lib/taxonomy';
 
 export default contentstack;
