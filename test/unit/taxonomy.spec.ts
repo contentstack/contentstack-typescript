@@ -1,11 +1,13 @@
 import { TaxonomyQuery } from '../../src/lib/taxonomy-query';
+import { Taxonomy } from '../../src/lib/taxonomy';
 import { AxiosInstance, httpClient } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
 import { taxonomyFindResponseDataMock } from '../utils/mocks';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
 
 describe('ta class', () => {
-  let taxonomy: TaxonomyQuery;
+  let taxonomies: TaxonomyQuery;
+  let taxonomy: Taxonomy;
   let client: AxiosInstance;
   let mockClient: MockAdapter;
 
@@ -15,12 +17,19 @@ describe('ta class', () => {
   });
 
   beforeEach(() => {
-    taxonomy = new TaxonomyQuery(client);
+    taxonomies = new TaxonomyQuery(client);
+    taxonomy = new Taxonomy(client, 'taxonomy_testing');
   });
 
-  it('should return response data when successful', async () => {
+  it('should return all taxonomies in the response data when successful', async () => {
     mockClient.onGet('/taxonomy-manager').reply(200, taxonomyFindResponseDataMock); //TODO: change to /taxonomies
-    const response = await taxonomy.find();
+    const response = await taxonomies.find();
     expect(response).toEqual(taxonomyFindResponseDataMock);
+  });
+
+  it('should return single taxonomy in the response data when successful', async () => {
+    mockClient.onGet('/taxonomy-manager/taxonomy_testing').reply(200, taxonomyFindResponseDataMock.taxonomies[0]); //TODO: change to /taxonomies/taxonomyUid
+    const response = await taxonomy.fetch();
+    expect(response).toEqual(taxonomyFindResponseDataMock.taxonomies[0]); //TODO: change to taxonomyFindResponseDataMock
   });
 });
