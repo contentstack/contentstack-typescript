@@ -1698,6 +1698,35 @@ const taxonomyFindResponseDataMock = {
     }
   ]
 }
+const termQueryFindResponseDataMock = {
+  "terms": [
+    {
+        "taxonomy_uid": "taxonomy_testing",
+        "uid": "term1",
+        "ancestors": [
+            {
+                "uid": "taxonomy_testing",
+                "name": "taxonomy testing",
+                "type": "TAXONOMY"
+            }
+        ],
+        "name": "term1",
+        "created_by": "created_by",
+        "created_at": "2025-10-10T06:43:13.799Z",
+        "updated_by": "updated_by",
+        "updated_at": "2025-10-10T06:43:13.799Z",
+        "children_count": 0,
+        "depth": 1,
+        "ACL": {},
+        "publish_details": {
+            "time": "2025-10-10T08:01:48.351Z",
+            "user": "user",
+            "environment": "environment",
+            "locale": "en-us"
+        }
+    }
+]
+}
 
 const syncResult: any = { ...axiosGetMock.data };
 
@@ -1712,5 +1741,6 @@ export {
   entryFetchMock,
   gfieldFetchDataMock,
   gfieldQueryFindResponseDataMock,
-  taxonomyFindResponseDataMock
+  taxonomyFindResponseDataMock,
+  termQueryFindResponseDataMock,
 };

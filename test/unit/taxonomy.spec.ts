@@ -4,6 +4,8 @@ import { AxiosInstance, httpClient } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
 import { taxonomyFindResponseDataMock } from '../utils/mocks';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
+import { Term } from '../../src/lib/term';
+import { TermQuery } from '../../src/lib/term-query';
 
 describe('ta class', () => {
   let taxonomies: TaxonomyQuery;
@@ -21,6 +23,16 @@ describe('ta class', () => {
     taxonomy = new Taxonomy(client, 'taxonomy_testing');
   });
 
+  it('should give term instance when term method is called with termUid', () => {
+    const query = taxonomy.term('termUid');
+    expect(query).toBeInstanceOf(Term);
+  });
+
+  it('should give term query instance when term method is called without termUid', () => {
+    const query = taxonomy.term()
+    expect(query).toBeInstanceOf(TermQuery);
+  });
+
   it('should return all taxonomies in the response data when successful', async () => {
     mockClient.onGet('/taxonomy-manager').reply(200, taxonomyFindResponseDataMock); //TODO: change to /taxonomies
     const response = await taxonomies.find();
@@ -30,6 +42,6 @@ describe('ta class', () => {
   it('should return single taxonomy in the response data when successful', async () => {
     mockClient.onGet('/taxonomy-manager/taxonomy_testing').reply(200, taxonomyFindResponseDataMock.taxonomies[0]); //TODO: change to /taxonomies/taxonomyUid
     const response = await taxonomy.fetch();
-    expect(response).toEqual(taxonomyFindResponseDataMock.taxonomies[0]); //TODO: change to taxonomyFindResponseDataMock
+    expect(response).toEqual(taxonomyFindResponseDataMock.taxonomies[0]);
   });
 });
