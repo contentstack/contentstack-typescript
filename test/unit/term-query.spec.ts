@@ -1,7 +1,7 @@
 import { TermQuery } from '../../src/lib/term-query';
 import { AxiosInstance, httpClient } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
-import { TermQueryFindResponseDataMock } from '../utils/mocks';
+import { termQueryFindResponseDataMock } from '../utils/mocks';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
 
 describe('TermQuery class', () => {
@@ -19,8 +19,8 @@ describe('TermQuery class', () => {
   });
 
   it('should return response data when successful', async () => {
-    mockClient.onGet('/taxonomy-manager/taxonomy_testing/terms').reply(200, TermQueryFindResponseDataMock);
+    mockClient.onGet('/taxonomy-manager/taxonomy_testing/terms').reply(200, termQueryFindResponseDataMock);
     const response = await termQuery.find();
-    expect(response).toEqual(TermQueryFindResponseDataMock);
+    expect(response).toEqual(termQueryFindResponseDataMock);
   });
 });

@@ -1698,7 +1698,7 @@ const taxonomyFindResponseDataMock = {
     }
   ]
 }
-const TermQueryFindResponseDataMock = {
+const termQueryFindResponseDataMock = {
   "terms": [
     {
         "taxonomy_uid": "taxonomy_testing",
@@ -1742,5 +1742,5 @@ export {
   gfieldFetchDataMock,
   gfieldQueryFindResponseDataMock,
   taxonomyFindResponseDataMock,
-  TermQueryFindResponseDataMock,
+  termQueryFindResponseDataMock,
 };
