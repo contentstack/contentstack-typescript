@@ -1,6 +1,6 @@
 import { AxiosInstance, httpClient } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
-import { TermQueryFindResponseDataMock } from '../utils/mocks';
+import { termQueryFindResponseDataMock } from '../utils/mocks';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
 import { Term } from '../../src/lib/term';
 import { Taxonomy } from '../../src/lib/taxonomy';
@@ -20,9 +20,9 @@ describe('Term class', () => {
   });
 
   it('should fetch the term by uid response when fetch method is called', async () => {
-    mockClient.onGet('/taxonomy-manager/taxonomy_testing/terms/term1').reply(200, TermQueryFindResponseDataMock.terms[0]); //TODO: change to /taxonomies
+    mockClient.onGet('/taxonomy-manager/taxonomy_testing/terms/term1').reply(200, termQueryFindResponseDataMock.terms[0]); //TODO: change to /taxonomies
 
     const response = await term.fetch();
-    expect(response).toEqual(TermQueryFindResponseDataMock.terms[0]);
+    expect(response).toEqual(termQueryFindResponseDataMock.terms[0]);
   });
 });
