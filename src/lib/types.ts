@@ -317,6 +317,8 @@ export interface FindResponse<T> {
   assets?: T[];
   global_fields?: T[];
   count?: number;
+  taxonomies?: T[];
+  terms?: T[];
 }
 
 export interface LivePreviewQuery {
