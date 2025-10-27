@@ -1,3 +1,7 @@
+### Version: 4.10.1
+#### Date: Oct-27-2025
+Fix: Upgrade dependecies
+
 ### Version: 4.10.0
 #### Date: Sep-22-2025
 Fix: Enhance retry logic to use configured retryDelay
