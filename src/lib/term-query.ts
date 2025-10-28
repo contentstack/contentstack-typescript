@@ -3,7 +3,7 @@ import { FindResponse } from './types';
 
 /**
  * @class TermQuery
- * @description Represents a query for fetching multiple terms from a taxonomy
+ * @description Represents a query for fetching multiple published terms from a taxonomy. Requires taxonomy_publish feature flag to be enabled.
  */
 export class TermQuery {
   private _taxonomyUid: string;
@@ -25,7 +25,7 @@ export class TermQuery {
   /**
    * @method find
    * @memberof TermQuery
-   * @description Fetches all terms from the taxonomy
+   * @description Fetches a list of all published terms within a specific taxonomy.
    * @returns {Promise<FindResponse<T>>}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
