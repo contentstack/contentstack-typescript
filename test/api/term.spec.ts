@@ -1,12 +1,12 @@
 import { Term } from "../../src/lib/term";
 import { stackInstance } from "../utils/stack-instance";
-import { TTerm } from "./types";
+import { TTerm, TTerms } from "./types";
 
 const stack = stackInstance();
 
 describe("Terms API test cases", () => {
   it("should get a term by uid", async () => {
-    const result = await makeTerms("term1").fetch<TTerm>();
+    const result = await makeTerms("vehicles").fetch<TTerm>();
     expect(result).toBeDefined();
     expect(result.taxonomy_uid).toBeDefined();
     expect(result.uid).toBeDefined();
@@ -15,14 +15,21 @@ describe("Terms API test cases", () => {
   });
 
   it("should get locales for a term", async () => {
-    // const result = await makeTerms("term1").locales().fetch();
+    // const result = await makeTerms("vehicles").locales().fetch();
     // API under building phase, so it should throw error
-    expect(async () => await makeTerms("term1").locales()).rejects.toThrow();
+    expect(async () => await makeTerms("vehicles").locales()).rejects.toThrow();
     // TODO: add assertions
+  });
+
+  it("should get ancestors for a term", async () => {
+    const result = await makeTerms("sleeper").ancestors<TTerms>();
+    expect(result).toBeDefined();
+    expect(result.terms).toBeDefined();
+    expect(result.terms[0].name).toBeDefined();
   });
 });
 
 function makeTerms(termUid = ""): Term {
-  const terms = stack.taxonomy("taxonomy_testing").term(termUid);
+  const terms = stack.taxonomy("taxonomy_testing_3").term(termUid);
   return terms;
 }
