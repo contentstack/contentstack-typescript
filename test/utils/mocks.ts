@@ -1738,6 +1738,93 @@ const termAncestorsResponseDataMock = {
   ]
 }
 
+const termDescendantsResponseDataMock = {
+  "terms": [
+    {
+      "taxonomy_uid": "taxonomy_testing",
+      "uid": "sleeper",
+      "ancestors": [
+        {
+          "uid": "taxonomy_testing",
+          "name": "taxonomy_testing",
+          "type": "TAXONOMY"
+        },
+        {
+          "uid": "vehicles",
+          "name": "vehicles",
+          "type": ""
+        },
+        {
+          "uid": "buses",
+          "name": "buses",
+          "type": ""
+        },
+        {
+          "uid": "vrl",
+          "name": "vrl",
+          "type": ""
+        }
+      ],
+      "name": "sleeper",
+      "parent_uid": "vrl",
+      "created_by": "created_by",
+      "created_at": "2025-10-28T07:58:46.870Z",
+      "updated_by": "updated_by",
+      "updated_at": "2025-10-28T07:58:46.870Z",
+      "children_count": 0,
+      "depth": 4,
+      "ACL": {},
+      "publish_details": {
+        "time": "2025-10-28T07:59:12.557Z",
+        "user": "user",
+        "environment": "environment",
+        "locale": "en-us"
+      }
+    },
+    {
+      "taxonomy_uid": "taxonomy_testing",
+      "uid": "intercity",
+      "ancestors": [
+        {
+          "uid": "taxonomy_testing",
+          "name": "taxonomy_testing",
+          "type": "TAXONOMY"
+        },
+        {
+          "uid": "vehicles",
+          "name": "vehicles",
+          "type": ""
+        },
+        {
+          "uid": "buses",
+          "name": "buses",
+          "type": ""
+        },
+        {
+          "uid": "vrl",
+          "name": "vrl",
+          "type": ""
+        }
+      ],
+      "name": "intercity",
+      "parent_uid": "vrl",
+      "created_by": "created_by",
+      "created_at": "2025-10-28T07:58:46.870Z",
+      "updated_by": "updated_by",
+      "updated_at": "2025-10-28T07:58:46.870Z",
+      "children_count": 0,
+      "depth": 4,
+      "ACL": {},
+      "publish_details": {
+        "time": "2025-10-28T07:59:12.565Z",
+        "user": "user",
+        "environment": "environment",
+        "locale": "en-us"
+      }
+    }
+  ]
+}
+
 const termQueryFindResponseDataMock = {
   "terms": [
     {
@@ -1785,4 +1872,5 @@ export {
   termQueryFindResponseDataMock,
   termLocalesResponseDataMock,
   termAncestorsResponseDataMock,
+  termDescendantsResponseDataMock,
 };

@@ -27,9 +27,16 @@ describe("Terms API test cases", () => {
     expect(result.terms).toBeDefined();
     expect(result.terms[0].name).toBeDefined();
   });
+
+  it("should get descendants for a term", async () => {
+    const result = await makeTerms("vrl").descendants<TTerms>();
+    expect(result).toBeDefined();
+    expect(result.terms).toBeDefined();
+    expect(result.terms[0].name).toBeDefined();
+  });
 });
 
 function makeTerms(termUid = ""): Term {
-  const terms = stack.taxonomy("taxonomy_testing_3").term(termUid);
+  const terms = stack.taxonomy("taxonomy_testing").term(termUid);
   return terms;
 }

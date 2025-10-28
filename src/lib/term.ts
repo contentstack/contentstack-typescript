@@ -47,11 +47,26 @@ export class Term {
     return response;
   }
 
+  /**
+   * @method descendants
+   * @memberof Term
+   * @description Fetches descendants for the term
+   * @returns {Promise<T>}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.taxonomy('taxonomy_uid').term('term_uid').descendants();
+   */
+  async descendants<T>(): Promise<T> {
+    const response = await getData(this._client, `${this._urlPath}/descendants`);
+    if (response.descendants) return response.descendants as T;
+    return response;
+  }
+
   async fetch<T>(): Promise<T> {
     const response = await getData(this._client, this._urlPath);
-
     if (response.term) return response.term as T;
-
     return response;
   }
 }
