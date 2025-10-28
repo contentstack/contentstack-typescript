@@ -1698,6 +1698,22 @@ const taxonomyFindResponseDataMock = {
     }
   ]
 }
+
+const termLocalesFindResponseDataMock = {
+  "locales": [
+    {
+      "code": "en-us",
+      "name": "English (United States)",
+      "fallback_code": null
+    },
+    {
+      "code": "es-es",
+      "name": "Spanish (Spain)",
+      "fallback_code": "en-us"
+    }
+  ]
+}
+
 const termQueryFindResponseDataMock = {
   "terms": [
     {
@@ -1743,4 +1759,5 @@ export {
   gfieldQueryFindResponseDataMock,
   taxonomyFindResponseDataMock,
   termQueryFindResponseDataMock,
+  termLocalesFindResponseDataMock,
 };
