@@ -1703,6 +1703,41 @@ const termLocalesResponseDataMock = {
   terms: []
 }
 
+const termAncestorsResponseDataMock = {
+  "terms": [
+    {
+      "uid": "vehicles",
+      "name": "vehicles",
+      "publish_details": {
+        "time": "2025-10-28T06:54:12.505Z",
+        "user": "user",
+        "environment": "environment",
+        "locale": "en-us"
+      }
+    },
+    {
+      "uid": "buses",
+      "name": "buses",
+      "publish_details": {
+        "time": "2025-10-28T06:54:12.514Z",
+        "user": "user",
+        "environment": "environment",
+        "locale": "en-us"
+      }
+    },
+    {
+      "uid": "vrl",
+      "name": "vrl",
+      "publish_details": {
+        "time": "2025-10-28T06:54:12.570Z",
+        "user": "user",
+        "environment": "environment",
+        "locale": "en-us"
+      }
+    }
+  ]
+}
+
 const termQueryFindResponseDataMock = {
   "terms": [
     {
@@ -1749,4 +1784,5 @@ export {
   taxonomyFindResponseDataMock,
   termQueryFindResponseDataMock,
   termLocalesResponseDataMock,
+  termAncestorsResponseDataMock,
 };

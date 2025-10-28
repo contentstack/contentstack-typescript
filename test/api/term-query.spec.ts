@@ -6,7 +6,7 @@ const stack = stackInstance();
 
 describe("Terms API test cases", () => {
   it("should check for terms is defined", async () => {
-    const result = await makeTerms("taxonomy_testing").find<TTerm>();
+    const result = await makeTerms("taxonomy_testing_3").find<TTerm>();
     if (result.terms) {
       expect(result.terms).toBeDefined();
       expect(result.terms[0].taxonomy_uid).toBeDefined();
