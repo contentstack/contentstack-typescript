@@ -1,5 +1,5 @@
 import { Region, params } from './types';
-import regionsData from '../../regions.json';
+import regionsData from '../assets/regions.json';
 
 export function getHostforRegion(cloudRegion: string = "aws_na", host?: string): string {
   if (host) return host;
