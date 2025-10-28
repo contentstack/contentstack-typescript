@@ -25,9 +25,25 @@ export class Term {
    * const result = await stack.taxonomy('taxonomy_uid').term('term_uid').locales();
    */
   async locales<T>(): Promise<T> {
-    const urlPath = `/taxonomy-manager/${this._taxonomyUid}/terms/${this._termUid}/locales`;
-    const response = await getData(this._client, urlPath);
+    const response = await getData(this._client, `${this._urlPath}/locales`); 
     if (response.locales) return response.locales as T;
+    return response;
+  }
+
+  /**
+   * @method ancestors
+   * @memberof Term
+   * @description Fetches ancestors for the term
+   * @returns {Promise<T>}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.taxonomy('taxonomy_uid').term('term_uid').ancestors();
+   */
+  async ancestors<T>(): Promise<T> {
+    const response = await getData(this._client, `${this._urlPath}/ancestors`);
+    if (response.ancestors) return response.ancestors as T;
     return response;
   }
 
