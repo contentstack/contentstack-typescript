@@ -12,6 +12,25 @@ export class Term {
     this._termUid = termUid;
     this._urlPath = `/taxonomy-manager/${this._taxonomyUid}/terms/${this._termUid}`; // TODO: change to /taxonomies
   }
+
+  /**
+   * @method locales
+   * @memberof Term
+   * @description Fetches locales for the term
+   * @returns {Promise<T>}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.taxonomy('taxonomy_uid').term('term_uid').locales();
+   */
+  async locales<T>(): Promise<T> {
+    const urlPath = `/taxonomy-manager/${this._taxonomyUid}/terms/${this._termUid}/locales`;
+    const response = await getData(this._client, urlPath);
+    if (response.locales) return response.locales as T;
+    return response;
+  }
+
   async fetch<T>(): Promise<T> {
     const response = await getData(this._client, this._urlPath);
 
