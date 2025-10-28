@@ -14,25 +14,25 @@ export type queryParams = {
 
 /**
  * Interface for creating Contentstack plugins
- * 
+ *
  * @example
  * ```typescript
  * import { ContentstackPlugin } from '@contentstack/delivery-sdk';
- * 
+ *
  * class MyPlugin implements ContentstackPlugin {
  *   onRequest(config: any): any {
  *     // Modify request configuration
  *     console.log('Processing request:', config.url);
  *     return { ...config, headers: { ...config.headers, 'X-Custom-Header': 'value' } };
  *   }
- * 
+ *
  *   onResponse(request: any, response: any, data: any): any {
  *     // Process response data
  *     console.log('Processing response:', response.status);
  *     return { ...response, data: { ...data, processed: true } };
  *   }
  * }
- * 
+ *
  * const stack = contentstack.stack({
  *   apiKey: 'your-api-key',
  *   deliveryToken: 'your-delivery-token',
@@ -342,3 +342,31 @@ export type LivePreview = {
   management_token?: string;
   preview_token?: string;
 };
+
+export interface BaseTaxonomy {
+  uid: string;
+  name: string;
+  description?: string;
+  terms_count?: number;
+  created_at: string;
+  updated_at: string;
+  created_by: string;
+  updated_by: string;
+  type: string;
+  ACL: ACL;
+  publish_details?: PublishDetails;
+}
+
+export interface BaseTerm {
+  taxonomy_uid: string;
+  uid: string;
+  name: string;
+  created_by: string;
+  created_at: string;
+  updated_by: string;
+  updated_at: string;
+  children_count?: number;
+  depth?: number;
+  ACL: ACL;
+  publish_details?: PublishDetails;
+}
