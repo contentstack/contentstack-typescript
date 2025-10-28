@@ -7,4 +7,16 @@ fileignoreconfig:
   checksum: 79ce5bd78376db37a34df82c0fea19031e995b66a5a246e73f8262fa05d65a9c
 - filename: test/unit/query-optimization-comprehensive.spec.ts
   checksum: f5aaf6c784d7c101a05ca513c584bbd6e95f963d1e42779f2596050d9bcbac96
+- filename: src/lib/entries.ts
+  checksum: f6a19da15baed75062ad0cc599573ed08926e28fffe3f6e4890a0efb4d58c910
+- filename: src/lib/cache.ts
+  checksum: d8d32089b8a4b247e4ba71c22b56cbb0a54440ebf35b102af222eb8032919f02
+- filename: test/unit/cache.spec.ts
+  checksum: e96f913a466a1f4d55a422e7032fc2c06eeed5fea86cdcc86a05fbe3eba29b7a
+- filename: src/lib/query.ts
+  checksum: 073c47e46755eb79d1d7e9fcaf2864296a218bf650888dd37c42480cce7df379
+- filename: test/api/retry-integration.spec.ts
+  checksum: dc07b0a8111fd8e155b99f56c31ccdddd4f46c86f1b162b17d73e15dfed8e3c8
+- filename: test/unit/retry-configuration.spec.ts
+  checksum: 359c8601c6205a65f3395cc209a93b278dfe7f5bb547c91b2eeab250b2c85aa3
 version: ""

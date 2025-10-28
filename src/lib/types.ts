@@ -1,6 +1,7 @@
 /* eslint-disable @cspell/spellchecker */
 import { HttpClientParams } from "@contentstack/core";
 import { PersistanceStoreOptions, StorageType } from "../persistance";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 
 // Internal Types
 export type params = {
@@ -10,6 +11,53 @@ export type params = {
 export type queryParams = {
   [key: string]: string | boolean | number | string[];
 };
+
+/**
+ * Interface for creating Contentstack plugins
+ * 
+ * @example
+ * ```typescript
+ * import { ContentstackPlugin } from '@contentstack/delivery-sdk';
+ * 
+ * class MyPlugin implements ContentstackPlugin {
+ *   onRequest(config: any): any {
+ *     // Modify request configuration
+ *     console.log('Processing request:', config.url);
+ *     return { ...config, headers: { ...config.headers, 'X-Custom-Header': 'value' } };
+ *   }
+ * 
+ *   onResponse(request: any, response: any, data: any): any {
+ *     // Process response data
+ *     console.log('Processing response:', response.status);
+ *     return { ...response, data: { ...data, processed: true } };
+ *   }
+ * }
+ * 
+ * const stack = contentstack.stack({
+ *   apiKey: 'your-api-key',
+ *   deliveryToken: 'your-delivery-token',
+ *   environment: 'your-environment',
+ *   plugins: [new MyPlugin()]
+ * });
+ * ```
+ */
+export interface ContentstackPlugin {
+  /**
+   * Called before each request is sent
+   * @param config - Axios request configuration object (with possible custom properties)
+   * @returns Modified request configuration (can be sync or async)
+   */
+  onRequest(config: any): any;
+
+  /**
+   * Called after each response is received
+   * @param request - The original request configuration
+   * @param response - Axios response object (with possible custom properties)
+   * @param data - Response data
+   * @returns Modified response object (can be sync or async)
+   */
+  onResponse(request: any, response: any, data: any): any;
+}
 
 // External Types
 export enum Region {
@@ -30,7 +78,7 @@ export interface StackConfig extends HttpClientParams {
   early_access?: string[];
   region?: string;
   locale?: string;
-  plugins?: any[];
+  plugins?: ContentstackPlugin[];
   logHandler?: (level: string, data: any) => void;
   cacheOptions?: CacheOptions;
   live_preview?: LivePreview;
