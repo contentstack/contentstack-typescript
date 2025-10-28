@@ -1,14 +1,26 @@
 import { Region, params } from './types';
+import regionsData from '../../regions.json';
 
-export function getHost(region: Region = Region.US, host?: string) {
+export function getHostforRegion(cloudRegion: string = "aws_na", host?: string): string {
   if (host) return host;
 
-  let url = 'cdn.contentstack.io';
-  if (region !== Region.US) {
-    url = region.toString().toLowerCase() + '-cdn.contentstack.com';
+  // Handle null, undefined, or empty string cases
+  if (!cloudRegion || typeof cloudRegion !== 'string') {
+    throw new Error("Unable to set host using the provided region. Please provide a valid region.");
   }
 
-  return url;
+  const normalizedRegion = cloudRegion.toLowerCase();
+
+  const regionObj = regionsData.regions.find(r =>
+    r.id === normalizedRegion ||
+    r.alias.some(alias => alias === normalizedRegion)
+  );
+
+  if (!regionObj) {
+    throw new Error("Unable to set host using the provided region. Please provide a valid region.");
+  }
+
+  return regionObj ? regionObj.endpoints.contentDelivery.replace(/^https?:\/\//, '') : 'cdn.contentstack.io';
 }
 
 export function isBrowser() {
