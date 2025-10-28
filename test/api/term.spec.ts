@@ -17,7 +17,7 @@ describe("Terms API test cases", () => {
   it("should get locales for a term", async () => {
     // const result = await makeTerms("term1").locales().fetch();
     // API under building phase, so it should throw error
-    expect(async () => await makeTerms("term1").locales().fetch()).rejects.toThrow();
+    expect(async () => await makeTerms("term1").locales()).rejects.toThrow();
     // TODO: add assertions
   });
 });

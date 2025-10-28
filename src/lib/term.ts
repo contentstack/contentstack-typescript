@@ -22,11 +22,13 @@ export class Term {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.taxonomy('taxonomy_uid').term('term_uid').locales().fetch();
+   * const result = await stack.taxonomy('taxonomy_uid').term('term_uid').locales();
    */
-  locales(): this {
-    this._urlPath = `${this._urlPath}/locales`;
-    return this;
+  async locales<T>(): Promise<T> {
+    const urlPath = `/taxonomy-manager/${this._taxonomyUid}/terms/${this._termUid}/locales`;
+    const response = await getData(this._client, urlPath);
+    if (response.locales) return response.locales as T;
+    return response;
   }
 
   async fetch<T>(): Promise<T> {
