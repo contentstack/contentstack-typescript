@@ -2,7 +2,7 @@ import { AxiosInstance, getData } from "@contentstack/core";
 
 /**
  * @class Term
- * @description Represents a taxonomy term with methods to fetch term data, locales, ancestors, and descendants
+ * @description Represents a published taxonomy term with methods to fetch term data, locales, ancestors, and descendants. Requires taxonomy_publish feature flag to be enabled.
  */
 export class Term {
   protected _client: AxiosInstance;
@@ -26,7 +26,7 @@ export class Term {
   /**
    * @method locales
    * @memberof Term
-   * @description Fetches locales for the term
+   * @description Fetches all published, localized versions of a single term.
    * @returns {Promise<T>}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
@@ -43,7 +43,7 @@ export class Term {
   /**
    * @method ancestors
    * @memberof Term
-   * @description Fetches ancestors for the term
+   * @description Fetches all ancestors of a single published term, up to the root.
    * @returns {Promise<T>}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
@@ -60,7 +60,7 @@ export class Term {
   /**
    * @method descendants
    * @memberof Term
-   * @description Fetches descendants for the term
+   * @description Fetches all descendants of a single published term.
    * @returns {Promise<T>}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
@@ -77,7 +77,7 @@ export class Term {
   /**
    * @method fetch
    * @memberof Term
-   * @description Fetches the term data by UID
+   * @description Fetches all descendants of a single published term.
    * @returns {Promise<T>}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'

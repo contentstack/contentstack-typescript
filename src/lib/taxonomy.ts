@@ -4,7 +4,7 @@ import { Term } from './term';
 
 /**
  * @class Taxonomy
- * @description Represents a taxonomy with methods to fetch taxonomy data and manage terms
+ * @description Represents a published taxonomy with methods to fetch taxonomy data and manage terms. Requires taxonomy_publish feature flag to be enabled.
  */
 export class Taxonomy {
   private _client: AxiosInstance;
