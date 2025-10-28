@@ -1698,6 +1698,11 @@ const taxonomyFindResponseDataMock = {
     }
   ]
 }
+
+const termLocalesResponseDataMock = {
+  terms: []
+}
+
 const termQueryFindResponseDataMock = {
   "terms": [
     {
@@ -1743,4 +1748,5 @@ export {
   gfieldQueryFindResponseDataMock,
   taxonomyFindResponseDataMock,
   termQueryFindResponseDataMock,
+  termLocalesResponseDataMock,
 };

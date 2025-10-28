@@ -13,7 +13,15 @@ describe("Terms API test cases", () => {
     expect(result.created_by).toBeDefined();
     expect(result.updated_by).toBeDefined();
   });
+
+  it("should get locales for a term", async () => {
+    // const result = await makeTerms("term1").locales().fetch();
+    // API under building phase, so it should throw error
+    expect(async () => await makeTerms("term1").locales()).rejects.toThrow();
+    // TODO: add assertions
+  });
 });
+
 function makeTerms(termUid = ""): Term {
   const terms = stack.taxonomy("taxonomy_testing").term(termUid);
   return terms;
