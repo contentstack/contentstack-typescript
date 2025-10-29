@@ -33,8 +33,8 @@
     "build:esm": "node tools/cleanup esm && tsc -p config/tsconfig.esm.json",
     "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json",
     "husky-check": "npm run build && husky && chmod +x .husky/pre-commit",
-    "postinstall": "curl -s --max-time 30 --fail https://artifacts.contentstack.com/regions.json -o src/assets/regions.json || echo 'Warning: Failed to download regions.json, using existing file if available'",
-    "postupdate": "curl -s --max-time 30 --fail https://artifacts.contentstack.com/regions.json -o src/assets/regions.json || echo 'Warning: Failed to download regions.json, using existing file if available'"
+    "postinstall": "node scripts/download-regions.cjs",
+    "postupdate": "node scripts/download-regions.cjs"
   },
   "dependencies": {
     "@contentstack/core": "^1.3.1",
@@ -44,6 +44,7 @@
   },
   "files": [
     "dist",
+    "scripts/download-regions.cjs",
     "package.json",
     "README.md",
     "src/assets/regions.json"
