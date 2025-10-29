@@ -16,7 +16,7 @@ describe('ContentType API test cases', () => {
   });
 
   it('should give a single taxonomy when taxonomy method is called with taxonomyUid', async () => {
-    const result = await makeTaxonomy('taxonomy_testing_3').fetch<TTaxonomy>();
+    const result = await makeTaxonomy('taxonomy_testing').fetch<TTaxonomy>();
     expect(result).toBeDefined();
   });
 });

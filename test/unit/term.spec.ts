@@ -1,6 +1,6 @@
 import { AxiosInstance, httpClient } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
-import { termQueryFindResponseDataMock, termLocalesResponseDataMock, termAncestorsResponseDataMock } from '../utils/mocks';
+import { termQueryFindResponseDataMock, termLocalesResponseDataMock, termAncestorsResponseDataMock, termDescendantsResponseDataMock } from '../utils/mocks';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
 import { Term } from '../../src/lib/term';
 import { Taxonomy } from '../../src/lib/taxonomy';
@@ -38,5 +38,12 @@ describe('Term class', () => {
 
     const response = await term.ancestors();
     expect(response).toEqual(termAncestorsResponseDataMock);
+  });
+
+  it('should fetch descendants for a term when descendants() is called', async () => {
+    mockClient.onGet('/taxonomy-manager/taxonomy_testing/terms/term1/descendants').reply(200, termDescendantsResponseDataMock);
+
+    const response = await term.descendants();
+    expect(response).toEqual(termDescendantsResponseDataMock);
   });
 });
