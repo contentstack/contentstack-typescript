@@ -1,10 +1,11 @@
 import { httpClient, retryRequestHandler, retryResponseErrorHandler, retryResponseHandler } from '@contentstack/core';
-import { AxiosRequestHeaders } from 'axios';
+import { AxiosRequestHeaders, InternalAxiosRequestConfig } from 'axios';
 import { handleRequest } from './cache';
 import { Stack as StackClass } from './stack';
 import { Policy, StackConfig, ContentstackPlugin } from './types';
 import * as Utility from './utils';
-export * as Utils from '@contentstack/utils';
+import * as Utils from '@contentstack/utils';
+export { Utils };
 
 let version = '{{VERSION}}';
 
@@ -33,8 +34,10 @@ let version = '{{VERSION}}';
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function stack(config: StackConfig): StackClass {
+  const DEFAULT_HOST = Utility.getHostforRegion(config.region, config.host);
+
   let defaultConfig = {
-    defaultHostname: 'cdn.contentstack.io',
+    defaultHostname: DEFAULT_HOST,
     headers: {} as AxiosRequestHeaders,
     params: {} as any,
     live_preview: {} as any,
@@ -42,7 +45,6 @@ export function stack(config: StackConfig): StackClass {
     ...config
   };
 
-  defaultConfig.defaultHostname = config.host || Utility.getHost(config.region, config.host);
   config.host = defaultConfig.defaultHostname;
 
   if (config.apiKey) {
@@ -104,6 +106,67 @@ export function stack(config: StackConfig): StackClass {
       });
     };
   }
+  // LogHandler interceptors
+  if (config.debug) {
+    // Request interceptor for logging
+    client.interceptors.request.use((requestConfig: any) => {
+      config.logHandler!('info', {
+        type: 'request',
+        method: requestConfig.method?.toUpperCase(),
+        url: requestConfig.url,
+        headers: requestConfig.headers,
+        params: requestConfig.params,
+        timestamp: new Date().toISOString()
+      });
+      return requestConfig;
+    });
+
+    // Response interceptor for logging
+    client.interceptors.response.use(
+      (response: any) => {
+        const level = getLogLevelFromStatus(response.status);
+        config.logHandler!(level, {
+          type: 'response',
+          status: response.status,
+          statusText: response.statusText,
+          url: response.config?.url,
+          method: response.config?.method?.toUpperCase(),
+          headers: response.headers,
+          data: response.data,
+          timestamp: new Date().toISOString()
+        });
+        return response;
+      },
+      (error: any) => {
+        const status = error.response?.status || 0;
+        const level = getLogLevelFromStatus(status);
+        config.logHandler!(level, {
+          type: 'response_error',
+          status: status,
+          statusText: error.response?.statusText || error.message,
+          url: error.config?.url,
+          method: error.config?.method?.toUpperCase(),
+          error: error.message,
+          timestamp: new Date().toISOString()
+        });
+        throw error;
+      }
+    );
+  }
+
+  // Helper function to determine log level based on HTTP status code
+  function getLogLevelFromStatus(status: number): string {
+    if (status >= 200 && status < 300) {
+      return 'info';
+    } else if (status >= 300 && status < 400) {
+      return 'warn';
+    } else if (status >= 400) {
+      return 'error';
+    } else {
+      return 'debug';
+    }
+  }
+
   // Retry policy handlers
   const errorHandler = (error: any) => {
     return retryResponseErrorHandler(error, config, client);
