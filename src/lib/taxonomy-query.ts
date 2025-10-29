@@ -11,7 +11,7 @@ export class TaxonomyQuery extends Query {
   /**
    * @method find
    * @memberof TaxonomyQuery
-   * @description Fetches all taxonomies of the stack using /taxonomy-manager endpoint
+   * @description Fetches a list of all published taxonomies available in the stack.
    * @returns {Promise<FindResponse<T>>}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
