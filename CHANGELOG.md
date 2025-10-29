@@ -1,6 +1,10 @@
-### Version: 4.10.1
-#### Date: Oct-01-2025
+### Version: 4.10.2
+#### Date: Oct-29-2025
 Enhancement: Added logHandler interceptors for request and response logging
+
+### Version: 4.10.1
+#### Date: Oct-27-2025
+Fix: Upgrade dependecies
 
 ### Version: 4.10.0
 #### Date: Sep-22-2025
