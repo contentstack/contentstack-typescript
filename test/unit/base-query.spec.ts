@@ -1,4 +1,8 @@
 import { BaseQuery } from '../../src/lib/base-query';
+import { httpClient, AxiosInstance } from '@contentstack/core';
+import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
+import MockAdapter from 'axios-mock-adapter';
+import { entryFindMock } from '../utils/mocks';
 
 describe('BaseQuery class', () => {
   let baseQuery: BaseQuery;
@@ -68,5 +72,96 @@ describe('BaseQuery class', () => {
 
     baseQuery.removeParam('key2');
     expect(baseQuery._queryParams).toEqual({ key1: 'value1' });
+  });
+});
+
+class TestableBaseQuery extends BaseQuery {
+  constructor(client: AxiosInstance, urlPath: string) {
+    super();
+    this._client = client;
+    this._urlPath = urlPath;
+    this._variants = '';
+  }
+
+  setVariants(variants: string) {
+    this._variants = variants;
+  }
+
+  setParameters(params: any) {
+    this._parameters = params;
+  }
+}
+
+describe('BaseQuery find method', () => {
+  let client: AxiosInstance;
+  let mockClient: MockAdapter;
+  let query: TestableBaseQuery;
+
+  beforeAll(() => {
+    client = httpClient(MOCK_CLIENT_OPTIONS);
+    mockClient = new MockAdapter(client as any);
+  });
+
+  beforeEach(() => {
+    query = new TestableBaseQuery(client, '/content_types/test_uid/entries');
+    mockClient.reset();
+  });
+
+  it('should call find with encode parameter true', async () => {
+    mockClient.onGet('/content_types/test_uid/entries').reply(200, entryFindMock);
+    
+    query.setParameters({ title: 'Test' });
+    const result = await query.find(true);
+    
+    expect(result).toEqual(entryFindMock);
+  });
+
+  it('should call find without parameters', async () => {
+    mockClient.onGet('/content_types/test_uid/entries').reply(200, entryFindMock);
+    
+    const result = await query.find();
+    
+    expect(result).toEqual(entryFindMock);
+  });
+
+  it('should call find with variants header when variants are set', async () => {
+    mockClient.onGet('/content_types/test_uid/entries').reply((config) => {
+      expect(config.headers?.['x-cs-variant-uid']).toBe('variant1,variant2');
+      return [200, entryFindMock];
+    });
+    
+    query.setVariants('variant1,variant2');
+    await query.find();
+  });
+
+  it('should extract content type UID from URL path', async () => {
+    mockClient.onGet('/content_types/my_content_type/entries').reply(200, entryFindMock);
+    
+    const queryWithContentType = new TestableBaseQuery(client, '/content_types/my_content_type/entries');
+    const result = await queryWithContentType.find();
+    
+    expect(result).toEqual(entryFindMock);
+  });
+
+  it('should return null for content type UID when URL does not match pattern', async () => {
+    mockClient.onGet('/assets').reply(200, entryFindMock);
+    
+    const queryWithoutContentType = new TestableBaseQuery(client, '/assets');
+    const result = await queryWithoutContentType.find();
+    
+    expect(result).toEqual(entryFindMock);
+  });
+
+  it('should handle find with both encode and variants', async () => {
+    mockClient.onGet('/content_types/test_uid/entries').reply((config) => {
+      expect(config.headers?.['x-cs-variant-uid']).toBe('test-variant');
+      return [200, entryFindMock];
+    });
+    
+    query.setVariants('test-variant');
+    query.setParameters({ status: 'published' });
+    const result = await query.find(true);
+    
+    expect(result).toEqual(entryFindMock);
   });
 }); 
