@@ -38,6 +38,18 @@ describe('Entries class', () => {
     expect(entry._queryParams['include[]']).toContain(referenceFieldUid);
   });
 
+  it('should handle multiple reference field UIDs', () => {
+    entry.includeReference('ref1', 'ref2', ['ref3', 'ref4']);
+    expect(entry._queryParams['include[]']).toEqual(['ref1', 'ref2', 'ref3', 'ref4']);
+  });
+
+  it('should log error when includeReference called with no arguments', () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    entry.includeReference();
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Argument should be a String or an Array.');
+    consoleErrorSpy.mockRestore();
+  });
+
   it('should add "include_fallback" in _queryParams when includeFallback method is called', () => {
     const returnedValue = entry.includeFallback();
     expect(returnedValue).toBeInstanceOf(Entries);
@@ -109,6 +121,20 @@ describe('Entries class', () => {
     expect(entry._queryParams).toEqual({ 'except[BASE][]': 'fieldUid2' });
   });
 
+  it('should handle except with array of fieldUids', () => {
+    entry.except(['field1', 'field2', 'field3']);
+    expect(entry._queryParams['except[BASE][0]']).toBe('field1');
+    expect(entry._queryParams['except[BASE][1]']).toBe('field2');
+    expect(entry._queryParams['except[BASE][2]']).toBe('field3');
+  });
+
+  it('should handle only with array of fieldUids', () => {
+    entry.only(['field1', 'field2', 'field3']);
+    expect(entry._queryParams['only[BASE][0]']).toBe('field1');
+    expect(entry._queryParams['only[BASE][1]']).toBe('field2');
+    expect(entry._queryParams['only[BASE][2]']).toBe('field3');
+  });
+
   it('should provide proper response when find method is called', async () => {
     mockClient.onGet(`/content_types/contentTypeUid/entries`).reply(200, entryFindMock);
     const returnedValue = await entry.find();
@@ -176,6 +202,10 @@ class TestVariants extends Entries {
     this.variants(['variant1', 'variant2']);
     return this._variants || "";
   }
+
+  getVariants(): string {
+    return this._variants || "";
+  }
 }
 
 describe('Variants test', () => {
@@ -190,5 +220,77 @@ describe('Variants test', () => {
     const testVariantObj = new TestVariants(httpClient(MOCK_CLIENT_OPTIONS))
 
     expect(testVariantObj.setAndGetVariantsHeaders()).toBe('variant1,variant2');
+  });
+
+  it('should set variants as string', () => {
+    const testVariantObj = new TestVariants(client);
+    testVariantObj.variants('variant1');
+    expect(testVariantObj.getVariants()).toBe('variant1');
+  });
+
+  it('should set variants as comma-separated string from array', () => {
+    const testVariantObj = new TestVariants(client);
+    testVariantObj.variants(['variant1', 'variant2', 'variant3']);
+    expect(testVariantObj.getVariants()).toBe('variant1,variant2,variant3');
+  });
+
+  it('should not set variants when empty string is provided', () => {
+    const testVariantObj = new TestVariants(client);
+    testVariantObj.variants('');
+    expect(testVariantObj.getVariants()).toBe('');
+  });
+
+  it('should not set variants when empty array is provided', () => {
+    const testVariantObj = new TestVariants(client);
+    testVariantObj.variants([]);
+    expect(testVariantObj.getVariants()).toBe('');
+  });
+});
+
+describe('Find with encode and variants', () => {
+  let client: AxiosInstance;
+  let mockClient: MockAdapter;
+  let entry: Entries;
+
+  beforeAll(() => {
+    client = httpClient(MOCK_CLIENT_OPTIONS);
+    mockClient = new MockAdapter(client as any);
+  });
+
+  beforeEach(() => {
+    entry = new Entries(client, 'contentTypeUid');
+    mockClient.reset();
+  });
+
+  it('should call find with encode parameter true', async () => {
+    mockClient.onGet('/content_types/contentTypeUid/entries').reply(200, entryFindMock);
+    
+    entry.query().where('title', QueryOperation.EQUALS, 'Test');
+    const result = await entry.find(true);
+    
+    expect(result).toEqual(entryFindMock);
+  });
+
+  it('should call find with variants header when variants are set', async () => {
+    mockClient.onGet('/content_types/contentTypeUid/entries').reply((config) => {
+      expect(config.headers?.['x-cs-variant-uid']).toBe('variant1,variant2');
+      return [200, entryFindMock];
+    });
+    
+    entry.variants(['variant1', 'variant2']);
+    await entry.find();
+  });
+
+  it('should handle find with both encode and variants', async () => {
+    mockClient.onGet('/content_types/contentTypeUid/entries').reply((config) => {
+      expect(config.headers?.['x-cs-variant-uid']).toBe('test-variant');
+      return [200, entryFindMock];
+    });
+    
+    entry.variants('test-variant');
+    entry.query().where('status', QueryOperation.EQUALS, 'published');
+    const result = await entry.find(true);
+    
+    expect(result).toEqual(entryFindMock);
   });
 })

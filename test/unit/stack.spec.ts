@@ -146,6 +146,38 @@ describe('Stack class tests', () => {
     expect(stack.getClient().defaults.headers['preview_timestamp']).toBeUndefined();
   });
 
+  it('should handle livePreviewQuery when live_preview config is not set', () => {
+    delete stack.config.live_preview;
+    const query = {
+      live_preview: 'live_preview_hash',
+      release_id: 'releaseId',
+    };
+  
+    stack.livePreviewQuery(query);
+  
+    expect(stack.getClient().defaults.headers['release_id']).toEqual('releaseId');
+  });
+
+  it('should use content_type_uid and entry_uid fallback properties', () => {
+    const query = {
+      live_preview: 'live_preview_hash',
+      content_type_uid: 'contentTypeUid',
+      entry_uid: 'entryUid',
+    };
+  
+    stack.config.live_preview = { enable: true, live_preview: 'true' };
+    stack.livePreviewQuery(query);
+  
+    expect(stack.getClient().stackConfig.live_preview).toEqual({
+      live_preview: 'live_preview_hash',
+      contentTypeUid: 'contentTypeUid',
+      enable: true,
+      entryUid: 'entryUid',
+      preview_timestamp: '',
+      include_applied_variants: false,
+    });
+  });
+
   it('should return last activities', async () => {
     mockClient.onGet('/content_types').reply(200, contentTypeQueryFindResponseDataMock);
     const response = await stack.getLastActivities();
@@ -154,9 +186,36 @@ describe('Stack class tests', () => {
     expect(Array.isArray(response.content_types)).toBe(true);
   });
 
+  it('should throw error when getLastActivities fails', async () => {
+    mockClient.onGet('/content_types').networkError();
+    
+    await expect(stack.getLastActivities()).rejects.toThrow('Error fetching last activities');
+  });
+
   it('should set port to 3000', () => {
     stack.setPort(3000);
     expect(stack.config.port).toEqual(3000);
+  });
+
+  it('should not set port when provided with non-number', () => {
+    stack.setPort('3000' as any);
+    expect(stack.config.port).not.toEqual('3000');
+  });
+
+  it('should set debug to true', () => {
+    stack.setDebug(true);
+    expect(stack.config.debug).toEqual(true);
+  });
+
+  it('should set debug to false', () => {
+    stack.setDebug(false);
+    expect(stack.config.debug).toEqual(false);
+  });
+
+  it('should not set debug when provided with non-boolean', () => {
+    stack.config.debug = false;
+    stack.setDebug('true' as any);
+    expect(stack.config.debug).toEqual(false);
   });
 
   describe('setHost method integration tests', () => {
