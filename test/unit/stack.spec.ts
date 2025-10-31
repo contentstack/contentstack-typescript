@@ -52,6 +52,24 @@ describe('Stack class tests', () => {
     done();
   });
 
+  it('should return TaxonomyQuery instance when taxonomy function is called', (done) => {
+    const taxonomyQuery = stack.taxonomy();
+    expect(taxonomyQuery).toBeDefined();
+    done();
+  });
+
+  it('should return GlobalField instance when globalField function is called with uid', (done) => {
+    const globalField = stack.globalField('globalFieldUid');
+    expect(globalField).toBeDefined();
+    done();
+  });
+
+  it('should return GlobalFieldQuery instance when globalField function is called without uid', (done) => {
+    const globalFieldQuery = stack.globalField();
+    expect(globalFieldQuery).toBeDefined();
+    done();
+  });
+
   it('should set the correct locale when setLocale function is called with proper locale param', (done) => {
     stack.setLocale(LOCALE);
     expect(stack.config.locale).toEqual(LOCALE);

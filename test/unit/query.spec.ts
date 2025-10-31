@@ -55,7 +55,7 @@ describe('Query class', () => {
   });
 
   it('should add a where-in filter to the query parameters', () => {
-    const subQuery = getQueryObject(client, 'your-referenced-content-type-uid');
+    const subQuery = getQueryObject(client, 'referenced-content-type-uid');
     subQuery.where('your-field-uid', QueryOperation.EQUALS, 'your-field-value');
     query.whereIn('your-reference-field-uid', subQuery);
     // eslint-disable-next-line prettier/prettier, @typescript-eslint/naming-convention
@@ -63,7 +63,7 @@ describe('Query class', () => {
   });
 
   it('should add a where-not-in filter to the query parameters', () => {
-    const subQuery = getQueryObject(client, 'your-referenced-content-type-uid');
+    const subQuery = getQueryObject(client, 'referenced-content-type-uid');
     subQuery.where('your-field-uid', QueryOperation.EQUALS, 'your-field-value');
     query.whereNotIn('your-reference-field-uid', subQuery);
     // eslint-disable-next-line prettier/prettier, @typescript-eslint/naming-convention
@@ -84,8 +84,13 @@ describe('Query class', () => {
   });
 
   it('should result in error when regex method is called with invalid regex', async () => {
-    const regexQuery = getQueryObject(client, 'your-referenced-content-type-uid');
+    const regexQuery = getQueryObject(client, 'referenced-content-type-uid');
     expect(() => regexQuery.regex("fieldUid", "[a-z")).toThrow("Invalid regexPattern: Must be a valid regular expression");
+  });
+
+  it('should throw error when regex method is called with invalid characters', async () => {
+    const regexQuery = getQueryObject(client, 'referenced-content-type-uid');
+    expect(() => regexQuery.regex("fieldUid", "test<script>")).toThrow("Invalid regexPattern: Must be a valid regular expression");
   });
 
   it('should add a regex parameter to _parameters when regex method is called with valid regex', () => {
@@ -364,6 +369,17 @@ describe('Query class', () => {
       query.and(query1, query2);
       
       expect(query._parameters.$and).toEqual([query1._parameters, query2._parameters]);
+    });
+  });
+
+  describe('find with encode and variants', () => {
+    it('should call find with encode=true and parameters', async () => {
+      mockClient.onGet('/content_types/contentTypeUid/entries').reply(200, entryFindMock);
+      
+      query.where('title', QueryOperation.EQUALS, 'Test');
+      const result = await query.find(true);
+      
+      expect(result).toEqual(entryFindMock);
     });
   });
 });

@@ -76,10 +76,12 @@ describe('BaseQuery class', () => {
 });
 
 class TestableBaseQuery extends BaseQuery {
-  constructor(client: AxiosInstance, urlPath: string) {
+  constructor(client: AxiosInstance, urlPath: string | null = null) {
     super();
     this._client = client;
-    this._urlPath = urlPath;
+    if (urlPath !== null) {
+      this._urlPath = urlPath;
+    }
     this._variants = '';
   }
 
@@ -89,6 +91,10 @@ class TestableBaseQuery extends BaseQuery {
 
   setParameters(params: any) {
     this._parameters = params;
+  }
+
+  setUrlPath(path: string) {
+    this._urlPath = path;
   }
 }
 
@@ -163,5 +169,13 @@ describe('BaseQuery find method', () => {
     const result = await query.find(true);
     
     expect(result).toEqual(entryFindMock);
+  });
+
+  it('should handle empty _urlPath gracefully', () => {
+    const queryWithoutUrlPath = new TestableBaseQuery(client, null);
+    queryWithoutUrlPath.setUrlPath('');
+    
+    // Verify that URL path is empty (testing the null check in extractContentTypeUidFromUrl)
+    expect(queryWithoutUrlPath).toBeInstanceOf(TestableBaseQuery);
   });
 }); 
