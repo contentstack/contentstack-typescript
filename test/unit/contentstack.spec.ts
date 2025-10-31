@@ -470,6 +470,34 @@ describe("Contentstack", () => {
       isBrowserSpy.mockRestore();
     });
 
+    it('should use fallback value when live_preview param is empty (line 74 || branch)', () => {
+      const isBrowserSpy = jest.spyOn(utils, 'isBrowser').mockReturnValue(true);
+      
+      // Mock document.location with empty live_preview param
+      (global as any).document = {
+        location: {
+          toString: () => 'http://localhost?live_preview='
+        }
+      };
+
+      const config = {
+        apiKey: "apiKey",
+        deliveryToken: "delivery",
+        environment: "env",
+        live_preview: {
+          enable: true,
+          live_preview: 'fallback_hash'
+        },
+      };
+      
+      const stackInstance = createStackInstance(config);
+      
+      // Should use the fallback value when params.get returns empty string
+      expect(stackInstance.config.live_preview?.live_preview).toBe('fallback_hash');
+      
+      isBrowserSpy.mockRestore();
+    });
+
     it('should not extract params when not in browser environment', () => {
       const isBrowserSpy = jest.spyOn(utils, 'isBrowser').mockReturnValue(false);
       
