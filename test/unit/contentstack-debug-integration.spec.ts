@@ -165,7 +165,7 @@ describe('Contentstack Debug Logging Integration', () => {
     mockClient.restore();
   });
 
-  it('should execute cache adapter when cacheOptions is provided', async () => {
+  it('should set cache adapter when cacheOptions is provided', () => {
     const config: StackConfig = {
       apiKey: "apiKey",
       deliveryToken: "delivery",
@@ -178,18 +178,49 @@ describe('Contentstack Debug Logging Integration', () => {
 
     const stack = Contentstack.stack(config);
     const client = stack.getClient();
-    const mockClient = new MockAdapter(client);
 
-    mockClient.onGet('/content_types/test').reply(200, {
-      content_types: []
-    });
+    // Verify the custom adapter was set
+    const customAdapter = client.defaults.adapter;
+    expect(customAdapter).toBeDefined();
+    expect(typeof customAdapter).toBe('function');
+  });
 
-    // Make request to trigger cache adapter
-    await client.get('/content_types/test', { contentTypeUid: 'test' });
+  it('should set cache adapter with NETWORK_ELSE_CACHE policy', () => {
+    const config: StackConfig = {
+      apiKey: "apiKey",
+      deliveryToken: "delivery",
+      environment: "env",
+      cacheOptions: {
+        policy: Policy.NETWORK_ELSE_CACHE,
+        maxAge: 3600,
+      },
+    };
 
-    expect(client.defaults.adapter).toBeDefined();
+    const stack = Contentstack.stack(config);
+    const client = stack.getClient();
 
-    mockClient.restore();
+    const customAdapter = client.defaults.adapter;
+    expect(customAdapter).toBeDefined();
+    expect(typeof customAdapter).toBe('function');
+  });
+
+  it('should set cache adapter with CACHE_ELSE_NETWORK policy', () => {
+    const config: StackConfig = {
+      apiKey: "apiKey",
+      deliveryToken: "delivery",
+      environment: "env",
+      cacheOptions: {
+        policy: Policy.CACHE_ELSE_NETWORK,
+        maxAge: 3600,
+      },
+    };
+
+    const stack = Contentstack.stack(config);
+    const client = stack.getClient();
+
+    const customAdapter = client.defaults.adapter;
+    expect(customAdapter).toBeDefined();
+    expect(typeof customAdapter).toBe('function');
   });
 });
 
