@@ -91,6 +91,13 @@ describe('Entries class', () => {
     expect(returnedValue).toBeInstanceOf(Query);
   });
 
+  it('should return Query instance with queryObj when query method is called with object', () => {
+    const queryObj = { title: 'Test' };
+    const returnedValue = entry.query(queryObj);
+    expect(returnedValue).toBeInstanceOf(Query);
+    expect(returnedValue._parameters).toEqual(queryObj);
+  });
+
   it('should add a fieldUid to the _queryParams object', () => {
     entry.only('fieldUid');
     expect(entry._queryParams).toEqual({ 'only[BASE][]': 'fieldUid' });
