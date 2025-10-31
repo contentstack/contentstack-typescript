@@ -15,9 +15,12 @@ export default {
   coverageDirectory: "./reports/contentstack-delivery/coverage/",
   collectCoverageFrom: ["src/**", "!src/index.ts"],
   coverageThreshold: {
-    // global: {
-    //   branches: 95,
-    // }
+    global: {
+      statements: 95,
+      branches: 95,
+      functions: 95,
+      lines: 95,
+    }
   },
   reporters: [
     "default",

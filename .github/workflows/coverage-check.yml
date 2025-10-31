@@ -1,0 +1,77 @@
+name: 'Coverage Check'
+
+on:
+  pull_request:
+    branches:
+      - development
+      - staging
+      - main
+  push:
+    branches:
+      - development
+      - staging
+      - main
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Jest Coverage Report
+        if: github.event_name == 'pull_request'
+        uses: artiomtr/jest-coverage-report-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          test-script: npm test -- --coverage --testMatch="**/test/unit/**/*.spec.ts"
+          threshold: 95
+          working-directory: ./
+          package-manager: npm
+          annotations: failed-tests
+          coverage-file: ./coverage/coverage-summary.json
+          base-coverage-file: ./coverage/coverage-summary.json
+          skip-step: install
+
+      - name: Run unit tests with coverage (for push events)
+        if: github.event_name == 'push'
+        run: npm test -- --coverage --testMatch="**/test/unit/**/*.spec.ts" --coverageReporters=json-summary --coverageReporters=text
+
+      - name: Verify coverage threshold
+        run: |
+          COVERAGE=$(node -pe "
+            const c = JSON.parse(require('fs').readFileSync('coverage/coverage-summary.json')).total;
+            const threshold = 95;
+            const metrics = ['statements', 'branches', 'functions', 'lines'];
+            const failed = metrics.filter(m => c[m].pct < threshold);
+            if (failed.length) {
+              console.log('❌ Coverage below 95%: ' + failed.join(', '));
+              process.exit(1);
+            }
+            console.log('✅ All coverage metrics meet the 95% threshold');
+          ")
+
+      - name: Upload coverage reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: |
+            coverage/
+            reports/
+          retention-days: 30
+
