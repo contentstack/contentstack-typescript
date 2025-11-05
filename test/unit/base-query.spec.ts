@@ -1,4 +1,5 @@
 import { BaseQuery } from '../../src/lib/base-query';
+import { Query } from '../../src/lib/query';
 import { httpClient, AxiosInstance } from '@contentstack/core';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
 import MockAdapter from 'axios-mock-adapter';
@@ -73,6 +74,80 @@ describe('BaseQuery class', () => {
     baseQuery.removeParam('key2');
     expect(baseQuery._queryParams).toEqual({ key1: 'value1' });
   });
+
+  describe('Enhancement: Methods return Query type', () => {
+    it('should return Query-compatible type from includeCount()', () => {
+      const returnedValue = baseQuery.includeCount();
+      
+      // Should be instance of BaseQuery (Query extends BaseQuery)
+      expect(returnedValue).toBeInstanceOf(BaseQuery);
+      expect(baseQuery._queryParams.include_count).toBe('true');
+    });
+
+    it('should return Query-compatible type from orderByAscending()', () => {
+      const returnedValue = baseQuery.orderByAscending('title');
+      
+      expect(returnedValue).toBeInstanceOf(BaseQuery);
+      expect(baseQuery._queryParams.asc).toBe('title');
+    });
+
+    it('should return Query-compatible type from orderByDescending()', () => {
+      const returnedValue = baseQuery.orderByDescending('created_at');
+      
+      expect(returnedValue).toBeInstanceOf(BaseQuery);
+      expect(baseQuery._queryParams.desc).toBe('created_at');
+    });
+
+    it('should return Query-compatible type from limit()', () => {
+      const returnedValue = baseQuery.limit(10);
+      
+      expect(returnedValue).toBeInstanceOf(BaseQuery);
+      expect(baseQuery._queryParams.limit).toBe(10);
+    });
+
+    it('should return Query-compatible type from skip()', () => {
+      const returnedValue = baseQuery.skip(5);
+      
+      expect(returnedValue).toBeInstanceOf(BaseQuery);
+      expect(baseQuery._queryParams.skip).toBe(5);
+    });
+
+    it('should return Query-compatible type from param()', () => {
+      const returnedValue = baseQuery.param('locale', 'en-us');
+      
+      expect(returnedValue).toBeInstanceOf(BaseQuery);
+      expect(baseQuery._queryParams.locale).toBe('en-us');
+    });
+
+    it('should return Query-compatible type from addParams()', () => {
+      const returnedValue = baseQuery.addParams({ include_count: 'true' });
+      
+      expect(returnedValue).toBeInstanceOf(BaseQuery);
+      expect(baseQuery._queryParams.include_count).toBe('true');
+    });
+
+    it('should return Query-compatible type from removeParam()', () => {
+      baseQuery.param('key1', 'value1');
+      const returnedValue = baseQuery.removeParam('key1');
+      
+      expect(returnedValue).toBeInstanceOf(BaseQuery);
+      expect(baseQuery._queryParams.key1).toBeUndefined();
+    });
+
+    it('should support method chaining with Query type', () => {
+      const chained = baseQuery
+        .limit(5)
+        .skip(0)
+        .includeCount()
+        .orderByAscending('title');
+      
+      expect(chained).toBeInstanceOf(BaseQuery);
+      expect(baseQuery._queryParams.limit).toBe(5);
+      expect(baseQuery._queryParams.skip).toBe(0);
+      expect(baseQuery._queryParams.include_count).toBe('true');
+      expect(baseQuery._queryParams.asc).toBe('title');
+    });
+  });
 });
 
 class TestableBaseQuery extends BaseQuery {
@@ -114,12 +189,111 @@ describe('BaseQuery find method', () => {
   });
 
   it('should call find with encode parameter true', async () => {
-    mockClient.onGet('/content_types/test_uid/entries').reply(200, entryFindMock);
+    mockClient.onGet('/content_types/test_uid/entries').reply((config) => {
+      // Verify that query parameters are encoded
+      const queryParam = config.params?.query;
+      expect(queryParam).toBeDefined();
+      // When encoded, special characters should be URL encoded
+      return [200, entryFindMock];
+    });
     
-    query.setParameters({ title: 'Test' });
+    query.setParameters({ title: 'Test & Encode' });
     const result = await query.find(true);
     
     expect(result).toEqual(entryFindMock);
+  });
+
+  it('should encode query parameters when encode is true', async () => {
+    mockClient.onGet('/content_types/test_uid/entries').reply((config) => {
+      const queryParam = config.params?.query;
+      // Verify encoding: 'Test & Value' should be encoded
+      expect(queryParam.title).toBe('Test%20%26%20Value');
+      return [200, entryFindMock];
+    });
+    
+    query.setParameters({ title: 'Test & Value' });
+    await query.find(true);
+  });
+
+  it('should not encode query parameters when encode is false', async () => {
+    mockClient.onGet('/content_types/test_uid/entries').reply((config) => {
+      const queryParam = config.params?.query;
+      // Verify no encoding: raw value should be present
+      expect(queryParam.title).toBe('Test & Value');
+      return [200, entryFindMock];
+    });
+    
+    query.setParameters({ title: 'Test & Value' });
+    await query.find(false);
+  });
+
+  it('should not encode query parameters when encode is not provided', async () => {
+    mockClient.onGet('/content_types/test_uid/entries').reply((config) => {
+      const queryParam = config.params?.query;
+      // Verify no encoding by default
+      expect(queryParam.title).toBe('Test & Value');
+      return [200, entryFindMock];
+    });
+    
+    query.setParameters({ title: 'Test & Value' });
+    await query.find();
+  });
+
+  it('should encode nested query parameters when encode is true', async () => {
+    mockClient.onGet('/content_types/test_uid/entries').reply((config) => {
+      const queryParam = config.params?.query;
+      // Verify nested object encoding
+      expect(queryParam.nested.name).toBe('John%20%26%20Jane');
+      expect(queryParam.nested.deeply.nested).toBe('value%20%2B%20symbols');
+      return [200, entryFindMock];
+    });
+    
+    query.setParameters({
+      nested: {
+        name: 'John & Jane',
+        deeply: {
+          nested: 'value + symbols'
+        }
+      }
+    });
+    await query.find(true);
+  });
+
+  it('should encode special characters correctly', async () => {
+    mockClient.onGet('/content_types/test_uid/entries').reply((config) => {
+      const queryParam = config.params?.query;
+      // Test various special characters
+      expect(queryParam.symbols).toBe('hello%40world.com%3Fparam%3Dvalue');
+      expect(queryParam.unicode).toBe('caf%C3%A9%20fran%C3%A7ais');
+      return [200, entryFindMock];
+    });
+    
+    query.setParameters({
+      symbols: 'hello@world.com?param=value',
+      unicode: 'café français'
+    });
+    await query.find(true);
+  });
+
+  it('should preserve non-string values when encoding', async () => {
+    mockClient.onGet('/content_types/test_uid/entries').reply((config) => {
+      const queryParam = config.params?.query;
+      // Numbers and booleans should not be encoded
+      expect(queryParam.numberValue).toBe(42);
+      expect(queryParam.booleanTrue).toBe(true);
+      expect(queryParam.booleanFalse).toBe(false);
+      // Strings should be encoded
+      expect(queryParam.stringValue).toBe('encode%20me');
+      return [200, entryFindMock];
+    });
+    
+    query.setParameters({
+      stringValue: 'encode me',
+      numberValue: 42,
+      booleanTrue: true,
+      booleanFalse: false
+    });
+    await query.find(true);
   });
 
   it('should call find without parameters', async () => {
@@ -177,5 +351,48 @@ describe('BaseQuery find method', () => {
     
     // Verify that URL path is empty (testing the null check in extractContentTypeUidFromUrl)
     expect(queryWithoutUrlPath).toBeInstanceOf(TestableBaseQuery);
+  });
+
+  it('should handle find with empty parameters and encode', async () => {
+    mockClient.onGet('/content_types/test_uid/entries').reply(200, entryFindMock);
+    
+    query.setParameters({});
+    const result = await query.find(true);
+    
+    expect(result).toEqual(entryFindMock);
+  });
+
+  it('should combine query params and _parameters correctly when encoding', async () => {
+    mockClient.onGet('/content_types/test_uid/entries').reply((config) => {
+      const params = config.params;
+      // Verify both query params and _parameters are included
+      expect(params.limit).toBe(10);
+      expect(params.query).toBeDefined();
+      expect(params.query.title).toBe('Test%20Title');
+      return [200, entryFindMock];
+    });
+    
+    query.setParameters({ title: 'Test Title' });
+    query.limit(10);
+    await query.find(true);
+  });
+
+  it('should handle find with complex nested parameters and encoding', async () => {
+    mockClient.onGet('/content_types/test_uid/entries').reply((config) => {
+      const queryParam = config.params?.query;
+      expect(queryParam.complex.nested.deep.value).toBe('encoded%20value');
+      return [200, entryFindMock];
+    });
+    
+    query.setParameters({
+      complex: {
+        nested: {
+          deep: {
+            value: 'encoded value'
+          }
+        }
+      }
+    });
+    await query.find(true);
   });
 }); 
