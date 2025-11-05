@@ -41,4 +41,13 @@ describe('ContentType class', () => {
     const response = await contentType.fetch();
     expect(response).toEqual(contentTypeResponseMock.content_type);
   });
+
+  it('should return response directly when content_type property is not present', async () => {
+    const responseWithoutContentType = { data: 'test', uid: 'test-uid' };
+    mockClient.onGet('/content_types/contentTypeUid').reply(200, responseWithoutContentType);
+    
+    const result = await contentType.fetch();
+    
+    expect(result).toEqual(responseWithoutContentType);
+  });
 });
