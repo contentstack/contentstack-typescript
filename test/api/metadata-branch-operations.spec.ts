@@ -2,9 +2,10 @@ import { stackInstance } from '../utils/stack-instance';
 import { TEntry } from './types';
 
 const stack = stackInstance();
-const contentTypeUid = process.env.CONTENT_TYPE_UID || 'sample_content_type';
-const entryUid = process.env.ENTRY_UID || 'sample_entry';
-const branchUid = process.env.BRANCH_UID || 'development';
+// Using new standardized env variable names
+const contentTypeUid = process.env.COMPLEX_CONTENT_TYPE_UID || 'cybersecurity';
+const entryUid = process.env.COMPLEX_ENTRY_UID || process.env.MEDIUM_ENTRY_UID || '';
+const branchUid = process.env.BRANCH_UID || 'main';
 
 describe('Metadata and Branch Operations API Tests', () => {
   describe('Entry Metadata Operations', () => {

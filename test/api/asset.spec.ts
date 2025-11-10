@@ -9,7 +9,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const stack = stackInstance();
-const assetUid = process.env.ASSET_UID;
+// Using new standardized env variable names
+const assetUid = process.env.IMAGE_ASSET_UID || process.env.ASSET_UID || '';
 describe('Asset API tests', () => {
   it('should check for asset is defined', async () => {
     const result = await makeAsset(assetUid).fetch<BaseAsset>();
