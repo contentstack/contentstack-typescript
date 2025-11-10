@@ -16,3 +16,10 @@ dist/*
 *.log
 .nx/
 regions.json
+
+# Build artifacts (compiled .js from .ts)
+src/**/*.js
+src/**/*.d.ts
+!src/**/*.ts
+test/**/*.js
+!test/**/*.spec.js
