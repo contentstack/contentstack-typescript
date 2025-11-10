@@ -49,7 +49,6 @@
     "src/assets/regions.json"
   ],
   "devDependencies": {
-    "@nrwl/jest": "^17.3.2",
     "@slack/bolt": "^4.4.0",
     "@types/humps": "^2.0.6",
     "@types/jest": "^29.5.14",
