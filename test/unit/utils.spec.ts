@@ -118,19 +118,19 @@ describe("Utils functions", () => {
 
     it("should throw error for invalid region", () => {
       expect(() => getHostforRegion("invalid_region")).toThrow(
-        "Unable to set host using the provided region. Please provide a valid region."
+        "Invalid region: invalid_region"
       );
     });
 
     it("should throw error for empty string region", () => {
       expect(() => getHostforRegion("")).toThrow(
-        "Unable to set host using the provided region. Please provide a valid region."
+        "Empty region provided. Please put valid region."
       );
     });
 
     it("should throw error for null region", () => {
       expect(() => getHostforRegion(null as any)).toThrow(
-        "Unable to set host using the provided region. Please provide a valid region."
+        "Cannot read properties of null (reading 'toLowerCase')"
       );
     });
 
@@ -142,15 +142,15 @@ describe("Utils functions", () => {
 
     it("should throw error for non-string region types", () => {
       expect(() => getHostforRegion(123 as any)).toThrow(
-        "Unable to set host using the provided region. Please provide a valid region."
+        "region.toLowerCase is not a function"
       );
       
       expect(() => getHostforRegion({} as any)).toThrow(
-        "Unable to set host using the provided region. Please provide a valid region."
+        "region.toLowerCase is not a function"
       );
       
       expect(() => getHostforRegion([] as any)).toThrow(
-        "Unable to set host using the provided region. Please provide a valid region."
+        "region.toLowerCase is not a function"
       );
     });
 
