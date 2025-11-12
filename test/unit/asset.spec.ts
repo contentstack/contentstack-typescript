@@ -42,6 +42,12 @@ describe('Asset class', () => {
     expect(asset._queryParams.include_fallback).toBe('true');
   });
 
+  it('should add "include_metadata" in _queryParams when includeMetadata method is called', () => {
+    const returnedValue = asset.includeMetadata();
+    expect(returnedValue).toBeInstanceOf(Asset);
+    expect(asset._queryParams.include_metadata).toBe('true');
+  });
+
   it('should add "relative_urls" in _queryParams when relativeUrl method is called', () => {
     const returnedValue = asset.relativeUrls();
     expect(returnedValue).toBeInstanceOf(Asset);
@@ -58,5 +64,14 @@ describe('Asset class', () => {
     mockClient.onGet(`/assets/assetUid`).reply(200, assetFetchDataMock);
     const returnedValue = await asset.fetch();
     expect(returnedValue).toEqual(assetFetchDataMock.asset);
+  });
+
+  it('should return response directly when asset property is not present', async () => {
+    const responseWithoutAsset = { data: 'test', uid: 'test-uid' };
+    mockClient.onGet(`/assets/assetUid`).reply(200, responseWithoutAsset);
+    
+    const result = await asset.fetch();
+    
+    expect(result).toEqual(responseWithoutAsset);
   });
 });

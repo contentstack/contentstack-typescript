@@ -44,6 +44,18 @@ describe('Entry class', () => {
     expect(entry._queryParams['include[]']).toContain(referenceFieldUid);
   });
 
+  it('should handle multiple reference field UIDs', () => {
+    entry.includeReference('ref1', 'ref2', ['ref3', 'ref4']);
+    expect(entry._queryParams['include[]']).toEqual(['ref1', 'ref2', 'ref3', 'ref4']);
+  });
+
+  it('should log error when includeReference called with no arguments', () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    entry.includeReference();
+    expect(consoleErrorSpy).toHaveBeenCalledWith('Argument should be a String or an Array.');
+    consoleErrorSpy.mockRestore();
+  });
+
   it('should add "include_metadata" in _queryParams when includeMetadata method is called', () => {
     const returnedValue = entry.includeMetadata();
     expect(returnedValue).toBeInstanceOf(Entry);
@@ -77,6 +89,13 @@ describe('Entry class', () => {
     expect(entry._queryParams).toEqual({ 'only[BASE][]': 'fieldUid2' });
   });
 
+  it('should handle only with array of fieldUids', () => {
+    entry.only(['field1', 'field2', 'field3']);
+    expect(entry._queryParams['only[BASE][0]']).toBe('field1');
+    expect(entry._queryParams['only[BASE][1]']).toBe('field2');
+    expect(entry._queryParams['only[BASE][2]']).toBe('field3');
+  });
+
   it('should add a fieldUid to the _queryParams object', () => {
     entry.except('fieldUid');
     expect(entry._queryParams).toEqual({ 'except[BASE][]': 'fieldUid' });
@@ -90,6 +109,22 @@ describe('Entry class', () => {
   it('should allow chaining of multiple calls', () => {
     entry.except('fieldUid1').except('fieldUid2');
     expect(entry._queryParams).toEqual({ 'except[BASE][]': 'fieldUid2' });
+  });
+
+  it('should handle except with array of fieldUids', () => {
+    entry.except(['field1', 'field2', 'field3']);
+    expect(entry._queryParams['except[BASE][0]']).toBe('field1');
+    expect(entry._queryParams['except[BASE][1]']).toBe('field2');
+    expect(entry._queryParams['except[BASE][2]']).toBe('field3');
+  });
+
+  it('should add params to _queryParams using addParams', () => {
+    const params = { key1: 'value1', key2: 123, key3: ['value3'] };
+    const returnedValue = entry.addParams(params);
+    expect(returnedValue).toBeInstanceOf(Entry);
+    expect(entry._queryParams.key1).toBe('value1');
+    expect(entry._queryParams.key2).toBe(123);
+    expect(entry._queryParams.key3).toEqual(['value3']);
   });
 
   it('should get the API response when fetch method is called', async () => {
@@ -110,6 +145,10 @@ class TestVariants extends Entry {
     this.variants(['variant1', 'variant2']); // setting the variants headers so it doesnt give empty string
     return this._variants || "";
   }
+
+  getVariants(): string {
+    return this._variants || "";
+  }
 }
 
 describe('Variants test', () => {
@@ -124,5 +163,77 @@ describe('Variants test', () => {
     const testVariantObj = new TestVariants(httpClient(MOCK_CLIENT_OPTIONS))
 
     expect(testVariantObj.setAndGetVariantsHeaders()).toBe('variant1,variant2');
+  });
+
+  it('should set variants as string', () => {
+    const testVariantObj = new TestVariants(client);
+    testVariantObj.variants('variant1');
+    expect(testVariantObj.getVariants()).toBe('variant1');
+  });
+
+  it('should set variants as comma-separated string from array', () => {
+    const testVariantObj = new TestVariants(client);
+    testVariantObj.variants(['variant1', 'variant2', 'variant3']);
+    expect(testVariantObj.getVariants()).toBe('variant1,variant2,variant3');
+  });
+
+  it('should not set variants when empty string is provided', () => {
+    const testVariantObj = new TestVariants(client);
+    testVariantObj.variants('');
+    expect(testVariantObj.getVariants()).toBe('');
+  });
+
+  it('should not set variants when empty array is provided', () => {
+    const testVariantObj = new TestVariants(client);
+    testVariantObj.variants([]);
+    expect(testVariantObj.getVariants()).toBe('');
+  });
+});
+
+describe('Fetch with variants', () => {
+  let client: AxiosInstance;
+  let mockClient: MockAdapter;
+  let entry: Entry;
+
+  beforeAll(() => {
+    client = httpClient(MOCK_CLIENT_OPTIONS);
+    mockClient = new MockAdapter(client as any);
+  });
+
+  beforeEach(() => {
+    entry = new Entry(client, 'contentTypeUid', 'entryUid');
+    mockClient.reset();
+  });
+
+  it('should call fetch with variants header when variants are set', async () => {
+    mockClient.onGet('/content_types/contentTypeUid/entries/entryUid').reply((config) => {
+      expect(config.headers?.['x-cs-variant-uid']).toBe('variant1,variant2');
+      return [200, entryFetchMock];
+    });
+    
+    entry.variants(['variant1', 'variant2']);
+    const result = await entry.fetch();
+    
+    expect(result).toEqual(entryFetchMock.entry);
+  });
+
+  it('should call fetch without variant header when variants are not set', async () => {
+    mockClient.onGet('/content_types/contentTypeUid/entries/entryUid').reply((config) => {
+      expect(config.headers?.['x-cs-variant-uid']).toBeUndefined();
+      return [200, entryFetchMock];
+    });
+    
+    const result = await entry.fetch();
+    
+    expect(result).toEqual(entryFetchMock.entry);
+  });
+
+  it('should return response directly when entry property is not present', async () => {
+    const responseWithoutEntry = { data: 'test', uid: 'test-uid' };
+    mockClient.onGet('/content_types/contentTypeUid/entries/entryUid').reply(200, responseWithoutEntry);
+    
+    const result = await entry.fetch();
+    
+    expect(result).toEqual(responseWithoutEntry);
   });
 })

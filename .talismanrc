@@ -1,6 +1,10 @@
 fileignoreconfig:
 - filename: package-lock.json
-  checksum: 32308dbe614c142c4804ff7c81baedddba058c5458e1d233fefb1d8070bf1905
+  checksum: 46c0d87a82455d4b2bae3347f7361dda71d2b979426b1c95ef707a9166c17778
+- filename: test/unit/contentstack.spec.ts
+  checksum: d5b99c01459ab8bc597baaa9e6cc4aa91ac6d9bf78af08e1d0220d0c5db3d0b3
+- filename: test/unit/utils.spec.ts
+  checksum: 79ce5bd78376db37a34df82c0fea19031e995b66a5a246e73f8262fa05d65a9c
 - filename: test/unit/query-optimization-comprehensive.spec.ts
   checksum: f5aaf6c784d7c101a05ca513c584bbd6e95f963d1e42779f2596050d9bcbac96
 - filename: src/lib/entries.ts

@@ -10,6 +10,7 @@ import { synchronization } from '../../src/lib/synchronization';
 import { ContentTypeQuery } from '../../src/lib/contenttype-query';
 import { AssetQuery } from '../../src/lib/asset-query';
 import { StackConfig } from '../../src/lib/types';
+import * as utils from '../../src/lib/utils';
 
 jest.mock('../../src/lib/synchronization');
 const syncMock = <jest.Mock<typeof synchronization>>(<unknown>synchronization);
@@ -48,6 +49,24 @@ describe('Stack class tests', () => {
   it('should return ContentType instance when contentType function is called with stack obj', (done) => {
     expect(stack.contentType('contentTypeUid')).toBeInstanceOf(ContentType);
     expect(stack.contentType()).toBeInstanceOf(ContentTypeQuery);
+    done();
+  });
+
+  it('should return TaxonomyQuery instance when taxonomy function is called', (done) => {
+    const taxonomyQuery = stack.taxonomy();
+    expect(taxonomyQuery).toBeDefined();
+    done();
+  });
+
+  it('should return GlobalField instance when globalField function is called with uid', (done) => {
+    const globalField = stack.globalField('globalFieldUid');
+    expect(globalField).toBeDefined();
+    done();
+  });
+
+  it('should return GlobalFieldQuery instance when globalField function is called without uid', (done) => {
+    const globalFieldQuery = stack.globalField();
+    expect(globalFieldQuery).toBeDefined();
     done();
   });
 
@@ -145,6 +164,38 @@ describe('Stack class tests', () => {
     expect(stack.getClient().defaults.headers['preview_timestamp']).toBeUndefined();
   });
 
+  it('should handle livePreviewQuery when live_preview config is not set', () => {
+    delete stack.config.live_preview;
+    const query = {
+      live_preview: 'live_preview_hash',
+      release_id: 'releaseId',
+    };
+  
+    stack.livePreviewQuery(query);
+  
+    expect(stack.getClient().defaults.headers['release_id']).toEqual('releaseId');
+  });
+
+  it('should use content_type_uid and entry_uid fallback properties', () => {
+    const query = {
+      live_preview: 'live_preview_hash',
+      content_type_uid: 'contentTypeUid',
+      entry_uid: 'entryUid',
+    };
+  
+    stack.config.live_preview = { enable: true, live_preview: 'true' };
+    stack.livePreviewQuery(query);
+  
+    expect(stack.getClient().stackConfig.live_preview).toEqual({
+      live_preview: 'live_preview_hash',
+      contentTypeUid: 'contentTypeUid',
+      enable: true,
+      entryUid: 'entryUid',
+      preview_timestamp: '',
+      include_applied_variants: false,
+    });
+  });
+
   it('should return last activities', async () => {
     mockClient.onGet('/content_types').reply(200, contentTypeQueryFindResponseDataMock);
     const response = await stack.getLastActivities();
@@ -153,9 +204,102 @@ describe('Stack class tests', () => {
     expect(Array.isArray(response.content_types)).toBe(true);
   });
 
+  it('should throw error when getLastActivities fails', async () => {
+    mockClient.onGet('/content_types').networkError();
+    
+    await expect(stack.getLastActivities()).rejects.toThrow('Error fetching last activities');
+  });
+
   it('should set port to 3000', () => {
     stack.setPort(3000);
     expect(stack.config.port).toEqual(3000);
   });
+
+  it('should not set port when provided with non-number', () => {
+    stack.setPort('3000' as any);
+    expect(stack.config.port).not.toEqual('3000');
+  });
+
+  it('should set debug to true', () => {
+    stack.setDebug(true);
+    expect(stack.config.debug).toEqual(true);
+  });
+
+  it('should set debug to false', () => {
+    stack.setDebug(false);
+    expect(stack.config.debug).toEqual(false);
+  });
+
+  it('should not set debug when provided with non-boolean', () => {
+    stack.config.debug = false;
+    stack.setDebug('true' as any);
+    expect(stack.config.debug).toEqual(false);
+  });
+
+  describe('setHost method integration tests', () => {
+    it('should set baseURL correctly for aws_na region', async () => {
+      await stack.setHost('aws_na');
+      expect(client.defaults.baseURL).toBe('https://cdn.contentstack.io');
+    });
+
+    it('should set baseURL correctly for eu region', async () => {
+      await stack.setHost('eu');
+      expect(client.defaults.baseURL).toBe('https://eu-cdn.contentstack.com');
+    });
+
+    it('should set baseURL correctly for au region', async () => {
+      await stack.setHost('au');
+      expect(client.defaults.baseURL).toBe('https://au-cdn.contentstack.com');
+    });
+
+    it('should set baseURL correctly for azure-na region', async () => {
+      await stack.setHost('azure-na');
+      expect(client.defaults.baseURL).toBe('https://azure-na-cdn.contentstack.com');
+    });
+
+    it('should set baseURL correctly for gcp-na region', async () => {
+      await stack.setHost('gcp-na');
+      expect(client.defaults.baseURL).toBe('https://gcp-na-cdn.contentstack.com');
+    });
+
+    it('should set baseURL correctly for gcp-eu region', async () => {
+      await stack.setHost('gcp-eu');
+      expect(client.defaults.baseURL).toBe('https://gcp-eu-cdn.contentstack.com');
+    });
+
+    it('should prioritize custom host over region', async () => {
+      const customHost = 'custom.example.com';
+      await stack.setHost('eu', customHost);
+      expect(client.defaults.baseURL).toBe(`https://${customHost}`);
+    });
+
+    it('should handle case insensitive regions', async () => {
+      await stack.setHost('EU');
+      expect(client.defaults.baseURL).toBe('https://eu-cdn.contentstack.com');
+    });
+
+    it('should use default region when no region provided', async () => {
+      await stack.setHost();
+      expect(client.defaults.baseURL).toBe('https://cdn.contentstack.io');
+    });
+
+    it('should throw error for invalid region', async () => {
+      await expect(stack.setHost('invalid_region')).rejects.toThrow(
+        'Invalid region: invalid_region'
+      );
+    });
+
+    it('should handle region aliases correctly', async () => {
+      await stack.setHost('na');
+      expect(client.defaults.baseURL).toBe('https://cdn.contentstack.io');
+      
+      await stack.setHost('us');
+      expect(client.defaults.baseURL).toBe('https://cdn.contentstack.io');
+      
+      await stack.setHost('aws-na');
+      expect(client.defaults.baseURL).toBe('https://cdn.contentstack.io');
+    });
+  });
+
 });
 

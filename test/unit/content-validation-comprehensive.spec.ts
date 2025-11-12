@@ -872,6 +872,9 @@ describe('Content Validation - Comprehensive Test Suite', () => {
 
   describe('Content Validation Edge Cases', () => {
     it('should handle null and undefined values gracefully', () => {
+      // Mock console.error to suppress validation messages
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      
       const query = new Query(client, {}, {}, '', 'blog_post');
       
       // Test with null values
@@ -881,6 +884,9 @@ describe('Content Validation - Comprehensive Test Suite', () => {
       // Test with empty strings
       expect(() => query.equalTo('title', '')).not.toThrow();
       expect(() => query.equalTo('view_count', 0)).not.toThrow();
+      
+      // Restore console.error
+      consoleSpy.mockRestore();
     });
 
     it('should validate content type without schema', async () => {
