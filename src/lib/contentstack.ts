@@ -34,7 +34,7 @@ let version = '{{VERSION}}';
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function stack(config: StackConfig): StackClass {
-  const DEFAULT_HOST = Utility.getHostforRegion(config.region || "", config.host);
+  const DEFAULT_HOST = Utility.getHostforRegion(config.region || "aws_na", config.host);
 
   let defaultConfig = {
     defaultHostname: DEFAULT_HOST,
