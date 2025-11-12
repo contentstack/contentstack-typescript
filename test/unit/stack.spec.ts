@@ -285,7 +285,7 @@ describe('Stack class tests', () => {
 
     it('should throw error for invalid region', async () => {
       await expect(stack.setHost('invalid_region')).rejects.toThrow(
-        'Unable to set host using the provided region. Please provide a valid region.'
+        'Invalid region: invalid_region'
       );
     });
 
