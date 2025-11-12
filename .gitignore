@@ -15,4 +15,3 @@ coverage
 dist/*
 *.log
 .nx/
-regions.json
