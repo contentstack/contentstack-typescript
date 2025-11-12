@@ -1,26 +1,10 @@
 import { Region, params } from './types';
-import regionsData from '../assets/regions.json';
+import { getContentstackEndpoint } from '@contentstack/utils';
 
-export function getHostforRegion(cloudRegion: string = "aws_na", host?: string): string {
+export function getHostforRegion(region: string = "aws_na", host?: string): string {
   if (host) return host;
 
-  // Handle null, undefined, or empty string cases
-  if (!cloudRegion || typeof cloudRegion !== 'string') {
-    throw new Error("Unable to set host using the provided region. Please provide a valid region.");
-  }
-
-  const normalizedRegion = cloudRegion.toLowerCase();
-
-  const regionObj = regionsData.regions.find(r =>
-    r.id === normalizedRegion ||
-    r.alias.some(alias => alias === normalizedRegion)
-  );
-
-  if (!regionObj) {
-    throw new Error("Unable to set host using the provided region. Please provide a valid region.");
-  }
-
-  return regionObj ? regionObj.endpoints.contentDelivery.replace(/^https?:\/\//, '') : 'cdn.contentstack.io';
+  return getContentstackEndpoint(region, 'contentDelivery', true) as string;
 }
 
 export function isBrowser() {
