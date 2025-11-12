@@ -19,6 +19,7 @@
     "noPropertyAccessFromIndexSignature": false,
     "outDir": "dist",
     "rootDir": ".",
+    "resolveJsonModule": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "sourceMap": true,
