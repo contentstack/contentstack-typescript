@@ -396,7 +396,8 @@ describe("Contentstack", () => {
       
       const stackInstance = createStackInstance(config);
       
-      expect(getHostforRegionSpy).toHaveBeenCalledWith(undefined, undefined);
+      // When no region is provided, the default parameter "aws_na" is used
+      expect(getHostforRegionSpy).toHaveBeenCalledWith("aws_na", undefined);
       expect(stackInstance).toBeInstanceOf(Stack);
       
       getHostforRegionSpy.mockRestore();
