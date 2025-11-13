@@ -1,6 +1,6 @@
 fileignoreconfig:
 - filename: package-lock.json
-  checksum: 46c0d87a82455d4b2bae3347f7361dda71d2b979426b1c95ef707a9166c17778
+  checksum: ce527f128f313f417949c4158039fad15af8ea1644fc65cdd5c15a3cb2c35dcd
 - filename: test/unit/contentstack.spec.ts
   checksum: d5b99c01459ab8bc597baaa9e6cc4aa91ac6d9bf78af08e1d0220d0c5db3d0b3
 - filename: test/unit/utils.spec.ts

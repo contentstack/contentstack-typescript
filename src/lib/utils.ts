@@ -1,10 +1,14 @@
 import { Region, params } from './types';
-import { getContentstackEndpoint } from '@contentstack/utils';
 
-export function getHostforRegion(region: string = "aws_na", host?: string): string {
+export function getHostforRegion(region: Region = Region.US, host?: string): string {
   if (host) return host;
 
-  return getContentstackEndpoint(region, 'contentDelivery', true) as string;
+  let url = 'cdn.contentstack.io';
+  if (region !== Region.US) {
+    url = region.toString().toLowerCase() + '-cdn.contentstack.com';
+  }
+
+  return url;
 }
 
 export function isBrowser() {

@@ -8,7 +8,6 @@ import { synchronization } from './synchronization';
 import {TaxonomyQuery} from './taxonomy-query';
 import { GlobalFieldQuery } from './global-field-query';
 import { GlobalField } from './global-field';
-import { getHostforRegion } from './utils';
 
 export class Stack {
   readonly config: StackConfig;
@@ -227,21 +226,6 @@ export class Stack {
   setDebug(debug: boolean) {
     if (typeof debug === "boolean") this.config.debug = debug;
     return this;
-  }
-
-  /**
-   * @method setHost
-   * @memberOf Stack
-   * @description Sets the host based on cloud region
-   * @param {String} cloudRegion - Cloud region (e.g., 'aws_na', 'aws_eu')
-   * @param {String} host - Optional custom host
-   * @return {Promise<string>} - Returns the host URL
-   * @instance
-   * */
-  async setHost(region: string = "aws_na", host?: string): Promise<void> {
-    const resolvedHost = getHostforRegion(region, host);
-
-    this._client.defaults.baseURL = `https://${resolvedHost}`;
   }
 
 }
