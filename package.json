@@ -46,7 +46,7 @@
     "README.md"
   ],
   "devDependencies": {
-    "@nrwl/jest": "^17.3.2",
+    "@nrwl/jest": "^19.8.4",
     "@slack/bolt": "^4.4.0",
     "@types/humps": "^2.0.6",
     "@types/jest": "^29.5.14",
