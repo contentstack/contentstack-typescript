@@ -33,7 +33,7 @@ export class PersistanceStore {
         break;
       case 'customStorage':
         if (!store) {
-          throw new TypeError('StorageType `customStorage` should have `storage`.');
+          throw new TypeError('Missing storage for customStorage. Provide a storage object with get, set, and remove methods and try again.');
         } else {
           this.store = store;
         }

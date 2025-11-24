@@ -150,7 +150,7 @@ export class Entries extends BaseQuery {
         (this._queryParams['include[]'] as string[]).push(...(Array.isArray(value) ? value : [value]));
       });
     } else {
-      console.error("Argument should be a String or an Array.");
+      console.error("Invalid argument. Provide a string or an array and try again.");
     }
     return this;
   }
