@@ -3,6 +3,7 @@ import { localStorage } from './storages/local-storage';
 import { memoryStorage } from './storages/memory-storage';
 import { Storage } from './types/storage';
 import { StorageType } from './types/storage-type';
+import { ErrorMessages } from '../lib/error-messages';
 
 export class PersistanceStore {
   protected store: Storage = localStorage;
@@ -33,7 +34,7 @@ export class PersistanceStore {
         break;
       case 'customStorage':
         if (!store) {
-          throw new TypeError('Missing storage for customStorage. Provide a storage object with get, set, and remove methods and try again.');
+          throw new TypeError(ErrorMessages.MISSING_CUSTOM_STORAGE);
         } else {
           this.store = store;
         }

@@ -5,6 +5,7 @@ import { Query } from '../../src/lib/query';
 import { QueryOperation, QueryOperator } from '../../src/lib/types';
 import { entryFindMock } from '../utils/mocks';
 import { Entries } from '../../src/lib/entries';
+import { ErrorMessages } from '../../src/lib/error-messages';
 
 // Mock @contentstack/core
 jest.mock('@contentstack/core', () => ({
@@ -177,9 +178,8 @@ describe('Query Optimization - Comprehensive Test Suite', () => {
       query.where('field@symbol', QueryOperation.EQUALS, 'value');
       query.where('field#hash', QueryOperation.EQUALS, 'value');
 
-      expect(consoleSpy).toHaveBeenCalledWith('Invalid fieldUid:', 'invalid field');
-      expect(consoleSpy).toHaveBeenCalledWith('Invalid fieldUid:', 'field@symbol');
-      expect(consoleSpy).toHaveBeenCalledWith('Invalid fieldUid:', 'field#hash');
+      expect(consoleSpy).toHaveBeenCalledWith(ErrorMessages.INVALID_FIELD_UID);
+      expect(consoleSpy).toHaveBeenCalledTimes(3);
 
       consoleSpy.mockRestore();
     });
@@ -191,8 +191,8 @@ describe('Query Optimization - Comprehensive Test Suite', () => {
       expect(() => query.regex('title', '^Demo')).not.toThrow();
 
       // Invalid regex patterns
-      expect(() => query.regex('title', '[a-z')).toThrow('Invalid regexPattern: Must be a valid regular expression');
-      expect(() => query.regex('title', '*invalid')).toThrow('Invalid regexPattern: Must be a valid regular expression');
+      expect(() => query.regex('title', '[a-z')).toThrow(ErrorMessages.INVALID_REGEX_PATTERN);
+      expect(() => query.regex('title', '*invalid')).toThrow(ErrorMessages.INVALID_REGEX_PATTERN);
     });
 
     it('should validate containedIn values for proper types', () => {
@@ -207,8 +207,8 @@ describe('Query Optimization - Comprehensive Test Suite', () => {
       query.containedIn('invalid', [{}, null, undefined] as any);
       query.containedIn('mixed_invalid', ['valid', {}, 'also_valid'] as any);
 
-      expect(consoleSpy).toHaveBeenCalledWith('Invalid value:', [{}, null, undefined]);
-      expect(consoleSpy).toHaveBeenCalledWith('Invalid value:', ['valid', {}, 'also_valid']);
+      expect(consoleSpy).toHaveBeenCalledWith(ErrorMessages.INVALID_VALUE_ARRAY);
+      expect(consoleSpy).toHaveBeenCalledTimes(2);
 
       consoleSpy.mockRestore();
     });
@@ -221,7 +221,7 @@ describe('Query Optimization - Comprehensive Test Suite', () => {
       expect(() => query.whereIn('valid_ref', subQuery)).not.toThrow();
 
       // Invalid reference UID
-      expect(() => query.whereIn('invalid ref', subQuery)).toThrow('Invalid referenceUid: Must be alphanumeric.');
+      expect(() => query.whereIn('invalid ref', subQuery)).toThrow(ErrorMessages.INVALID_REFERENCE_UID('invalid ref'));
     });
 
     it('should validate value types for comparison operations', () => {
@@ -239,8 +239,8 @@ describe('Query Optimization - Comprehensive Test Suite', () => {
       query.equalTo('also_invalid', [] as any);
       query.lessThan('bad_value', {} as any);
 
-      expect(consoleSpy).toHaveBeenCalledWith('Invalid value (expected string or number):', {});
-      expect(consoleSpy).toHaveBeenCalledWith('Invalid value (expected string or number):', []);
+      expect(consoleSpy).toHaveBeenCalledWith(ErrorMessages.INVALID_VALUE_STRING_OR_NUMBER);
+      expect(consoleSpy).toHaveBeenCalledTimes(3);
 
       consoleSpy.mockRestore();
     });
@@ -254,7 +254,7 @@ describe('Query Optimization - Comprehensive Test Suite', () => {
 
       // Invalid search key
       query.search('invalid search');
-      expect(consoleSpy).toHaveBeenCalledWith('Invalid key:', 'invalid search');
+      expect(consoleSpy).toHaveBeenCalledWith(ErrorMessages.INVALID_KEY);
 
       consoleSpy.mockRestore();
     });

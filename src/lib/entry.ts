@@ -1,4 +1,5 @@
 import { AxiosInstance, getData } from '@contentstack/core';
+import { ErrorMessages } from './error-messages';
 
 interface EntryResponse<T> {
   entry: T;
@@ -112,7 +113,7 @@ export class Entry {
         (this._queryParams['include[]'] as string[]).push(...(Array.isArray(value) ? value : [value]));
       });
     } else {
-      console.error("Invalid argument. Provide a string or an array and try again.");
+      console.error(ErrorMessages.INVALID_ARGUMENT_STRING_OR_ARRAY);
     }
     return this;
   }
