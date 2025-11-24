@@ -73,7 +73,7 @@ export class Query extends BaseQuery {
     additionalData?: object
   ): Query {
     if (!this.isValidAlphanumeric(fieldUid)) {
-      console.error("Invalid fieldUid:", fieldUid);
+      console.error("Invalid fieldUid. Provide an alphanumeric field UID and try again.");
       return this;
     }
     if (queryOperation == QueryOperation.EQUALS) {
@@ -102,7 +102,7 @@ export class Query extends BaseQuery {
    */
   regex(fieldUid: string, regexPattern: string, options?: string): Query {
     if (!this.isValidAlphanumeric(fieldUid)) {
-      console.error("Invalid fieldUid:", fieldUid);
+      console.error("Invalid fieldUid. Provide an alphanumeric field UID and try again.");
       return this;
     }
     if (!this.isValidRegexPattern(regexPattern)) {
@@ -226,11 +226,11 @@ export class Query extends BaseQuery {
    */
   containedIn(key: string, value: (string | number | boolean)[]): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error("Invalid key. Provide an alphanumeric key and try again.");
       return this;
     }
     if (!this.isValidValue(value)) {
-      console.error("Invalid value:", value);
+      console.error("Invalid value. Provide an array of strings, numbers, or booleans and try again.");
       return this;
     }
     this._parameters[key] = { '$in': value };
@@ -252,11 +252,11 @@ export class Query extends BaseQuery {
    */
   notContainedIn(key: string, value: (string | number | boolean)[]): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error("Invalid key. Provide an alphanumeric key and try again.");
       return this;
     }
     if (!this.isValidValue(value)) {
-      console.error("Invalid value:", value);
+      console.error("Invalid value. Provide an array of strings, numbers, or booleans and try again.");
       return this;
     }
     this._parameters[key] = { '$nin': value };
@@ -278,7 +278,7 @@ export class Query extends BaseQuery {
    */
   exists(key: string): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error("Invalid key. Provide an alphanumeric key and try again.");
       return this;
     }
     this._parameters[key] = { '$exists': true };
@@ -300,7 +300,7 @@ export class Query extends BaseQuery {
    */
   notExists(key: string): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error("Invalid key. Provide an alphanumeric key and try again.");
       return this;
     }
     this._parameters[key] = { '$exists': false };
@@ -367,11 +367,11 @@ export class Query extends BaseQuery {
    */
   equalTo(key: string, value: string | number | boolean): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error("Invalid key. Provide an alphanumeric key and try again.");
       return this;
     }
     if (typeof value !== 'string' && typeof value !== 'number') {
-      console.error("Invalid value (expected string or number):", value);
+      console.error("Invalid value. Provide a string or number and try again.");
       return this;
     }
     this._parameters[key] = value;
@@ -392,11 +392,11 @@ export class Query extends BaseQuery {
    */
   notEqualTo(key: string, value: string | number | boolean): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error("Invalid key. Provide an alphanumeric key and try again.");
       return this;
     }
     if (typeof value !== 'string' && typeof value !== 'number') {
-      console.error("Invalid value (expected string or number):", value);
+      console.error("Invalid value. Provide a string or number and try again.");
       return this;
     }
     this._parameters[key] = { '$ne': value };
@@ -418,7 +418,7 @@ export class Query extends BaseQuery {
    */
   referenceIn(key: string, query: Query): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error("Invalid key. Provide an alphanumeric key and try again.");
       return this;
     }
     this._parameters[key] = { '$in_query': query._parameters }
@@ -440,7 +440,7 @@ export class Query extends BaseQuery {
    */
   referenceNotIn(key: string, query: Query): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error("Invalid key. Provide an alphanumeric key and try again.");
       return this;
     }
     this._parameters[key] = { '$nin_query': query._parameters }
@@ -462,7 +462,7 @@ export class Query extends BaseQuery {
    */
   tags(values: (string | number | boolean)[]): Query {
     if (!this.isValidValue(values)) {
-      console.error("Invalid value:", values);
+      console.error("Invalid value. Provide an array of strings, numbers, or booleans and try again.");
       return this;
     }
     this._parameters['tags'] = values;
@@ -484,7 +484,7 @@ export class Query extends BaseQuery {
    */
   search(key: string): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error("Invalid key. Provide an alphanumeric key and try again.");
       return this;
     }
     this._queryParams['typeahead'] = key
@@ -506,11 +506,11 @@ export class Query extends BaseQuery {
    */
   lessThan(key: string, value: (string | number)): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error("Invalid key. Provide an alphanumeric key and try again.");
       return this;
     }
     if (typeof value !== 'string' && typeof value !== 'number') {
-      console.error("Invalid value (expected string or number):", value);
+      console.error("Invalid value. Provide a string or number and try again.");
       return this;
     }
 
@@ -533,11 +533,11 @@ export class Query extends BaseQuery {
    */
   lessThanOrEqualTo(key: string, value: (string | number)): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error("Invalid key. Provide an alphanumeric key and try again.");
       return this;
     }
     if (typeof value !== 'string' && typeof value !== 'number') {
-      console.error("Invalid value (expected string or number):", value);
+      console.error("Invalid value. Provide a string or number and try again.");
       return this;
     }
     this._parameters[key] = { '$lte': value };
@@ -559,11 +559,11 @@ export class Query extends BaseQuery {
    */
   greaterThan(key: string, value: (string | number)): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error("Invalid key. Provide an alphanumeric key and try again.");
       return this;
     }
     if (typeof value !== 'string' && typeof value !== 'number') {
-      console.error("Invalid value (expected string or number):", value);
+      console.error("Invalid value. Provide a string or number and try again.");
       return this;
     }
     this._parameters[key] = { '$gt': value };
@@ -585,11 +585,11 @@ export class Query extends BaseQuery {
    */
   greaterThanOrEqualTo(key: string, value: (string | number)): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error("Invalid key. Provide an alphanumeric key and try again.");
       return this;
     }
     if (typeof value !== 'string' && typeof value !== 'number') {
-      console.error("Invalid value (expected string or number):", value);
+      console.error("Invalid value. Provide a string or number and try again.");
       return this;
     }
     this._parameters[key] = { '$gte': value };
