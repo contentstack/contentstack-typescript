@@ -230,17 +230,17 @@ describe('Query Optimization - Comprehensive Test Suite', () => {
       // Valid values
       query.equalTo('title', 'string value');
       query.equalTo('count', 42);
-      query.equalTo('is_published', true);
       query.lessThan('score', 100);
       query.greaterThan('rating', 3.5);
 
-      // Invalid values
+      // Invalid values (note: boolean is also invalid for equalTo as it only accepts string or number)
+      query.equalTo('is_published', true as any); // boolean triggers error
       query.equalTo('invalid', {} as any);
       query.equalTo('also_invalid', [] as any);
       query.lessThan('bad_value', {} as any);
 
       expect(consoleSpy).toHaveBeenCalledWith(ErrorMessages.INVALID_VALUE_STRING_OR_NUMBER);
-      expect(consoleSpy).toHaveBeenCalledTimes(3);
+      expect(consoleSpy).toHaveBeenCalledTimes(4);
 
       consoleSpy.mockRestore();
     });

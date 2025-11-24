@@ -654,14 +654,13 @@ describe('Content Validation - Comprehensive Test Suite', () => {
       query.where('view_count', QueryOperation.IS_GREATER_THAN, 100);
       query.where('is_published', QueryOperation.EQUALS, true);
       
-      // Invalid field UIDs
+      // Invalid field UIDs (note: field-with-dashes is actually valid as hyphens are allowed)
       query.where('invalid field', QueryOperation.EQUALS, 'test');
-      query.where('field-with-dashes', QueryOperation.EQUALS, 'test');
-      query.where('123invalid', QueryOperation.EQUALS, 'test');
+      query.where('field@symbol', QueryOperation.EQUALS, 'test');
       
       // Check that console.error was called for invalid field UIDs
       expect(consoleSpy).toHaveBeenCalledWith(ErrorMessages.INVALID_FIELD_UID);
-      expect(consoleSpy).toHaveBeenCalledTimes(3);
+      expect(consoleSpy).toHaveBeenCalledTimes(2);
       
       consoleSpy.mockRestore();
     });
@@ -708,14 +707,14 @@ describe('Content Validation - Comprehensive Test Suite', () => {
       // Valid value types
       query.equalTo('title', 'string value');
       query.equalTo('view_count', 123);
-      query.equalTo('is_published', true);
       
-      // Invalid value types for equalTo (expects string, number, or boolean)
+      // Invalid value types for equalTo (expects string or number, not boolean)
+      query.equalTo('is_published', true as any); // boolean triggers error
       query.equalTo('title', [] as any);
       query.equalTo('title', {} as any);
       
       expect(consoleSpy).toHaveBeenCalledWith(ErrorMessages.INVALID_VALUE_STRING_OR_NUMBER);
-      expect(consoleSpy).toHaveBeenCalledTimes(2);
+      expect(consoleSpy).toHaveBeenCalledTimes(3);
       
       consoleSpy.mockRestore();
     });

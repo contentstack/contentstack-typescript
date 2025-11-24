@@ -338,12 +338,12 @@ describe('Query class', () => {
 
     it('should throw error when whereIn() receives invalid referenceUid', () => {
       const subQuery = getQueryObject(client, 'content_type_uid');
-      expect(() => query.whereIn('invalid@ref!', subQuery)).toThrow('Invalid referenceUid: Must be alphanumeric.');
+      expect(() => query.whereIn('invalid@ref!', subQuery)).toThrow(ErrorMessages.INVALID_REFERENCE_UID('invalid@ref!'));
     });
 
     it('should throw error when whereNotIn() receives invalid referenceUid', () => {
       const subQuery = getQueryObject(client, 'content_type_uid');
-      expect(() => query.whereNotIn('invalid@ref!', subQuery)).toThrow('Invalid referenceUid: Must be alphanumeric.');
+      expect(() => query.whereNotIn('invalid@ref!', subQuery)).toThrow(ErrorMessages.INVALID_REFERENCE_UID('invalid@ref!'));
     });
   });
 
