@@ -7,10 +7,19 @@ export function getHostforRegion(region: string = "aws_na", host?: string): stri
   return getContentstackEndpoint(region, 'contentDelivery', true) as string;
 }
 
+/**
+ * Checks if the code is running in a browser environment
+ * @returns {boolean} True if running in browser, false otherwise
+ */
 export function isBrowser() {
   return (typeof window !== "undefined");
 }
 
+/**
+ * Encodes query parameters recursively, handling nested objects
+ * @param {params} params - Query parameters object to encode
+ * @returns {params} Encoded query parameters object
+ */
 export function encodeQueryParams(params: params): params {
   const encodedParams: params = {};
   
