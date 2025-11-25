@@ -428,7 +428,7 @@ describe('Query Operators - Comprehensive Coverage', () => {
   skipIfNoUID('ReferenceIn and ReferenceNotIn Operators', () => {
     it('should query entries with referenceIn operator', async () => {
       // Use actual author UID from stack
-      const authorUID = SIMPLE_ENTRY_UID || 'blt0d105f742e245409';
+      const authorUID = SIMPLE_ENTRY_UID || 'example_entry_uid';
       
       // Create a query for the referenced content type
       const authorQuery = stack.contentType('author').entry().query();

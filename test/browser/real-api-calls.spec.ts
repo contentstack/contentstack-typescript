@@ -2,13 +2,6 @@
  * Browser Environment - Real API Call Tests
  * 
  * Purpose: Test SDK with REAL API calls in browser environment
- * This validates:
- * - SDK works with actual Contentstack API
- * - HTTP requests work in browser (fetch/axios)
- * - Data serialization/deserialization works
- * - No Node.js-specific code breaks real calls
- * 
- * Requirements: .env file with valid credentials
  */
 
 import { browserStackInstance, hasRealCredentials, skipIfNoCredentials } from './helpers/browser-stack-instance';
@@ -64,16 +57,18 @@ describe('Browser Environment - Real API Calls', () => {
         
         if (activities.content_types && activities.content_types.length > 0) {
           const firstContentType = activities.content_types[0];
-          console.log(`   Testing with content type: ${firstContentType}`);
+          const contentTypeUid = firstContentType.uid || firstContentType; // Handle both object and string
+          console.log(`   Testing with content type: ${contentTypeUid}`);
           
-          const query = stack.ContentType(firstContentType).Query();
+          const query = stack.contentType(contentTypeUid).entry();
           const result = await query.find();
           
           expect(result).toBeDefined();
-          expect(Array.isArray(result[0])).toBe(true);
+          expect(result.entries).toBeDefined();
+          expect(Array.isArray(result.entries)).toBe(true);
           
           console.log(`✅ Successfully queried entries`);
-          console.log(`   Found ${result[0]?.length || 0} entries`);
+          console.log(`   Found ${result.entries?.length || 0} entries`);
         } else {
           console.log('⚠️  No content types available to test');
         }
@@ -93,15 +88,20 @@ describe('Browser Environment - Real API Calls', () => {
         
         if (activities.content_types && activities.content_types.length > 0) {
           const firstContentType = activities.content_types[0];
+          const contentTypeUid = firstContentType.uid || firstContentType;
           
-          const query = stack.ContentType(firstContentType)
-            .Query()
+          const query = stack.contentType(contentTypeUid)
+            .entry()
             .limit(5);
           
-          const result = await query.find();
+          const result = await query.find<any>();
           
           expect(result).toBeDefined();
-          expect(result[0].length).toBeLessThanOrEqual(5);
+          expect(result.entries).toBeDefined();
+          expect(Array.isArray(result.entries)).toBe(true);
+          if (result.entries) {
+            expect(result.entries.length).toBeLessThanOrEqual(5);
+          }
           
           console.log(`✅ Query with limit worked correctly`);
         }
@@ -124,14 +124,15 @@ describe('Browser Environment - Real API Calls', () => {
         
         if (activities.content_types && activities.content_types.length > 0) {
           const firstContentType = activities.content_types[0];
-          const entries = await stack.ContentType(firstContentType).Query().limit(1).find();
+          const contentTypeUid = firstContentType.uid || firstContentType;
+          const entries = await stack.contentType(contentTypeUid).entry().limit(1).find<any>();
           
-          if (entries[0] && entries[0].length > 0) {
-            const firstEntry = entries[0][0];
+          if (entries.entries && entries.entries.length > 0) {
+            const firstEntry: any = entries.entries[0];
             console.log(`   Testing with entry UID: ${firstEntry.uid}`);
             
             // Fetch specific entry
-            const entry = await stack.ContentType(firstContentType).Entry(firstEntry.uid).fetch();
+            const entry = await stack.contentType(contentTypeUid).entry(firstEntry.uid).fetch<any>();
             
             expect(entry).toBeDefined();
             expect(entry.uid).toBe(firstEntry.uid);
@@ -209,7 +210,7 @@ describe('Browser Environment - Real API Calls', () => {
       const stack = browserStackInstance();
       
       try {
-        await stack.ContentType('nonexistent_content_type_12345').Query().find();
+        await stack.contentType('nonexistent_content_type_12345').entry().find();
         // If this succeeds, that's fine (empty results)
       } catch (error: any) {
         // Error is expected, just verify it's a proper HTTP error, not a Node.js module error

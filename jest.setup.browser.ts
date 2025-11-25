@@ -4,26 +4,8 @@
  * Sets up browser-like globals and polyfills for testing
  */
 
-// Disable source-map-support in browser tests (uses Node.js fs module)
-try {
-  // @ts-ignore
-  delete require.cache[require.resolve('source-map-support')];
-} catch (e) {
-  // Ignore if not loaded
-}
-
-// Mock fetch if not available in jsdom
-if (!global.fetch) {
-  const nodeFetch = require('node-fetch');
-  global.fetch = nodeFetch as any;
-}
-
-// Ensure browser globals are available
-if (typeof window !== 'undefined') {
-  // Add any browser-specific setup here
-  (global as any).window = window;
-  (global as any).document = document;
-}
+// jsdom provides fetch natively in newer versions
+// No need to import node-fetch
 
 // Suppress expected console errors during tests
 const originalError = console.error;

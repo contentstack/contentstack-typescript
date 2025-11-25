@@ -1,134 +1,186 @@
 /**
- * End-to-End Browser Integration Tests
+ * End-to-End Browser Integration Tests (Phase 2)
  * 
- * Purpose: Test SDK in REAL browsers (not jsdom simulation)
- * This is the gold standard - catches issues jsdom misses!
+ * Purpose: Test SDK in REAL browsers (Chrome, Firefox, Safari)
+ * This catches browser-specific issues that jsdom simulation misses!
+ * 
+ * What This Tests:
+ * - SDK loads without errors
+ * - All 7 regions work in real browser
+ * - No Node.js module errors
+ * - Cross-browser compatibility
  * 
  * Prerequisites:
- *   1. Install Playwright: npm install --save-dev @playwright/test
- *   2. Install browsers: npx playwright install
- *   3. Create test HTML page with SDK bundle
+ *   npm install --save-dev @playwright/test
+ *   npx playwright install
  * 
  * Usage:
- *   npx playwright test
+ *   npm run test:e2e
  */
 
 import { test, expect } from '@playwright/test';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Extend Window interface for test results
+declare global {
+  interface Window {
+    testResults?: {
+      total: number;
+      passed: number;
+      failed: number;
+      consoleErrors: string[];
+    };
+  }
+}
 
 test.describe('SDK in Real Browser Environment', () => {
   
   test.beforeEach(async ({ page }) => {
-    // TODO: Navigate to test page that loads SDK
-    // For now, this is a placeholder showing the structure
+    // Capture browser console (only errors)
+    page.on('pageerror', error => {
+      console.error('[Browser Error]:', error);
+    });
     
-    // Example:
-    // await page.goto('/test-sdk.html');
+    // Load test page with SDK (via HTTP server to avoid CORS)
+    const testPageUrl = 'http://localhost:8765/test/e2e/test-page.html';
+    await page.goto(testPageUrl);
     
-    console.log('⚠️  Note: Real browser tests require a test HTML page');
-    console.log('   Create test/e2e/test-page.html with SDK bundle');
+    // Wait for tests to complete
+    await page.waitForFunction(() => window.testResults !== undefined, { timeout: 10000 });
   });
 
   test('SDK should load in browser without errors', async ({ page }) => {
-    // Monitor console for errors
-    const errors: string[] = [];
-    page.on('console', (msg) => {
-      if (msg.type() === 'error') {
-        errors.push(msg.text());
-      }
-    });
-
-    // TODO: Navigate to test page
-    // await page.goto('/test-sdk.html');
+    // Get test results from page
+    const results = await page.evaluate(() => window.testResults);
     
-    // Wait for SDK to load
-    await page.waitForTimeout(1000);
+    expect(results).toBeDefined();
     
-    // Verify no console errors
-    if (errors.length > 0) {
-      console.log('❌ Console errors:', errors);
+    if (!results) {
+      throw new Error('Test results not found on window object');
     }
     
-    // expect(errors.length).toBe(0);
+    // Print failures if any
+    if (results.failed > 0) {
+      console.log(`\n❌ ${results.failed} test(s) failed in browser HTML tests`);
+      console.log('Check the browser UI at http://localhost:8765/test/e2e/test-page.html for details\n');
+    }
+    
+    expect(results.failed).toBe(0);
+    expect(results.passed).toBeGreaterThan(0);
+    
+    // Verify no Node.js module errors
+    const nodeModuleErrors = results.consoleErrors.filter((err: string) => 
+      err.includes('fs') || err.includes('path') || err.includes('crypto')
+    );
+    
+    expect(nodeModuleErrors.length).toBe(0);
   });
 
   test('SDK should initialize Stack in browser', async ({ page }) => {
-    // TODO: Create test page first
-    // await page.goto('/test-sdk.html');
+    // Verify stack initialization works
+    const result = await page.evaluate(() => {
+      const sdk = (window as any).ContentstackSDK?.default || (window as any).ContentstackSDK;
+      if (!sdk || typeof sdk.stack !== 'function') {
+        return { success: false, error: 'SDK not loaded', sdkKeys: Object.keys(sdk || {}) };
+      }
+      
+      try {
+        const stackInstance = sdk.stack({
+          apiKey: 'test_api_key',
+          deliveryToken: 'test_delivery_token',
+          environment: 'test',
+        });
+        
+        return {
+          success: true,
+          hasConfig: !!stackInstance.config,
+          hasContentType: typeof stackInstance.contentType === 'function',
+          hasAsset: typeof stackInstance.asset === 'function'
+        };
+      } catch (error: any) {
+        return { success: false, error: error.message, stack: error.stack };
+      }
+    });
     
-    // Execute SDK code in browser context
-    // const result = await page.evaluate(() => {
-    //   const { Stack } = (window as any).ContentstackSDK;
-    //   const stack = Stack({
-    //     api_key: 'test_api_key',
-    //     delivery_token: 'test_token',
-    //     environment: 'test',
-    //   });
-    //   return stack !== undefined;
-    // });
+    if (!result.success) {
+      console.log('SDK initialization failed:', result);
+    }
     
-    // expect(result).toBe(true);
+    expect(result.success).toBe(true);
+    expect(result.hasConfig).toBe(true);
+    expect(result.hasContentType).toBe(true);
+    expect(result.hasAsset).toBe(true);
   });
 
   test('SDK should not throw Node.js module errors', async ({ page }) => {
-    const errors: string[] = [];
+    const results = await page.evaluate(() => window.testResults);
     
-    page.on('console', (msg) => {
-      if (msg.type() === 'error') {
-        const text = msg.text();
-        if (text.includes('fs') || text.includes('path') || text.includes('crypto')) {
-          errors.push(text);
-        }
-      }
-    });
-
-    // TODO: Load SDK in browser
-    // await page.goto('/test-sdk.html');
-    
-    await page.waitForTimeout(1000);
-    
-    // This would catch the fs issue!
-    if (errors.length > 0) {
-      console.log('❌ CRITICAL: SDK tried to use Node.js modules in browser!');
-      console.log('   Errors:', errors);
+    if (!results) {
+      throw new Error('Test results not found on window object');
     }
     
-    // expect(errors.length).toBe(0);
+    // Check for Node.js module errors
+    const nodeModuleErrors = results.consoleErrors.filter((err: string) => 
+      err.toLowerCase().includes('fs') || 
+      err.toLowerCase().includes('path') || 
+      err.toLowerCase().includes('crypto') ||
+      err.toLowerCase().includes('cannot find module')
+    );
+    
+    if (nodeModuleErrors.length > 0) {
+      console.log('❌ CRITICAL: SDK tried to use Node.js modules in browser!');
+      console.log('   Errors:', nodeModuleErrors);
+    }
+    
+    expect(nodeModuleErrors.length).toBe(0);
   });
 
-  test.skip('Real browser test example - requires test page', async ({ page }) => {
-    // This is a full example showing how it would work
+  test('All 7 regions work in browser', async ({ page }) => {
+    // Test all regions resolve correctly
+    const regionTests = await page.evaluate(() => {
+      const sdk = (window as any).ContentstackSDK?.default || (window as any).ContentstackSDK;
+      const regions = ['US', 'EU', 'AWS-AU', 'AZURE-NA', 'AZURE-EU', 'GCP-NA', 'GCP-EU'];
+      const results: any[] = [];
+      
+      for (const region of regions) {
+        try {
+          const stack = sdk.stack({
+            apiKey: 'test',
+            deliveryToken: 'test',
+            environment: 'test',
+            region: region
+          });
+          
+          results.push({
+            region,
+            success: true,
+            host: stack.config.host
+          });
+        } catch (error: any) {
+          results.push({
+            region,
+            success: false,
+            error: error.message
+          });
+        }
+      }
+      
+      return results;
+    });
     
-    // 1. Create test HTML page with SDK bundle
-    const testHtml = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>SDK Browser Test</title>
-          <script src="/dist/modern/index.js"></script>
-        </head>
-        <body>
-          <div id="result"></div>
-          <script>
-            try {
-              const stack = ContentstackSDK.Stack({
-                api_key: 'blt123',
-                delivery_token: 'cs123',
-                environment: 'test'
-              });
-              document.getElementById('result').textContent = 'SUCCESS';
-            } catch (error) {
-              document.getElementById('result').textContent = 'ERROR: ' + error.message;
-            }
-          </script>
-        </body>
-      </html>
-    `;
+    // All regions should succeed
+    regionTests.forEach(test => {
+      expect(test.success).toBe(true);
+      expect(test.host).toBeTruthy();
+    });
     
-    // 2. Serve it and test
-    // await page.setContent(testHtml);
-    // const result = await page.textContent('#result');
-    // expect(result).toBe('SUCCESS');
+    expect(regionTests.length).toBe(7);
   });
+  
 });
 
 test.describe('Browser API Compatibility', () => {

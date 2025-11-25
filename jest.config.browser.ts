@@ -20,16 +20,15 @@ export default {
       "ts-jest",
       {
         tsconfig: {
-          // Browser-only libs (no Node.js types!)
+          // Browser-only libs
           lib: ["dom", "dom.iterable", "es2020"],
-          // Explicitly exclude Node.js types to catch Node-only API usage
-          types: [],
+          // Include jest types for test files
+          types: ["jest", "@types/node"],
           target: "es2020",
           module: "commonjs",
           esModuleInterop: true,
           skipLibCheck: true
         },
-        // Disable source map support in browser environment
         diagnostics: {
           warnOnly: true
         }

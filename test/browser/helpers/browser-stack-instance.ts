@@ -6,22 +6,23 @@
  */
 
 import dotenv from 'dotenv';
-import { Stack } from '../../../src/index';
+import * as contentstack from '../../../src/lib/contentstack';
+import { StackConfig } from '../../../src/lib/types';
 
 dotenv.config();
 
 /**
  * Get stack configuration from environment variables
  */
-export function getStackConfig() {
+export function getStackConfig(): StackConfig {
   return {
-    api_key: process.env.API_KEY || 'test_api_key',
-    delivery_token: process.env.DELIVERY_TOKEN || 'test_delivery_token',
+    apiKey: process.env.API_KEY || 'test_api_key',
+    deliveryToken: process.env.DELIVERY_TOKEN || 'test_delivery_token',
     environment: process.env.ENVIRONMENT || 'test',
     host: process.env.HOST || undefined,
     live_preview: {
       enable: false,
-      management_token: process.env.PREVIEW_TOKEN || '',
+      preview_token: process.env.PREVIEW_TOKEN || '',
       host: process.env.LIVE_PREVIEW_HOST || '',
     }
   };
@@ -32,7 +33,13 @@ export function getStackConfig() {
  */
 export function browserStackInstance() {
   const config = getStackConfig();
-  return Stack(config);
+  console.log('🔧 Browser Stack Config:', {
+    apiKey: config.apiKey ? `${config.apiKey.substring(0, 8)}...` : 'MISSING',
+    deliveryToken: config.deliveryToken ? `${config.deliveryToken.substring(0, 8)}...` : 'MISSING',
+    environment: config.environment,
+    host: config.host
+  });
+  return contentstack.stack(config);
 }
 
 /**
