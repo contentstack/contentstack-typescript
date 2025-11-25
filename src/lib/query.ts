@@ -57,7 +57,7 @@ export class Query extends BaseQuery {
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.where("field_UID", QueryOperation.IS_LESS_THAN, ["field1", "field2"]).find()
    * // OR
-   * const asset = await stack.asset().where("field_UID", QueryOperation.IS_LESS_THAN, ["field1", "field2"]).find()
+   * const asset = await stack.asset().query().where("field_UID", QueryOperation.IS_LESS_THAN, ["field1", "field2"]).find()
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -128,7 +128,7 @@ export class Query extends BaseQuery {
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const subQuery = stack.contentType("referencedContentTypeUid").entry().query().where("title", QueryOperation.EQUALS, "value");
    * query.whereIn("brand", subQuery)
-   * const res = await query.find()
+   * const result = await query.find()
    *
    * @param {string} referenceUid - UID of the reference field to query.
    * @param {Query} queryInstance - The Query instance to include in the where clause.
@@ -156,7 +156,7 @@ export class Query extends BaseQuery {
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const subQuery = stack.contentType("referencedContentTypeUid").entry().query().where("title", QueryOperation.EQUALS, "value");
    * query.whereNotIn("brand", subQuery)
-   * const res = await query.find()
+   * const result = await query.find()
    *
    * @param {string} referenceUid - UID of the reference field to query.
    * @param {Query} queryInstance - The Query instance to include in the where clause.
@@ -184,7 +184,7 @@ export class Query extends BaseQuery {
    * const subQuery1 = stack.contentType("contentType2Uid").entry().query().where("price", QueryOperation.IS_LESS_THAN, 90);
    * const subQuery2 = stack.contentType("contentType3Uid").entry().query().where("discount", QueryOperation.INCLUDES, [20, 45]);
    * query.queryOperator(QueryOperator.AND, subQuery1, subQuery2)
-   * const res = await query.find()
+   * const result = await query.find()
    *
    * @param {QueryOperator} queryType - The type of query operator to apply.
    * @param {...Query[]} queryObjects - The Query instances to apply the query to.
@@ -214,7 +214,7 @@ export class Query extends BaseQuery {
    * const assetQuery = stack.asset().query();
    * const assetResult = assetQuery.getQuery()
    *
-   * @returns {Query}
+   * @returns {{ [key: string]: any }} The raw query object
    */
   getQuery(): { [key: string]: any } {
     return this._parameters;
@@ -333,7 +333,7 @@ export class Query extends BaseQuery {
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query1 = stack.contentType('contenttype_uid').entry().query().containedIn('fieldUID', ['value']);
    * const query2 = stack.contentType('contenttype_uid').entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
-   * const query = await stack.contentType('contenttype_uid').entry().query().or(query1, query2).find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().or(query1, query2).find();
    *  
    * @returns {Query}
    */
@@ -357,7 +357,7 @@ export class Query extends BaseQuery {
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query1 = stack.contentType('contenttype_uid').entry().query().containedIn('fieldUID', ['value']);
    * const query2 = stack.contentType('contenttype_uid').entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
-   * const query = await stack.contentType('contenttype_uid').entry().query().and(query1, query2).find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().and(query1, query2).find();
    *  
    * @returns {Query}
    */
@@ -380,7 +380,7 @@ export class Query extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = await stack.contentType('contenttype_uid').entry().query().equalTo('fieldUid', 'value').find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().equalTo('fieldUid', 'value').find();
    *  
    * @returns {Query}
    */
@@ -407,7 +407,7 @@ export class Query extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = await stack.contentType('contenttype_uid').entry().query().notEqualTo('fieldUid', 'value').find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().notEqualTo('fieldUid', 'value').find();
    *  
    * @returns {Query}
    */
@@ -434,8 +434,8 @@ export class Query extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().referenceIn('reference_uid', query).find();
+   * const subQuery = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
+   * const result = await stack.contentType('contenttype_uid').entry().query().referenceIn('reference_uid', subQuery).find();
    *  
    * @returns {Query}
    */
@@ -458,8 +458,8 @@ export class Query extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().referenceNotIn('reference_uid', query).find();
+   * const subQuery = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
+   * const result = await stack.contentType('contenttype_uid').entry().query().referenceNotIn('reference_uid', subQuery).find();
    *  
    * @returns {Query}
    */
@@ -481,8 +481,7 @@ export class Query extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().tags(['tag1']).find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().tags(['tag1']).find();
    *  
    * @returns {Query}
    */
@@ -504,8 +503,7 @@ export class Query extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().search('key').find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().search('key').find();
    *  
    * @returns {Query}
    */
@@ -528,8 +526,7 @@ export class Query extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().lessThan('fieldUid', 'value').find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().lessThan('fieldUid', 100).find();
    *  
    * @returns {Query}
    */
@@ -557,8 +554,7 @@ export class Query extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().lessThanOrEqualTo('fieldUid', 'value').find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().lessThanOrEqualTo('fieldUid', 100).find();
    *  
    * @returns {Query}
    */
@@ -585,8 +581,7 @@ export class Query extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().greaterThan('fieldUid', 'value').find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().greaterThan('fieldUid', 100).find();
    *  
    * @returns {Query}
    */
@@ -613,8 +608,7 @@ export class Query extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().greaterThanOrEqualTo('fieldUid', 'value').find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().greaterThanOrEqualTo('fieldUid', 100).find();
    *  
    * @returns {Query}
    */

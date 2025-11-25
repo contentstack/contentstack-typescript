@@ -30,7 +30,7 @@ let version = '{{VERSION}}';
  *    policy: Policy.CACHE_THEN_NETWORK,
  *    storeType: 'localStorage'
  *   }
- * }
+ * });
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function stack(config: StackConfig): StackClass {

@@ -137,8 +137,8 @@ export class Entries extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType("contentTypeUid").entry().includeReference("brand")
-   * const res = await query.find()
+   * const entries = stack.contentType("contentTypeUid").entry().includeReference("brand")
+   * const result = await entries.find()
    *
    * @param {string} referenceFieldUid - UID of the reference field to include.
    * @returns {Entries} - Returns the Entries instance for chaining.
@@ -165,8 +165,8 @@ export class Entries extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType("contentTypeUid").entry().includeReferenceContentTypeUID()
-   * const res = await query.find()
+   * const entries = stack.contentType("contentTypeUid").entry().includeReferenceContentTypeUID()
+   * const result = await entries.find()
    *
    * @returns {Entries} - Returns the Entries instance for chaining.
    */
@@ -184,8 +184,8 @@ export class Entries extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType("contentTypeUid").entry().includeSchema()
-   * const res = await query.find()
+   * const entries = stack.contentType("contentTypeUid").entry().includeSchema()
+   * const result = await entries.find()
    *
    * @returns {Entries} - Returns the Entries instance for chaining.
    */
@@ -248,7 +248,7 @@ export class Entries extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.contentType("contentTypeUid").entry().query();
+   * const query = stack.contentType("contentTypeUid").entry().query();
    */
   query(queryObj?: { [key: string]: any }) {
     if (queryObj) return new Query(this._client, this._parameters, this._queryParams, this._variants, this._contentTypeUid, queryObj);

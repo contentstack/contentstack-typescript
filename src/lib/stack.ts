@@ -246,7 +246,7 @@ export class Stack {
    * @method setDebug
    * @memberof Stack
    * @description Sets the debug option
-   * @param {Number} debug - Debug value
+   * @param {boolean} debug - Debug value
    * @return {Stack}
    * @instance
    * */
@@ -257,7 +257,7 @@ export class Stack {
 
   /**
    * @method setHost
-   * @memberOf Stack
+   * @memberof Stack
    * @description Sets the host based on cloud region
    * @param {String} cloudRegion - Cloud region (e.g., 'aws_na', 'aws_eu')
    * @param {String} host - Optional custom host

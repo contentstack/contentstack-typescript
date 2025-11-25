@@ -100,7 +100,7 @@ export class Entry {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType("contentTypeUid").entry(entry_uid).includeReference("brand").fetch()
+   * const result = await stack.contentType("contentTypeUid").entry(entry_uid).includeReference("brand").fetch()
    *
    * @param {string} referenceFieldUid - UID of the reference field to include.
    * @returns {Entry} - Returns the Entry instance for chaining.
