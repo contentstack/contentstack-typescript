@@ -118,7 +118,7 @@ describe('Deep Reference Chains Tests', () => {
     it('should fetch 4-level deep reference chain', async () => {
       // Use page_builder entry for 4-level chain (page_footer.references.reference)
       const PAGE_BUILDER_CT = process.env.PAGE_BUILDER_CONTENT_TYPE_UID || 'page_builder';
-      const PAGE_BUILDER_ENTRY_UID = process.env.PAGE_BUILDER_ENTRY_UID || 'blt6bfcacfaa6d74211';
+      const PAGE_BUILDER_ENTRY_UID = process.env.PAGE_BUILDER_ENTRY_UID || 'example_page_builder_uid';
       
       try {
         const result = await stack

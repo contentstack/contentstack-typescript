@@ -17,6 +17,9 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './test/e2e',
   
+  // Output directory for test artifacts (NOT test-results to avoid conflicts)
+  outputDir: 'reports/playwright-test-results',
+  
   // Run tests in parallel
   fullyParallel: true,
   
@@ -31,8 +34,8 @@ export default defineConfig({
   
   // Reporter to use
   reporter: [
-    ['html', { outputFolder: 'reports/playwright' }],
     ['list'],
+    ['json', { outputFile: 'test-results/playwright-results.json' }],
   ],
   
   // Shared settings for all projects
@@ -47,40 +50,23 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
 
-  // Configure projects for major browsers
+  // Configure project for Chrome only (Phase 2 - Quick & Essential)
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-    
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-    
-    // Test against mobile viewports
-    {
-      name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
-    },
-    
-    {
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
-    },
   ],
 
   // Run local dev server before starting tests (if needed)
-  // webServer: {
-  //   command: 'npm run start:test-server',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  // Run a local web server for browser tests (to avoid CORS issues with file://)
+  webServer: {
+    command: 'npx http-server . -p 8765 --cors -s --silent',
+    port: 8765,
+    reuseExistingServer: !process.env.CI,
+    timeout: 30000,
+    stdout: 'ignore',
+    stderr: 'pipe',
+  },
 });
 

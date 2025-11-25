@@ -1,28 +1,34 @@
-*.DS_Store
-**/node_modules/*
-.idea/*
-reports/*
-apidocs-templates/*
-test/smtpconfig.js/*
-test/config.js/*
-test/sync_config.js/*
-test/report.json/*
-tap-html.html
-*html-report
-coverage
+.DS_Store
+node_modules/
+dist/
+coverage/
 .env
-.dccache
-dist/*
 *.log
-.nx/
-regions.json
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.cache
+test-results/
 
-# Build artifacts (compiled .js from .ts)
+# Build artifacts (should only be in dist/)
 src/**/*.js
-src/**/*.d.ts
-!src/**/*.ts
-test/**/*.js
-!test/**/*.spec.js
-pipeline.yml
+src/**/*.js.map
 
-test/docs/
+# Browser test bundle (generated)
+test/e2e/sdk-browser-bundle.js
+test/e2e/sdk-browser-bundle.js.map
+docs
+reports
+
+# Bundler test artifacts (regenerated on test run)
+test/bundlers/**/.next/
+test/bundlers/**/dist/
+test/bundlers/**/node_modules/
+test/bundlers/**/package-lock.json
+
+# Temporary internal scripts
+test/docs/*.js
+test/docs/*.mjs
+test/docs/sanity-report*
