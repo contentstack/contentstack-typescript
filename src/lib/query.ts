@@ -97,7 +97,7 @@ export class Query extends BaseQuery {
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.regex('title','^Demo').find()
    * // OR
-   * const result = await query..regex('title','^Demo', 'i').find() // regex with options
+   * const result = await query.regex('title','^Demo', 'i').find() // regex with options
    * @returns {Query}
    */
   regex(fieldUid: string, regexPattern: string, options?: string): Query {
@@ -122,9 +122,12 @@ export class Query extends BaseQuery {
    * The query retrieves all entries that satisfy the query conditions made on referenced fields
    * This method sets the '$in_query' parameter to a reference field UID and a query instance in the API request.
    * @example
-   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
-   * query.whereIn("brand")
+   * const subQuery = stack.contentType("referencedContentTypeUid").entry().query().where("title", QueryOperation.EQUALS, "value");
+   * query.whereIn("brand", subQuery)
    * const res = await query.find()
    *
    * @param {string} referenceUid - UID of the reference field to query.
@@ -147,9 +150,12 @@ export class Query extends BaseQuery {
    * This query works the opposite of $in_query and retrieves all entries that does not satisfy query conditions made on referenced fields.
    * This method sets the '$nin_query' parameter to a reference field UID and a query instance in the API request.
    * @example
-   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
-   * query.whereNotIn("brand")
+   * const subQuery = stack.contentType("referencedContentTypeUid").entry().query().where("title", QueryOperation.EQUALS, "value");
+   * query.whereNotIn("brand", subQuery)
    * const res = await query.find()
    *
    * @param {string} referenceUid - UID of the reference field to query.
@@ -171,10 +177,12 @@ export class Query extends BaseQuery {
    * @description In case of '$and' get entries that satisfy all the conditions provided in the '$and' query and
    * in case of '$or' query get all entries that satisfy at least one of the given conditions provided in the '$or' query.
    * @example
-   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentType1Uid").entry().query();
-   * const subQuery1 = stack.contentType("contentType2Uid").query().where("price", QueryOperation.IS_LESS_THAN, fields=90);
-   * const subQuery2 = stack.contentType("contentType3Uid").query().where("discount", QueryOperation.INCLUDES, fields=[20, 45]);
+   * const subQuery1 = stack.contentType("contentType2Uid").entry().query().where("price", QueryOperation.IS_LESS_THAN, 90);
+   * const subQuery2 = stack.contentType("contentType3Uid").entry().query().where("discount", QueryOperation.INCLUDES, [20, 45]);
    * query.queryOperator(QueryOperator.AND, subQuery1, subQuery2)
    * const res = await query.find()
    *
@@ -201,9 +209,10 @@ export class Query extends BaseQuery {
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
-   * const result = await query.query({'brand': {'$nin_query': {'title': 'Apple Inc.'}}}).getQuery()
+   * const result = query.getQuery()
    * // OR
-   * const asset = await stack.asset().query({'brand': {'$nin_query': {'title': 'Apple Inc.'}}}).getQuery()
+   * const assetQuery = stack.asset().query();
+   * const assetResult = assetQuery.getQuery()
    *
    * @returns {Query}
    */
@@ -214,7 +223,9 @@ export class Query extends BaseQuery {
   /**
    * @method containedIn
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value is contained in the provided array of values
+   * @param {string} key - The field UID to filter on
+   * @param {(string | number | boolean)[]} value - Array of values to match against
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -238,9 +249,11 @@ export class Query extends BaseQuery {
   }
 
   /**
-   * @method NoContainedIn
+   * @method notContainedIn
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value is not contained in the provided array of values
+   * @param {string} key - The field UID to filter on
+   * @param {(string | number | boolean)[]} value - Array of values to exclude
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -266,7 +279,8 @@ export class Query extends BaseQuery {
   /**
    * @method exists
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the specified field exists
+   * @param {string} key - The field UID to check for existence
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -288,7 +302,8 @@ export class Query extends BaseQuery {
   /**
    * @method notExists
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the specified field does not exist
+   * @param {string} key - The field UID to check for non-existence
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -310,7 +325,8 @@ export class Query extends BaseQuery {
   /**
    * @method or
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Combines multiple queries with OR logic - returns entries that match at least one of the provided queries
+   * @param {...Query} queries - Query instances to combine with OR logic
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -333,14 +349,15 @@ export class Query extends BaseQuery {
   /**
    * @method and
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Combines multiple queries with AND logic - returns entries that match all of the provided queries
+   * @param {...Query} queries - Query instances to combine with AND logic
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query1 = stack.contentType('contenttype_uid').Entry().query().containedIn('fieldUID', ['value']);
-   * const query2 = stack.contentType('contenttype_uid').Entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
-   * const query = await stack.contentType('contenttype_uid').Entry().query().and(query1, query2).find();
+   * const query1 = stack.contentType('contenttype_uid').entry().query().containedIn('fieldUID', ['value']);
+   * const query2 = stack.contentType('contenttype_uid').entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
+   * const query = await stack.contentType('contenttype_uid').entry().query().and(query1, query2).find();
    *  
    * @returns {Query}
    */
@@ -356,12 +373,14 @@ export class Query extends BaseQuery {
   /**
    * @method equalTo
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value equals the specified value
+   * @param {string} key - The field UID to filter on
+   * @param {string | number | boolean} value - The value to match
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = await stack.contentType('contenttype_uid').Entry().query().equalTo('fieldUid', 'value').find();
+   * const query = await stack.contentType('contenttype_uid').entry().query().equalTo('fieldUid', 'value').find();
    *  
    * @returns {Query}
    */
@@ -381,12 +400,14 @@ export class Query extends BaseQuery {
   /**
    * @method notEqualTo
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value does not equal the specified value
+   * @param {string} key - The field UID to filter on
+   * @param {string | number | boolean} value - The value to exclude
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = await stack.contentType('contenttype_uid').Entry().query().notEqualTo('fieldUid', 'value').find();
+   * const query = await stack.contentType('contenttype_uid').entry().query().notEqualTo('fieldUid', 'value').find();
    *  
    * @returns {Query}
    */
@@ -406,13 +427,15 @@ export class Query extends BaseQuery {
   /**
    * @method referenceIn
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the reference field matches entries from the provided query
+   * @param {string} key - The reference field UID to filter on
+   * @param {Query} query - Query instance to match referenced entries against
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().referenceIn('reference_uid', query).find();
+   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
+   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().referenceIn('reference_uid', query).find();
    *  
    * @returns {Query}
    */
@@ -428,13 +451,15 @@ export class Query extends BaseQuery {
   /**
    * @method referenceNotIn
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the reference field does not match entries from the provided query
+   * @param {string} key - The reference field UID to filter on
+   * @param {Query} query - Query instance to exclude referenced entries against
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().referenceNotIn('reference_uid', query).find();
+   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
+   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().referenceNotIn('reference_uid', query).find();
    *  
    * @returns {Query}
    */
@@ -450,13 +475,14 @@ export class Query extends BaseQuery {
   /**
    * @method tags
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries that have any of the specified tags
+   * @param {(string | number | boolean)[]} values - Array of tag values to filter by
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().tags(['tag1']).find();
+   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
+   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().tags(['tag1']).find();
    *  
    * @returns {Query}
    */
@@ -472,13 +498,14 @@ export class Query extends BaseQuery {
   /**
    * @method search
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Enables typeahead search functionality for the query
+   * @param {string} key - The search term to use for typeahead search
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().search('key').find();
+   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
+   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().search('key').find();
    *  
    * @returns {Query}
    */
@@ -494,13 +521,15 @@ export class Query extends BaseQuery {
   /**
    * @method lessThan
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value is less than the specified value
+   * @param {string} key - The field UID to filter on
+   * @param {string | number} value - The value to compare against
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().lessThan('fieldUid', 'value').find();
+   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
+   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().lessThan('fieldUid', 'value').find();
    *  
    * @returns {Query}
    */
@@ -521,13 +550,15 @@ export class Query extends BaseQuery {
   /**
    * @method lessThanOrEqualTo
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value is less than or equal to the specified value
+   * @param {string} key - The field UID to filter on
+   * @param {string | number} value - The value to compare against
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().lessThanOrEqualTo('fieldUid', 'value').find();
+   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
+   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().lessThanOrEqualTo('fieldUid', 'value').find();
    *  
    * @returns {Query}
    */
@@ -547,13 +578,15 @@ export class Query extends BaseQuery {
   /**
    * @method greaterThan
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value is greater than the specified value
+   * @param {string} key - The field UID to filter on
+   * @param {string | number} value - The value to compare against
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().greaterThan('fieldUid', 'value').find();
+   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
+   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().greaterThan('fieldUid', 'value').find();
    *  
    * @returns {Query}
    */
@@ -573,13 +606,15 @@ export class Query extends BaseQuery {
   /**
    * @method greaterThanOrEqualTo
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value is greater than or equal to the specified value
+   * @param {string} key - The field UID to filter on
+   * @param {string | number} value - The value to compare against
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().greaterThanOrEqualTo('fieldUid', 'value').find();
+   * const query = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
+   * const entryQuery = await stack.contentType('contenttype_uid').entry().query().greaterThanOrEqualTo('fieldUid', 'value').find();
    *  
    * @returns {Query}
    */

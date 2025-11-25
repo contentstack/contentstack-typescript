@@ -61,14 +61,14 @@ export class AssetQuery extends BaseQuery {
 
   /**
    * @method includeMetadata
-   * @memberof Entries
-   * @description Include the metadata for getting metadata content for the entry.
-   * @returns {Entries}
+   * @memberof AssetQuery
+   * @description Include the metadata for getting metadata content for the asset.
+   * @returns {AssetQuery}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.asset().includeMetadata().fetch();
+   * const result = await stack.asset().includeMetadata().find();
    */
   includeMetadata(): AssetQuery {
     this._queryParams.include_metadata = 'true';
@@ -128,7 +128,7 @@ export class AssetQuery extends BaseQuery {
   }
   /**
    * @method query
-   * @memberof Query
+   * @memberof AssetQuery
    * @description Fetches the asset data on the basis of the query
    * @returns {Query}
    * @example

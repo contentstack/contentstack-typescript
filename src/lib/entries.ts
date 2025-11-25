@@ -62,13 +62,13 @@ export class Entries extends BaseQuery {
   /**
    * @method includeContentType
    * @memberof Entries
-   * @description IInclude the details of the content type along with the entries details
+   * @description Include the details of the content type along with the entries details
    * @returns {Entries}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.contentType(contentType_uid).entry().includeContentType().fetch();
+   * const result = await stack.contentType(contentType_uid).entry().includeContentType().find();
    */
   includeContentType(): Entries {
     this._queryParams.include_content_type = 'true';
@@ -85,7 +85,7 @@ export class Entries extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.contentType(contentType_uid).entry().includeEmbeddedItems().fetch();
+   * const result = await stack.contentType(contentType_uid).entry().includeEmbeddedItems().find();
    */
   includeEmbeddedItems(): Entries {
     this._queryParams['include_embedded_items[]'] = 'BASE';
@@ -134,7 +134,9 @@ export class Entries extends BaseQuery {
    * you need to use the include[] parameter and specify the UID of the reference field as value.
    * This function sets the include parameter to a reference field UID in the API request.
    * @example
-   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().includeReference("brand")
    * const res = await query.find()
    *
@@ -160,7 +162,9 @@ export class Entries extends BaseQuery {
    * @memberof Entries
    * @description This method also includes the content type UIDs of the referenced entries returned in the response.
    * @example
-   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().includeReferenceContentTypeUID()
    * const res = await query.find()
    *
@@ -175,9 +179,11 @@ export class Entries extends BaseQuery {
   /**
    * @method includeSchema
    * @memberof Entries
-   * @description This method also includes the content type UIDs of the referenced entries returned in the response.
+   * @description Includes the schema of the content type along with the entries details.
    * @example
-   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().includeSchema()
    * const res = await query.find()
    *
@@ -191,9 +197,9 @@ export class Entries extends BaseQuery {
 
   /**
    * @method locale
-   * @memberof Entry
-   * @description The assets published in the locale will be fetched
-   * @returns {Entry}
+   * @memberof Entries
+   * @description The entries published in the locale will be fetched
+   * @returns {Entries}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -235,8 +241,9 @@ export class Entries extends BaseQuery {
   /**
    * @method query
    * @memberof Entries
-   * @description Fetches the Entry data on the basis of the asset uid
-   * @returns {Collection}
+   * @description Creates a query object for filtering entries
+   * @param {object} queryObj - Optional query object to initialize the query
+   * @returns {Query} Query instance for chaining query methods
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -251,9 +258,9 @@ export class Entries extends BaseQuery {
 
   /**
    * @method variants
-   * @memberof Entry
+   * @memberof Entries
    * @description The variant header will be added to axios client
-   * @returns {Entry}
+   * @returns {Entries}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
