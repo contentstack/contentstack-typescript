@@ -135,7 +135,7 @@ export class AssetQuery extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.asset().query().where('fieldUid', queryOperators, 'value').find();
+   * const result = await stack.asset().query().where('fieldUid', QueryOperation.EQUALS, 'value').find();
    */
   query() {
     return new Query(this._client, this._parameters, this._queryParams);
