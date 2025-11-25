@@ -23,3 +23,6 @@ src/**/*.d.ts
 !src/**/*.ts
 test/**/*.js
 !test/**/*.spec.js
+pipeline.yml
+
+test/docs/
