@@ -30,6 +30,7 @@
     "test:api:report": "jest ./test/api --json --outputFile=test-results/jest-results.json",
     "test:bundlers:report": "cd test/bundlers && ./run-with-report.sh",
     "test:cicd": "mkdir -p test-results && npm run test:api:report && npm run test:bundlers:report && npm run test:e2e && node test/reporting/generate-unified-report.js",
+    "test:cicd:no-browser": "mkdir -p test-results && npm run test:api:report && npm run test:bundlers:report && node test/reporting/generate-unified-report.js",
     "test:all": "npm run test:unit && npm run test:browser && npm run test:api",
     "test:sanity-report": "node sanity-report.mjs",
     "validate:browser": "node scripts/validate-browser-safe.js",
