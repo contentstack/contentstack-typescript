@@ -14,7 +14,7 @@ let version = '{{VERSION}}';
  * @memberof Contentstack
  * @description Creates a stack instance
  * @param {StackConfig} config - config object for stack with apiKey, deliveryToken and environment as required fields
- *
+ * @returns {StackClass} Stack instance
  * @example
  * import contentstack from '@contentstack/delivery-sdk'
  * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
@@ -30,7 +30,7 @@ let version = '{{VERSION}}';
  *    policy: Policy.CACHE_THEN_NETWORK,
  *    storeType: 'localStorage'
  *   }
- * }
+ * });
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function stack(config: StackConfig): StackClass {

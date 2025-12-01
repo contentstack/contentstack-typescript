@@ -39,6 +39,16 @@ function generateEnhancedCacheKey(originalKey: string, contentTypeUid?: string, 
   return cacheKey;
 }
 
+/**
+ * Handles cache requests based on the cache policy
+ * @param {CacheOptions} cacheOptions - Cache configuration options
+ * @param {string} apiKey - API key for cache key generation
+ * @param {Function} defaultAdapter - Default axios adapter function
+ * @param {Function} resolve - Promise resolve function
+ * @param {Function} reject - Promise reject function
+ * @param {object} config - Request configuration object
+ * @returns {Promise} Resolves or rejects based on cache policy and API response
+ */
 export async function handleRequest(
   cacheOptions: CacheOptions,
   apiKey: string,

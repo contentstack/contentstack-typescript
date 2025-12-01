@@ -97,8 +97,10 @@ export class Entry {
    * you need to use the include[] parameter and specify the UID of the reference field as value.
    * This function sets the include parameter to a reference field UID in the API request.
    * @example
-   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
-   * const query = stack.contentType("contentTypeUid").entry(entry_uid).includeReference("brand").fetch()
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.contentType("contentTypeUid").entry(entry_uid).includeReference("brand").fetch()
    *
    * @param {string} referenceFieldUid - UID of the reference field to include.
    * @returns {Entry} - Returns the Entry instance for chaining.
@@ -120,7 +122,7 @@ export class Entry {
   /**
    * @method includeContentType
    * @memberof Entry
-   * @description IInclude the details of the content type along with the entries details
+   * @description Include the details of the content type along with the entries details
    * @returns {Entry}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
@@ -154,13 +156,13 @@ export class Entry {
   /**
    * @method locale
    * @memberof Entry
-   * @description The assets published in the locale will be fetched
+   * @description The entry published in the locale will be fetched
    * @returns {Entry}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.assetQuery().locale('en-us').fetch();
+   * const result = await stack.contentType('contentTypeUid').entry('entryUid').locale('en-us').fetch();
    */
   locale(locale: string): this {
     this._queryParams.locale = locale;
@@ -172,7 +174,7 @@ export class Entry {
    * @method fetch
    * @memberof Entry
    * @description Fetches the entry data on the basis of the entry uid
-   * @returns {Collection}
+   * @returns {Promise<T>} Promise that resolves to the entry data
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -208,7 +210,7 @@ export class Entry {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = stack.contentType("contentTypeUid").entry().addParams({"key": "value"}).fetch()
+   * const result = await stack.contentType("contentTypeUid").entry("entryUid").addParams({"key": "value"}).fetch()
    *
    * @returns {Entry}
    */
@@ -226,7 +228,7 @@ export class Entry {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.contentType("contentTypeUid").entry().except("fieldUID").find()
+   * const result = await stack.contentType("contentTypeUid").entry("entryUid").except("fieldUID").fetch()
    *
    * @param {string} fieldUid - field uid to exclude
    * @returns {Entry} - returns Entry object for chaining method calls
@@ -253,7 +255,7 @@ export class Entry {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.contentType("contentTypeUid").entry().only("fieldUID").find()
+   * const result = await stack.contentType("contentTypeUid").entry("entryUid").only("fieldUID").fetch()
    *
    * @param {string} fieldUid - field uid to select
    * @returns {Entry} - returns Entry object for chaining method calls

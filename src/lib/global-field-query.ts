@@ -14,9 +14,11 @@ export class GlobalFieldQuery extends BaseQuery {
    * @description Includes the _branch top-level key in the response
    * @returns {GlobalFieldQuery}
    * @example
-   * const stack = contentstack.stack('apiKey','deliveryToken','environment');
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const globalFields = stack.globalField();
-   * const result = globalFields.includeBranch().find();
+   * const result = await globalFields.includeBranch().find();
    */
   includeBranch(): GlobalFieldQuery {
     this._queryParams.include_branch = 'true';

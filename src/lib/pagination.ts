@@ -6,8 +6,8 @@ export class Pagination {
    * @method constructor
    * @memberof Pagination
    * @description Create a pagination class object to paginate through the query response
-   * @param {baseQuery} object of class BaseQUery
-   * @param {paginationObj} object to send skip and limit values
+   * @param {BaseQuery} object of class BaseQuery
+   * @param {PaginationObj} object to send skip and limit values
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *

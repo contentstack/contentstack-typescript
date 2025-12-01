@@ -21,13 +21,16 @@ export class ContentType {
   /**
    * @method entry
    * @memberof ContentType
-   * @description Creates entry object of the passed entry uid.
-   * @returns {Entry}
+   * @description Creates entry object of the passed entry uid, or entries query object if no uid is provided.
+   * @param {string} [uid] - Optional entry UID. If provided, returns a single Entry instance. If omitted, returns Entries query object.
+   * @returns {Entry | Entries} Entry instance if uid is provided, otherwise Entries query object
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const entry = stack.contentType("contentTypeUid").entry("entryUid");
+   * // OR
+   * const entries = stack.contentType("contentTypeUid").entry();
    */
   entry(uid: string): Entry;
   entry(): Entries;
@@ -41,7 +44,7 @@ export class ContentType {
    * @method fetch
    * @memberof ContentType
    * @description Fetches the contentType data on the basis of the contentType uid
-   * @returns {ContentType}
+   * @returns {Promise<T>} Promise that resolves to the content type data
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
