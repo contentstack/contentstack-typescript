@@ -14,5 +14,7 @@ fileignoreconfig:
 - filename: test/browser/real-api-calls.spec.ts
   checksum: 514930cdde28cdc8b37ab054031260d5703dc8bdf777906dd5f9baa270ab7c3a
 - filename: package-lock.json
-  ignore_detectors: [base64]
+- filename: test/api/live-preview-comprehensive.spec.ts
+  checksum: fe961d576a31f1ea502ecd10c890a78b77b6f3019dd810dd3be914e6abf298dd
+  ignore_detectors: [ base64 ]
 version: "1.0"
