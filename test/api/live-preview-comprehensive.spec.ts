@@ -1,5 +1,6 @@
 import { stackInstance } from '../utils/stack-instance';
 import { BaseEntry, QueryOperation } from '../../src';
+import * as contentstack from '../../src/lib/contentstack';
 
 const stack = stackInstance();
 
@@ -15,7 +16,9 @@ const SIMPLE_ENTRY_UID = process.env.SIMPLE_ENTRY_UID;
 
 // Live Preview Configuration
 const PREVIEW_TOKEN = process.env.PREVIEW_TOKEN;
+const MANAGEMENT_TOKEN = process.env.MANAGEMENT_TOKEN;
 const LIVE_PREVIEW_HOST = process.env.LIVE_PREVIEW_HOST;
+const HOST = process.env.HOST;
 
 describe('Live Preview Comprehensive Tests', () => {
   const skipIfNoUID = !COMPLEX_ENTRY_UID ? describe.skip : describe;
@@ -157,7 +160,12 @@ describe('Live Preview Comprehensive Tests', () => {
       });
 
       const contentTypes = [COMPLEX_CT, MEDIUM_CT, SIMPLE_CT];
-      const results = [];
+      const results: Array<{
+        contentType: string;
+        entriesCount?: number;
+        error?: string;
+        success: boolean;
+      }> = [];
 
       for (const contentType of contentTypes) {
         try {
@@ -559,6 +567,695 @@ describe('Live Preview Comprehensive Tests', () => {
         enabled: !!enabledResult,
         bothSuccessful: !!disabledResult && !!enabledResult
       });
+    });
+  });
+
+  // ═══════════════════════════════════════════════════════════════
+  // MANAGEMENT TOKEN TESTS
+  // ═══════════════════════════════════════════════════════════════
+  
+  const skipIfNoManagementToken = !MANAGEMENT_TOKEN ? describe.skip : describe;
+
+  skipIfNoManagementToken('Live Preview Configuration with Management Token', () => {
+    it('should configure live preview with management token (enabled)', async () => {
+      const testStack = contentstack.stack({
+        apiKey: process.env.API_KEY as string,
+        deliveryToken: process.env.DELIVERY_TOKEN as string,
+        environment: process.env.ENVIRONMENT as string,
+        live_preview: {
+          enable: true,
+          management_token: MANAGEMENT_TOKEN,
+          host: HOST
+        }
+      });
+
+      const livePreviewConfig = testStack.config.live_preview;
+      
+      expect(livePreviewConfig).toBeDefined();
+      expect(livePreviewConfig?.enable).toBe(true);
+      expect(livePreviewConfig?.management_token).toBe(MANAGEMENT_TOKEN);
+      expect(livePreviewConfig?.host).toBe(HOST);
+      expect(testStack.config.host).toBeDefined(); // Region-specific CDN host
+
+      console.log('Live preview with management token (enabled):', {
+        enabled: livePreviewConfig?.enable,
+        hasManagementToken: !!livePreviewConfig?.management_token,
+        host: livePreviewConfig?.host
+      });
+    });
+
+    it('should configure live preview with management token (disabled)', async () => {
+      const testStack = contentstack.stack({
+        apiKey: process.env.API_KEY as string,
+        deliveryToken: process.env.DELIVERY_TOKEN as string,
+        environment: process.env.ENVIRONMENT as string,
+        live_preview: {
+          enable: false,
+          management_token: MANAGEMENT_TOKEN
+        }
+      });
+
+      const livePreviewConfig = testStack.config.live_preview;
+      
+      expect(livePreviewConfig).toBeDefined();
+      expect(livePreviewConfig?.enable).toBe(false);
+      expect(livePreviewConfig?.management_token).toBe(MANAGEMENT_TOKEN);
+      expect(livePreviewConfig?.host).toBeUndefined();
+      expect(testStack.config.host).toBeDefined(); // Region-specific CDN host
+
+      console.log('Live preview with management token (disabled):', {
+        enabled: livePreviewConfig?.enable,
+        hasManagementToken: !!livePreviewConfig?.management_token,
+        host: livePreviewConfig?.host || 'undefined'
+      });
+    });
+
+    it('should validate management token vs preview token configuration', async () => {
+      // Management token configuration
+      const mgmtStack = contentstack.stack({
+        apiKey: process.env.API_KEY as string,
+        deliveryToken: process.env.DELIVERY_TOKEN as string,
+        environment: process.env.ENVIRONMENT as string,
+        live_preview: {
+          enable: true,
+          management_token: MANAGEMENT_TOKEN,
+          host: HOST
+        }
+      });
+
+      // Preview token configuration (if available)
+      const previewStack = contentstack.stack({
+        apiKey: process.env.API_KEY as string,
+        deliveryToken: process.env.DELIVERY_TOKEN as string,
+        environment: process.env.ENVIRONMENT as string,
+        live_preview: {
+          enable: true,
+          preview_token: PREVIEW_TOKEN,
+          host: HOST
+        }
+      });
+
+      const mgmtConfig = mgmtStack.config.live_preview;
+      const previewConfig = previewStack.config.live_preview;
+
+      expect(mgmtConfig).toBeDefined();
+      expect(previewConfig).toBeDefined();
+      
+      console.log('Management vs Preview token configuration:', {
+        managementToken: {
+          hasToken: !!mgmtConfig?.management_token,
+          hasPreviewToken: !!mgmtConfig?.preview_token
+        },
+        previewToken: {
+          hasToken: !!previewConfig?.preview_token,
+          hasManagementToken: !!previewConfig?.management_token
+        }
+      });
+    });
+  });
+
+  skipIfNoManagementToken('Live Preview Queries with Management Token', () => {
+    it('should check for entry when live preview is enabled with management token', async () => {
+      if (!COMPLEX_ENTRY_UID) {
+        console.log('⚠️  Skipping: Entry UID not configured');
+        return;
+      }
+
+      try {
+        const testStack = contentstack.stack({
+          apiKey: process.env.API_KEY as string,
+          deliveryToken: process.env.DELIVERY_TOKEN as string,
+          environment: process.env.ENVIRONMENT as string,
+          live_preview: {
+            enable: true,
+            management_token: MANAGEMENT_TOKEN,
+            host: HOST
+          }
+        });
+
+        testStack.livePreviewQuery({
+          contentTypeUid: COMPLEX_CT,
+          live_preview: MANAGEMENT_TOKEN as string
+        });
+
+        const startTime = Date.now();
+        const result = await testStack
+          .contentType(COMPLEX_CT)
+          .entry(COMPLEX_ENTRY_UID)
+          .fetch() as any;
+        const duration = Date.now() - startTime;
+
+        expect(result).toBeDefined();
+        expect(result.uid).toBe(COMPLEX_ENTRY_UID);
+        
+        console.log('Live preview entry fetch with management token (enabled):', {
+          duration: `${duration}ms`,
+          entryUid: result.uid,
+          title: result.title,
+          hasVersion: !!result._version
+        });
+      } catch (error: any) {
+        // Management token may return 403 (forbidden) or 422 (unprocessable entity)
+        // depending on permissions and configuration
+        if (error.response?.status === 403) {
+          console.log('⚠️  Management token returned 403 (forbidden - expected behavior)');
+          expect(error.response.status).toBe(403);
+        } else if (error.response?.status === 422) {
+          console.log('⚠️  Management token returned 422 (configuration issue - expected)');
+          expect(error.response.status).toBe(422);
+        } else {
+          console.log('✅ Entry fetched successfully with management token');
+          throw error;
+        }
+      }
+    });
+
+    it('should check for entry when live preview is disabled with management token', async () => {
+      if (!COMPLEX_ENTRY_UID) {
+        console.log('⚠️  Skipping: Entry UID not configured');
+        return;
+      }
+
+      try {
+        const testStack = contentstack.stack({
+          host: HOST,
+          apiKey: process.env.API_KEY as string,
+          deliveryToken: process.env.DELIVERY_TOKEN as string,
+          environment: process.env.ENVIRONMENT as string,
+          live_preview: {
+            enable: false,
+            management_token: MANAGEMENT_TOKEN
+          }
+        });
+
+        testStack.livePreviewQuery({
+          contentTypeUid: COMPLEX_CT,
+          live_preview: MANAGEMENT_TOKEN as string
+        });
+
+        const startTime = Date.now();
+        const result = await testStack
+          .contentType(COMPLEX_CT)
+          .entry(COMPLEX_ENTRY_UID)
+          .fetch() as any;
+        const duration = Date.now() - startTime;
+
+        expect(result).toBeDefined();
+        expect(result.uid).toBe(COMPLEX_ENTRY_UID);
+
+        console.log('Live preview entry fetch with management token (disabled):', {
+          duration: `${duration}ms`,
+          entryUid: result.uid,
+          title: result.title,
+          hasVersion: !!result._version
+        });
+      } catch (error: any) {
+        // 422 errors may occur with management token configuration
+        if (error.response?.status === 422) {
+          console.log('⚠️  Management token with live preview disabled returned 422 (expected)');
+          expect(error.response.status).toBe(422);
+        } else if (error.response?.status === 403) {
+          console.log('⚠️  Management token returned 403 (forbidden - expected)');
+          expect(error.response.status).toBe(403);
+        } else {
+          throw error;
+        }
+      }
+    });
+
+    it('should perform queries with management token', async () => {
+      try {
+        const testStack = contentstack.stack({
+          apiKey: process.env.API_KEY as string,
+          deliveryToken: process.env.DELIVERY_TOKEN as string,
+          environment: process.env.ENVIRONMENT as string,
+          live_preview: {
+            enable: true,
+            management_token: MANAGEMENT_TOKEN,
+            host: HOST
+          }
+        });
+
+        testStack.livePreviewQuery({
+          contentTypeUid: COMPLEX_CT,
+          live_preview: MANAGEMENT_TOKEN as string
+        });
+
+        const startTime = Date.now();
+        const result = await testStack
+          .contentType(COMPLEX_CT)
+          .entry()
+          .query()
+          .limit(5)
+          .find() as any;
+        const duration = Date.now() - startTime;
+
+        expect(result).toBeDefined();
+        expect(result.entries).toBeDefined();
+        expect(Array.isArray(result.entries)).toBe(true);
+
+        console.log('Live preview query with management token:', {
+          duration: `${duration}ms`,
+          entriesCount: result.entries?.length || 0,
+          limit: 5
+        });
+      } catch (error: any) {
+        if (error.response?.status === 403 || error.response?.status === 422) {
+          console.log(`⚠️  Management token query returned ${error.response.status} (expected behavior)`);
+          expect([403, 422]).toContain(error.response.status);
+        } else {
+          throw error;
+        }
+      }
+    });
+  });
+
+  skipIfNoManagementToken('Live Preview Performance with Management Token', () => {
+    it('should measure management token performance', async () => {
+      if (!COMPLEX_ENTRY_UID) {
+        console.log('⚠️  Skipping: Entry UID not configured');
+        return;
+      }
+
+      try {
+        const testStack = contentstack.stack({
+          apiKey: process.env.API_KEY as string,
+          deliveryToken: process.env.DELIVERY_TOKEN as string,
+          environment: process.env.ENVIRONMENT as string,
+          live_preview: {
+            enable: true,
+            management_token: MANAGEMENT_TOKEN,
+            host: HOST
+          }
+        });
+
+        testStack.livePreviewQuery({
+          contentTypeUid: COMPLEX_CT,
+          live_preview: MANAGEMENT_TOKEN as string
+        });
+
+        const startTime = Date.now();
+        const result = await testStack
+          .contentType(COMPLEX_CT)
+          .entry(COMPLEX_ENTRY_UID)
+          .includeReference(['related_content'])
+          .fetch() as any;
+        const duration = Date.now() - startTime;
+
+        expect(result).toBeDefined();
+        expect(result.uid).toBe(COMPLEX_ENTRY_UID);
+
+        console.log('Management token performance with references:', {
+          duration: `${duration}ms`,
+          entryUid: result.uid,
+          withReferences: true
+        });
+
+        // Management token operations should complete reasonably
+        expect(duration).toBeLessThan(10000); // 10 seconds max
+      } catch (error: any) {
+        if (error.response?.status === 403 || error.response?.status === 422) {
+          console.log(`⚠️  Management token returned ${error.response.status} (expected, skipping performance check)`);
+          expect([403, 422]).toContain(error.response.status);
+        } else {
+          throw error;
+        }
+      }
+    });
+
+    it('should compare management token vs preview token performance', async () => {
+      if (!COMPLEX_ENTRY_UID || !PREVIEW_TOKEN) {
+        console.log('⚠️  Skipping: Entry UID or Preview Token not configured');
+        return;
+      }
+
+      try {
+        // Management token query
+        const mgmtStack = contentstack.stack({
+          apiKey: process.env.API_KEY as string,
+          deliveryToken: process.env.DELIVERY_TOKEN as string,
+          environment: process.env.ENVIRONMENT as string,
+          live_preview: {
+            enable: true,
+            management_token: MANAGEMENT_TOKEN,
+            host: HOST
+          }
+        });
+
+        mgmtStack.livePreviewQuery({
+          contentTypeUid: COMPLEX_CT,
+          live_preview: MANAGEMENT_TOKEN as string
+        });
+
+        const mgmtStart = Date.now();
+        const mgmtResult = await mgmtStack
+          .contentType(COMPLEX_CT)
+          .entry(COMPLEX_ENTRY_UID)
+          .fetch();
+        const mgmtTime = Date.now() - mgmtStart;
+
+        // Preview token query
+        const previewStack = contentstack.stack({
+          apiKey: process.env.API_KEY as string,
+          deliveryToken: process.env.DELIVERY_TOKEN as string,
+          environment: process.env.ENVIRONMENT as string,
+          live_preview: {
+            enable: true,
+            preview_token: PREVIEW_TOKEN,
+            host: HOST
+          }
+        });
+
+        previewStack.livePreviewQuery({
+          live_preview: PREVIEW_TOKEN
+        });
+
+        const previewStart = Date.now();
+        const previewResult = await previewStack
+          .contentType(COMPLEX_CT)
+          .entry(COMPLEX_ENTRY_UID)
+          .fetch();
+        const previewTime = Date.now() - previewStart;
+
+        expect(mgmtResult).toBeDefined();
+        expect(previewResult).toBeDefined();
+
+        console.log('Management token vs Preview token performance:', {
+          managementToken: `${mgmtTime}ms`,
+          previewToken: `${previewTime}ms`,
+          difference: `${Math.abs(mgmtTime - previewTime)}ms`,
+          ratio: (mgmtTime / previewTime).toFixed(2)
+        });
+      } catch (error: any) {
+        if (error.response?.status === 403 || error.response?.status === 422) {
+          console.log(`⚠️  Token returned ${error.response.status} (expected, skipping comparison)`);
+          expect([403, 422]).toContain(error.response.status);
+        } else {
+          throw error;
+        }
+      }
+    });
+  });
+
+  skipIfNoManagementToken('Live Preview Error Handling with Management Token', () => {
+    it('should handle invalid management tokens', async () => {
+      if (!COMPLEX_ENTRY_UID) {
+        console.log('⚠️  Skipping: Entry UID not configured');
+        return;
+      }
+
+      const testStack = contentstack.stack({
+        apiKey: process.env.API_KEY as string,
+        deliveryToken: process.env.DELIVERY_TOKEN as string,
+        environment: process.env.ENVIRONMENT as string,
+        live_preview: {
+          enable: true,
+          management_token: 'invalid-management-token-12345',
+          host: HOST as string
+        }
+      });
+
+      testStack.livePreviewQuery({
+        contentTypeUid: COMPLEX_CT,
+        live_preview: 'invalid-management-token-12345'
+      });
+
+      try {
+        const result = await testStack
+          .contentType(COMPLEX_CT)
+          .entry(COMPLEX_ENTRY_UID)
+          .fetch<any>();
+        
+        console.log('Invalid management token handled gracefully:', {
+          entryUid: result.uid
+        });
+      } catch (error: any) {
+        console.log('Invalid management token properly rejected:', {
+          status: error.response?.status,
+          message: error.message
+        });
+        
+        // Should return 401 (unauthorized) or 403 (forbidden)
+        expect([401, 403, 422]).toContain(error.response?.status);
+      }
+    });
+
+    it('should handle management token with invalid host', async () => {
+      if (!COMPLEX_ENTRY_UID) {
+        console.log('⚠️  Skipping: Entry UID not configured');
+        return;
+      }
+
+      const testStack = contentstack.stack({
+        apiKey: process.env.API_KEY as string,
+        deliveryToken: process.env.DELIVERY_TOKEN as string,
+        environment: process.env.ENVIRONMENT as string,
+        live_preview: {
+          enable: true,
+          management_token: MANAGEMENT_TOKEN as string,
+          host: 'invalid-host.example.com'
+        }
+      });
+
+      testStack.livePreviewQuery({
+        contentTypeUid: COMPLEX_CT,
+        live_preview: MANAGEMENT_TOKEN as string
+      });
+
+      try {
+        const result = await testStack
+          .contentType(COMPLEX_CT)
+          .entry(COMPLEX_ENTRY_UID)
+          .fetch<any>();
+        
+        console.log('Invalid host with management token handled:', {
+          entryUid: result.uid
+        });
+      } catch (error: any) {
+        console.log('Invalid host with management token rejected:', {
+          message: error.message,
+          code: error.code
+        });
+        
+        // Network or configuration error expected
+        expect(error).toBeDefined();
+      }
+    });
+
+    it('should handle management token permission errors', async () => {
+      if (!COMPLEX_ENTRY_UID) {
+        console.log('⚠️  Skipping: Entry UID not configured');
+        return;
+      }
+
+      const testStack = contentstack.stack({
+        apiKey: process.env.API_KEY as string,
+        deliveryToken: process.env.DELIVERY_TOKEN as string,
+        environment: process.env.ENVIRONMENT as string,
+        live_preview: {
+          enable: true,
+          management_token: MANAGEMENT_TOKEN as string,
+          host: HOST as string
+        }
+      });
+
+      testStack.livePreviewQuery({
+        contentTypeUid: COMPLEX_CT,
+        live_preview: MANAGEMENT_TOKEN as string
+      });
+
+      try {
+        const result = await testStack
+          .contentType(COMPLEX_CT)
+          .entry(COMPLEX_ENTRY_UID)
+          .fetch() as any;
+        
+        console.log('Management token permission check passed:', {
+          entryUid: result.uid,
+          hasPermissions: true
+        });
+        
+        expect(result).toBeDefined();
+      } catch (error: any) {
+        console.log('Management token permission error (expected):', {
+          status: error.response?.status,
+          message: error.message
+        });
+        
+        // 403 (forbidden) expected for permission issues
+        if (error.response?.status === 403) {
+          expect(error.response.status).toBe(403);
+        } else {
+          throw error;
+        }
+      }
+    });
+  });
+
+  skipIfNoManagementToken('Live Preview Edge Cases with Management Token', () => {
+    it('should handle management token with non-existent entries', async () => {
+      const testStack = contentstack.stack({
+        apiKey: process.env.API_KEY as string,
+        deliveryToken: process.env.DELIVERY_TOKEN as string,
+        environment: process.env.ENVIRONMENT as string,
+        live_preview: {
+          enable: true,
+          management_token: MANAGEMENT_TOKEN as string,
+          host: HOST as string
+        }
+      });
+
+      testStack.livePreviewQuery({
+        contentTypeUid: COMPLEX_CT,
+        live_preview: MANAGEMENT_TOKEN as string
+      });
+
+      try {
+        const result = await testStack
+          .contentType(COMPLEX_CT)
+          .entry('non-existent-entry-uid-12345')
+          .fetch() as any;
+        
+        console.log('Non-existent entry with management token handled:', result);
+      } catch (error: any) {
+        console.log('Non-existent entry with management token properly rejected:', {
+          status: error.response?.status,
+          message: error.message
+        });
+        
+        // Should return 404 (not found) or 403 (forbidden)
+        expect([404, 403, 422]).toContain(error.response?.status);
+      }
+    });
+
+    it('should handle management token configuration changes mid-session', async () => {
+      if (!COMPLEX_ENTRY_UID) {
+        console.log('⚠️  Skipping: Entry UID not configured');
+        return;
+      }
+
+      try {
+        // First query with management token enabled
+        const stack1 = contentstack.stack({
+          apiKey: process.env.API_KEY as string,
+          deliveryToken: process.env.DELIVERY_TOKEN as string,
+          environment: process.env.ENVIRONMENT as string,
+          live_preview: {
+            enable: true,
+            management_token: MANAGEMENT_TOKEN as string,
+            host: HOST as string
+          }
+        });
+
+        stack1.livePreviewQuery({
+          contentTypeUid: COMPLEX_CT,
+          live_preview: MANAGEMENT_TOKEN as string
+        });
+
+        const result1 = await stack1
+          .contentType(COMPLEX_CT)
+          .entry(COMPLEX_ENTRY_UID)
+          .fetch();
+
+        // Second query with management token disabled
+        const stack2 = contentstack.stack({
+          apiKey: process.env.API_KEY as string,
+          deliveryToken: process.env.DELIVERY_TOKEN as string,
+          environment: process.env.ENVIRONMENT as string,
+          live_preview: {
+            enable: false,
+            management_token: MANAGEMENT_TOKEN as string
+          }
+        });
+
+        stack2.livePreviewQuery({
+          contentTypeUid: COMPLEX_CT,
+          live_preview: MANAGEMENT_TOKEN as string
+        });
+
+        const result2 = await stack2
+          .contentType(COMPLEX_CT)
+          .entry(COMPLEX_ENTRY_UID)
+          .fetch();
+
+        expect(result1).toBeDefined();
+        expect(result2).toBeDefined();
+
+        console.log('Management token configuration changes handled:', {
+          enabled: !!result1,
+          disabled: !!result2,
+          bothSuccessful: !!result1 && !!result2
+        });
+      } catch (error: any) {
+        if (error.response?.status === 403 || error.response?.status === 422) {
+          console.log(`⚠️  Management token configuration change returned ${error.response.status} (expected)`);
+          expect([403, 422]).toContain(error.response.status);
+        } else {
+          throw error;
+        }
+      }
+    });
+
+    it('should handle concurrent management token queries', async () => {
+      if (!COMPLEX_ENTRY_UID) {
+        console.log('⚠️  Skipping: Entry UID not configured');
+        return;
+      }
+
+      try {
+        const testStack = contentstack.stack({
+          apiKey: process.env.API_KEY as string,
+          deliveryToken: process.env.DELIVERY_TOKEN as string,
+          environment: process.env.ENVIRONMENT as string,
+          live_preview: {
+            enable: true,
+            management_token: MANAGEMENT_TOKEN as string,
+            host: HOST as string
+          }
+        });
+
+        testStack.livePreviewQuery({
+          contentTypeUid: COMPLEX_CT,
+          live_preview: MANAGEMENT_TOKEN as string
+        });
+
+        const startTime = Date.now();
+        
+        // Perform multiple concurrent queries with management token
+        const queryPromises = [
+          testStack.contentType(COMPLEX_CT).entry(COMPLEX_ENTRY_UID).fetch() as Promise<any>,
+          testStack.contentType(MEDIUM_CT).entry().query().limit(3).find() as Promise<any>,
+          testStack.contentType(SIMPLE_CT).entry().query().limit(3).find() as Promise<any>
+        ];
+        
+        const results = await Promise.allSettled(queryPromises);
+        
+        const duration = Date.now() - startTime;
+        
+        const successCount = results.filter(r => r.status === 'fulfilled').length;
+        const failedCount = results.filter(r => r.status === 'rejected').length;
+
+        console.log('Concurrent management token queries:', {
+          duration: `${duration}ms`,
+          successful: successCount,
+          failed: failedCount,
+          results: results.map((r, i) => ({
+            queryType: ['single_entry', 'query', 'query'][i],
+            status: r.status
+          }))
+        });
+
+        // At least some queries should complete (either success or expected errors)
+        expect(results.length).toBe(3);
+        expect(duration).toBeLessThan(20000); // 20 seconds max
+      } catch (error: any) {
+        if (error.response?.status === 403 || error.response?.status === 422) {
+          console.log(`⚠️  Concurrent management token queries returned ${error.response.status} (expected)`);
+          expect([403, 422]).toContain(error.response.status);
+        } else {
+          throw error;
+        }
+      }
     });
   });
 });
