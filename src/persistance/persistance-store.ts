@@ -3,6 +3,7 @@ import { localStorage } from './storages/local-storage';
 import { memoryStorage } from './storages/memory-storage';
 import { Storage } from './types/storage';
 import { StorageType } from './types/storage-type';
+import { ErrorMessages } from '../lib/error-messages';
 
 /**
  * Persistence store for caching data with expiration support
@@ -41,7 +42,7 @@ export class PersistanceStore {
         break;
       case 'customStorage':
         if (!store) {
-          throw new TypeError('StorageType `customStorage` should have `storage`.');
+          throw new TypeError(ErrorMessages.MISSING_CUSTOM_STORAGE);
         } else {
           this.store = store;
         }

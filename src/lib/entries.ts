@@ -3,6 +3,7 @@ import { Query } from './query';
 import { BaseQuery } from './base-query';
 import { FindResponse } from './types';
 import { encodeQueryParams } from './utils';
+import { ErrorMessages } from './error-messages';
 
 export class Entries extends BaseQuery {
   private _contentTypeUid: string;
@@ -152,7 +153,7 @@ export class Entries extends BaseQuery {
         (this._queryParams['include[]'] as string[]).push(...(Array.isArray(value) ? value : [value]));
       });
     } else {
-      console.error("Argument should be a String or an Array.");
+      console.error(ErrorMessages.INVALID_ARGUMENT_STRING_OR_ARRAY);
     }
     return this;
   }
