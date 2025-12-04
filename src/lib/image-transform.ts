@@ -53,7 +53,7 @@ export class ImageTransform {
   /**
    * @method format
    * @memberof ImageTransform
-   * @description The format parameter lets you converts a given image from one format to another.
+   * @description The format parameter lets you convert a given image from one format to another.
    * @param {Format} format - Specifies the format to change to.
    * @returns {ImageTransform}
    * @example
@@ -72,11 +72,12 @@ export class ImageTransform {
    * @method resize
    * @memberof ImageTransform
    * @description The resize parameter lets you resize the image in terms of width, height, upscaling the image.
-   * @param {string | number} width - Specifies the width to resize the image to.
+   * @param {object} options - Resize options object
+   * @param {string | number} [options.width] - Specifies the width to resize the image to.
    * The value can be in pixels (for example, 400) or in percentage (for example, 0.60 OR '60p')
-   * @param {string | number} height - Specifies the height to resize the image to.
+   * @param {string | number} [options.height] - Specifies the height to resize the image to.
    * The value can be in pixels (for example, 400) or in percentage (for example, 0.60 OR '60p')
-   * @param {string} disable - The disable parameter disables the functionality that is enabled by default.
+   * @param {string} [options.disable] - The disable parameter disables the functionality that is enabled by default.
    * As of now, there is only one value, i.e., upscale, that you can use with the disable parameter.
    * @returns {ImageTransform}
    * @example
@@ -108,20 +109,21 @@ export class ImageTransform {
    * the height and width in pixels or percentage value, or defining height and width in aspect ratio.
    * You can also define a sub region (i.e., define the starting point for crop) before cropping the image,
    * or you can offset the image on its X and Y axis (i.e., define the centre point of the crop) before cropping the image.
-   * @returns {ImageTransform}
-   * @param {string | number} width - Specifies the width to resize the image to.
+   * @param {object} options - Crop options object
+   * @param {string | number} options.width - Specifies the width to resize the image to.
    * The value can be in pixels (for example, 400) or in percentage (for example, 0.60 OR '60p')
-   * @param {string | number} height - Specifies the height to resize the image to.
+   * @param {string | number} options.height - Specifies the height to resize the image to.
    * The value can be in pixels (for example, 400) or in percentage (for example, 0.60 OR '60p')
-   * @param {string | number} xval - (Optional) For CropBy Region, xval defines the X-axis position
+   * @param {string | number} [options.xval] - (Optional) For CropBy Region, xval defines the X-axis position
    * of the top left corner of the crop. For CropBy Offset, xval defines the horizontal offset of the crop region.
-   * @param {string | number} yval - (Optional) For CropBy Region, yval defines the Y-axis position
+   * @param {string | number} [options.yval] - (Optional) For CropBy Region, yval defines the Y-axis position
    * of the top left corner of the crop. For CropBy Offset, yval defines the vertical offset of the crop region.
-   * @param {CropBy} cropBy - (Optional) Specifies the CropBy type. Values are DEFAULT, ASPECTRATIO, REGION, OFFSET.
-   * @param {boolean} safe - (Optional) Ensures that the output image never returns an error due to the specified crop area being
+   * @param {CropBy} [options.cropBy] - (Optional) Specifies the CropBy type. Values are DEFAULT, ASPECTRATIO, REGION, OFFSET.
+   * @param {boolean} [options.safe] - (Optional) Ensures that the output image never returns an error due to the specified crop area being
    * out of bounds. The output image is returned as an intersection of the source image and the defined crop area.
-   * @param {boolean} smart - (Optional) Ensures crop is done using content-aware algorithms. Content-aware image cropping returns a
+   * @param {boolean} [options.smart] - (Optional) Ensures crop is done using content-aware algorithms. Content-aware image cropping returns a
    * cropped image that automatically fits the defined dimensions while intelligently including the most important components of the image.
+   * @returns {ImageTransform}
    * @example
    * const url = 'www.example.com';
    * const transformObj = new ImageTransform().crop({ width: 100, height: 200 })
@@ -177,8 +179,11 @@ export class ImageTransform {
         this.obj.crop = [width.toString(), height.toString(), `offset-x${xval}`, `offset-y${yval}`];
       }
     }
-    if (safe) this.obj.crop = [...this.obj.crop, 'safe'];
-    if (smart) this.obj.crop = [...this.obj.crop, 'smart'];
+    // Only add safe/smart when crop is an array (not for ASPECTRATIO which is a string)
+    if (Array.isArray(this.obj.crop)) {
+      if (safe) this.obj.crop = [...this.obj.crop, 'safe'];
+      if (smart) this.obj.crop = [...this.obj.crop, 'smart'];
+    }
 
     return this;
   }
@@ -187,8 +192,8 @@ export class ImageTransform {
    * @method fit
    * @memberof ImageTransform
    * @description The fit parameter enables you to fit the given image properly within the specified height and width.
-   * @returns {ImageTransform}
    * @param {FitBy} type - Specifies fit type (BOUNDS or CROP).
+   * @returns {ImageTransform}
    * @example
    * const url = 'www.example.com';
    * const transformObj = new ImageTransform().resize({ width: 200, height: 200 }).fit(FitBy.BOUNDS);
@@ -204,9 +209,9 @@ export class ImageTransform {
   /**
    * @method trim
    * @memberof ImageTransform
-   * @description The trim parameterlets you trim an image from the edges. This is especially useful for removing border or white spaces.
-   * @returns {ImageTransform}
+   * @description The trim parameter lets you trim an image from the edges. This is especially useful for removing border or white spaces.
    * @param {number | number[]} trimValues - specifies values for top, right, bottom, and left edges of an image.
+   * @returns {ImageTransform}
    * @example
    * const url = 'www.example.com';
    * const transformObj = new ImageTransform().trim([25, 50, 75, 90]);
@@ -234,9 +239,9 @@ export class ImageTransform {
    * @memberof ImageTransform
    * @description The orient parameter lets you control the cardinal orientation of the given image. Using this parameter,
    * you can orient the image right or left, flip horizontally or vertically or both
-   * @returns {ImageTransform}
    * @param {Orientation} orientType - Type of Orientation. Values are DEFAULT, FLIP_HORIZONTAL, FLIP_HORIZONTAL_VERTICAL,
    * FLIP_VERTICAL, FLIP_HORIZONTAL_LEFT, RIGHT, FLIP_HORIZONTAL_RIGHT, LEFT.
+   * @returns {ImageTransform}
    * @example
    * const url = 'www.example.com';
    * const transformObj = new ImageTransform().orient(Orientation.FLIP_HORIZONTAL);
@@ -254,18 +259,19 @@ export class ImageTransform {
    * @memberof ImageTransform
    * @description The overlay parameter allows you to put one image on top of another.
    * You need to specify the relative URL of the image as value for this parameter.
-   * @returns {ImageTransform}
-   * @param {string} relativeURL - URL of the image to overlay on base image
-   * @param {OverlayAlign | OverlayAlign[]} align - lets you define the position of the overlay image.
+   * @param {object} options - Overlay options object
+   * @param {string} options.relativeURL - URL of the image to overlay on base image
+   * @param {OverlayAlign | OverlayAlign[]} [options.align] - lets you define the position of the overlay image.
    * Accepted values are TOP, BOTTOM, LEFT, RIGHT, MIDDLE, CENTER.
-   * @param {OverlayRepeat} repeat - lets you define how the overlay image will be repeated on the given image.
+   * @param {OverlayRepeat} [options.repeat] - lets you define how the overlay image will be repeated on the given image.
    * Accepted values are X, Y, BOTH.
-   * @param {string | number} width - lets you define the width of the overlay image.
+   * @param {string | number} [options.width] - lets you define the width of the overlay image.
    * For pixels, use any whole number between 1 and 8192. For percentages, use any decimal number between 0.0 and 0.99.
-   * @param {string | number} height - lets you define the height of the overlay image.
+   * @param {string | number} [options.height] - lets you define the height of the overlay image.
    * For pixels, use any whole number between 1 and 8192. For percentages, use any decimal number between 0.0 and 0.99
-   * @param {number | number[]} pad - lets you add extra pixels to the edges of an image. 
+   * @param {number | number[]} [options.pad] - lets you add extra pixels to the edges of an image. 
    * This is useful if you want to add whitespace or border to an image.
+   * @returns {ImageTransform}
    * @example
    * const url = 'www.example.com';
    * const transformObj = new ImageTransform().overlay({ relativeURL: overlayImgURL });
@@ -315,8 +321,8 @@ export class ImageTransform {
    * @memberof ImageTransform
    * @description The padding parameter lets you add extra pixels to the edges of an image. 
    * This is useful if you want to add whitespace or border to an image.
-   * @returns {ImageTransform}
    * @param {number | number[]} padding - padding value in pixels or percentages
+   * @returns {ImageTransform}
    * @example
    * const url = 'www.example.com';
    * const transformObj = new ImageTransform().padding([25, 50, 75, 90]);
@@ -337,9 +343,9 @@ export class ImageTransform {
   /**
    * @method bgColor
    * @memberof ImageTransform
-   * @description The bgColor parameter lets you set a backgroud color for the given image.
-   * @returns {ImageTransform}
+   * @description The bgColor parameter lets you set a background color for the given image.
    * @param {string | number[]} color - color of the background
+   * @returns {ImageTransform}
    * @example
    * const url = 'www.example.com';
    * const transformObj = new ImageTransform().bgColor('cccccc');
@@ -361,8 +367,8 @@ export class ImageTransform {
    * @method dpr
    * @memberof ImageTransform
    * @description The dpr parameter lets you deliver images with appropriate size to devices that come with a defined device pixel ratio.
-   * @returns {ImageTransform}
    * @param {number} dprValue - value of device pixel ratio 1-10000 or 0.0 to 9999.999
+   * @returns {ImageTransform}
    * @example
    * const url = 'www.example.com';
    * const transformObj = new ImageTransform().resize({ width: 300, height: 500 }).dpr(10);
@@ -379,8 +385,8 @@ export class ImageTransform {
    * @method blur
    * @memberof ImageTransform
    * @description The blur parameter allows you to decrease the focus and clarity of a given image.
-   * @returns {ImageTransform}
    * @param {number} blurValue - to set the blur intensity between 1-1000.
+   * @returns {ImageTransform}
    * @example
    * const url = 'www.example.com';
    * const transformObj = new ImageTransform().blur(10);
@@ -415,10 +421,10 @@ export class ImageTransform {
    * @method sharpen
    * @memberof ImageTransform
    * @description The sharpen parameter allows you to increase the definition of the edges of objects in an image.
-   * @returns {ImageTransform}
    * @param {number} amount - [0-10] specifies the amount of contrast to be set for the image edges
    * @param {number} radius - [1-1000] specifies the radius of the image edges
    * @param {number} threshold - [0-255] specifies the range of image edges that need to be ignored while sharpening
+   * @returns {ImageTransform}
    * @example
    * const url = 'www.example.com';
    * const transformObj = new ImageTransform().sharpen(5, 1000, 2);
@@ -435,8 +441,8 @@ export class ImageTransform {
    * @method saturation
    * @memberof ImageTransform
    * @description The saturation parameter allows you to increase or decrease the intensity of the colors in a given image.
-   * @returns {ImageTransform}
    * @param {number} saturationValue - to set the saturation of image between -100 to 100
+   * @returns {ImageTransform}
    * @example
    * const url = 'www.example.com';
    * const transformObj = new ImageTransform().saturation(-80.99);
@@ -452,9 +458,9 @@ export class ImageTransform {
   /**
    * @method contrast
    * @memberof ImageTransform
-   * @description The contrast parameter lets you enable the functionality that automates certain image optimization features.
-   * @returns {ImageTransform}
+   * @description The contrast parameter lets you adjust the contrast level of the image.
    * @param {number} contrastValue - to set the contrast of image between -100 to 100
+   * @returns {ImageTransform}
    * @example
    * const url = 'www.example.com';
    * const transformObj = new ImageTransform().contrast(-80.99);
@@ -470,9 +476,9 @@ export class ImageTransform {
   /**
    * @method brightness
    * @memberof ImageTransform
-   * @description The brightness parameter lets you enable the functionality that automates certain image optimization features.
+   * @description The brightness parameter lets you adjust the brightness level of the image.
+   * @param {number} brightnessValue - to set the brightness of image between -100 to 100
    * @returns {ImageTransform}
-   * @param {number} contrastValue - to set the brightness of image between -100 to 100
    * @example
    * const url = 'www.example.com';
    * const transformObj = new ImageTransform().brightness(80.50);
@@ -490,9 +496,9 @@ export class ImageTransform {
    * @memberof ImageTransform
    * @description The resizeFilter parameter allows you to use the resizing filter to increase or
    * decrease the number of pixels in a given image.
-   * @returns {ImageTransform}
    * @param {ResizeFilter} type - type of Filter to apply
    * Values are NEAREST, BILINEAR, BICUBIC, LANCZOS2, LANCZOS3.
+   * @returns {ImageTransform}
    * @example
    * const url = 'www.example.com';
    * const transformObj = new ImageTransform().resize({ width: 500, height: 550 }).resizeFilter(ResizeFilter.NEAREST);
@@ -511,12 +517,12 @@ export class ImageTransform {
    * @description The canvas parameter allows you to increase the size of the canvas that surrounds an image.
    * You can specify the height and width of the canvas area in pixels or percentage or define the height and width
    * of the aspect ratio of the canvas. You can also define the starting point for the canvas area or offset the canvas on its X and Y axis.
-   * @returns {ImageTransform}
    * @param {string | number} width - sets width of the canvas
    * @param {string | number} height - sets height of the canvas
    * @param {string | number} xval - defines the X-axis position of the top left corner or horizontal offset
    * @param {string | number} yval - defines the Y-axis position of the top left corner or vertical offset
    * @param {CanvasBy} canvasBy - Specifies the canvasBy type. Accepted values are DEFAULT, ASPECTRATIO, REGION, OFFSET.
+   * @returns {ImageTransform}
    * @example
    * const url = 'www.example.com';
    * const transformObj = new ImageTransform().canvas({ width: 100, height: 200 });

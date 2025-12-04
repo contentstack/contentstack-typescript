@@ -10,6 +10,7 @@ import { Entries } from '../../src/lib/entries';
 import { GlobalField } from '../../src/lib/global-field';
 import { QueryOperation, QueryOperator, TaxonomyQueryOperation } from '../../src/lib/types';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
+import { ErrorMessages } from '../../src/lib/error-messages';
 
 describe('Content Validation - Comprehensive Test Suite', () => {
   let client: AxiosInstance;
@@ -653,14 +654,13 @@ describe('Content Validation - Comprehensive Test Suite', () => {
       query.where('view_count', QueryOperation.IS_GREATER_THAN, 100);
       query.where('is_published', QueryOperation.EQUALS, true);
       
-      // Invalid field UIDs
+      // Invalid field UIDs (note: field-with-dashes is actually valid as hyphens are allowed)
       query.where('invalid field', QueryOperation.EQUALS, 'test');
-      query.where('field-with-dashes', QueryOperation.EQUALS, 'test');
-      query.where('123invalid', QueryOperation.EQUALS, 'test');
+      query.where('field@symbol', QueryOperation.EQUALS, 'test');
       
       // Check that console.error was called for invalid field UIDs
-      // Note: The validation function only logs for the first invalid field encountered
-      expect(consoleSpy).toHaveBeenCalledWith('Invalid fieldUid:', 'invalid field');
+      expect(consoleSpy).toHaveBeenCalledWith(ErrorMessages.INVALID_FIELD_UID);
+      expect(consoleSpy).toHaveBeenCalledTimes(2);
       
       consoleSpy.mockRestore();
     });
@@ -694,8 +694,8 @@ describe('Content Validation - Comprehensive Test Suite', () => {
       expect(() => query.regex('title', '[A-Z]+')).not.toThrow();
       
       // Invalid regex patterns
-      expect(() => query.regex('title', '[a-z')).toThrow('Invalid regexPattern: Must be a valid regular expression');
-      expect(() => query.regex('title', '*invalid')).toThrow('Invalid regexPattern: Must be a valid regular expression');
+      expect(() => query.regex('title', '[a-z')).toThrow(ErrorMessages.INVALID_REGEX_PATTERN);
+      expect(() => query.regex('title', '*invalid')).toThrow(ErrorMessages.INVALID_REGEX_PATTERN);
     });
 
     it('should validate query value types', () => {
@@ -707,14 +707,14 @@ describe('Content Validation - Comprehensive Test Suite', () => {
       // Valid value types
       query.equalTo('title', 'string value');
       query.equalTo('view_count', 123);
-      query.equalTo('is_published', true);
       
-      // Invalid value types for equalTo (expects string, number, or boolean)
+      // Invalid value types for equalTo (expects string or number, not boolean)
+      query.equalTo('is_published', true as any); // boolean triggers error
       query.equalTo('title', [] as any);
       query.equalTo('title', {} as any);
       
-      expect(consoleSpy).toHaveBeenCalledWith('Invalid value (expected string or number):', []);
-      expect(consoleSpy).toHaveBeenCalledWith('Invalid value (expected string or number):', {});
+      expect(consoleSpy).toHaveBeenCalledWith(ErrorMessages.INVALID_VALUE_STRING_OR_NUMBER);
+      expect(consoleSpy).toHaveBeenCalledTimes(3);
       
       consoleSpy.mockRestore();
     });
