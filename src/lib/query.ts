@@ -2,6 +2,7 @@ import { AxiosInstance, getData } from '@contentstack/core';
 import { BaseQuery } from './base-query';
 import { BaseQueryParameters, QueryOperation, QueryOperator, TaxonomyQueryOperation, params, queryParams, FindResponse } from './types';
 import { encodeQueryParams } from './utils';
+import { ErrorMessages } from './error-messages';
 
 export class Query extends BaseQuery {
   private _contentTypeUid?: string;
@@ -57,7 +58,7 @@ export class Query extends BaseQuery {
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.where("field_UID", QueryOperation.IS_LESS_THAN, ["field1", "field2"]).find()
    * // OR
-   * const asset = await stack.asset().where("field_UID", QueryOperation.IS_LESS_THAN, ["field1", "field2"]).find()
+   * const asset = await stack.asset().query().where("field_UID", QueryOperation.IS_LESS_THAN, ["field1", "field2"]).find()
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -73,7 +74,7 @@ export class Query extends BaseQuery {
     additionalData?: object
   ): Query {
     if (!this.isValidAlphanumeric(fieldUid)) {
-      console.error("Invalid fieldUid:", fieldUid);
+      console.error(ErrorMessages.INVALID_FIELD_UID);
       return this;
     }
     if (queryOperation == QueryOperation.EQUALS) {
@@ -97,16 +98,16 @@ export class Query extends BaseQuery {
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.regex('title','^Demo').find()
    * // OR
-   * const result = await query..regex('title','^Demo', 'i').find() // regex with options
+   * const result = await query.regex('title','^Demo', 'i').find() // regex with options
    * @returns {Query}
    */
   regex(fieldUid: string, regexPattern: string, options?: string): Query {
     if (!this.isValidAlphanumeric(fieldUid)) {
-      console.error("Invalid fieldUid:", fieldUid);
+      console.error(ErrorMessages.INVALID_FIELD_UID);
       return this;
     }
     if (!this.isValidRegexPattern(regexPattern)) {
-      throw new Error("Invalid regexPattern: Must be a valid regular expression");
+      throw new Error(ErrorMessages.INVALID_REGEX_PATTERN);
     }
     else {
       this._parameters[fieldUid] = { $regex: regexPattern };
@@ -122,10 +123,13 @@ export class Query extends BaseQuery {
    * The query retrieves all entries that satisfy the query conditions made on referenced fields
    * This method sets the '$in_query' parameter to a reference field UID and a query instance in the API request.
    * @example
-   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
-   * query.whereIn("brand")
-   * const res = await query.find()
+   * const subQuery = stack.contentType("referencedContentTypeUid").entry().query().where("title", QueryOperation.EQUALS, "value");
+   * query.whereIn("brand", subQuery)
+   * const result = await query.find()
    *
    * @param {string} referenceUid - UID of the reference field to query.
    * @param {Query} queryInstance - The Query instance to include in the where clause.
@@ -134,7 +138,7 @@ export class Query extends BaseQuery {
   whereIn(referenceUid: string, queryInstance: Query): Query {
     // eslint-disable-next-line @typescript-eslint/naming-convention, prettier/prettier
     if (!this.isValidAlphanumeric(referenceUid)) {
-      throw new Error("Invalid referenceUid: Must be alphanumeric.");
+      throw new Error(ErrorMessages.INVALID_REFERENCE_UID(referenceUid));
     }
     this._parameters[referenceUid] = { '$in_query': queryInstance._parameters };
     return this;
@@ -147,10 +151,13 @@ export class Query extends BaseQuery {
    * This query works the opposite of $in_query and retrieves all entries that does not satisfy query conditions made on referenced fields.
    * This method sets the '$nin_query' parameter to a reference field UID and a query instance in the API request.
    * @example
-   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
-   * query.whereNotIn("brand")
-   * const res = await query.find()
+   * const subQuery = stack.contentType("referencedContentTypeUid").entry().query().where("title", QueryOperation.EQUALS, "value");
+   * query.whereNotIn("brand", subQuery)
+   * const result = await query.find()
    *
    * @param {string} referenceUid - UID of the reference field to query.
    * @param {Query} queryInstance - The Query instance to include in the where clause.
@@ -159,7 +166,7 @@ export class Query extends BaseQuery {
   whereNotIn(referenceUid: string, queryInstance: Query): Query {
     // eslint-disable-next-line @typescript-eslint/naming-convention, prettier/prettier
     if (!this.isValidAlphanumeric(referenceUid)) {
-      throw new Error("Invalid referenceUid: Must be alphanumeric.");
+      throw new Error(ErrorMessages.INVALID_REFERENCE_UID(referenceUid));
     }
     this._parameters[referenceUid] = { '$nin_query': queryInstance._parameters };
     return this;
@@ -171,12 +178,14 @@ export class Query extends BaseQuery {
    * @description In case of '$and' get entries that satisfy all the conditions provided in the '$and' query and
    * in case of '$or' query get all entries that satisfy at least one of the given conditions provided in the '$or' query.
    * @example
-   * const stack = contentstack.stack("apiKey", "deliveryKey", "environment");
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentType1Uid").entry().query();
-   * const subQuery1 = stack.contentType("contentType2Uid").query().where("price", QueryOperation.IS_LESS_THAN, fields=90);
-   * const subQuery2 = stack.contentType("contentType3Uid").query().where("discount", QueryOperation.INCLUDES, fields=[20, 45]);
+   * const subQuery1 = stack.contentType("contentType2Uid").entry().query().where("price", QueryOperation.IS_LESS_THAN, 90);
+   * const subQuery2 = stack.contentType("contentType3Uid").entry().query().where("discount", QueryOperation.INCLUDES, [20, 45]);
    * query.queryOperator(QueryOperator.AND, subQuery1, subQuery2)
-   * const res = await query.find()
+   * const result = await query.find()
    *
    * @param {QueryOperator} queryType - The type of query operator to apply.
    * @param {...Query[]} queryObjects - The Query instances to apply the query to.
@@ -201,11 +210,12 @@ export class Query extends BaseQuery {
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
-   * const result = await query.query({'brand': {'$nin_query': {'title': 'Apple Inc.'}}}).getQuery()
+   * const result = query.getQuery()
    * // OR
-   * const asset = await stack.asset().query({'brand': {'$nin_query': {'title': 'Apple Inc.'}}}).getQuery()
+   * const assetQuery = stack.asset().query();
+   * const assetResult = assetQuery.getQuery()
    *
-   * @returns {Query}
+   * @returns {{ [key: string]: any }} The raw query object
    */
   getQuery(): { [key: string]: any } {
     return this._parameters;
@@ -214,7 +224,9 @@ export class Query extends BaseQuery {
   /**
    * @method containedIn
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value is contained in the provided array of values
+   * @param {string} key - The field UID to filter on
+   * @param {(string | number | boolean)[]} value - Array of values to match against
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -226,11 +238,11 @@ export class Query extends BaseQuery {
    */
   containedIn(key: string, value: (string | number | boolean)[]): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error(ErrorMessages.INVALID_KEY);
       return this;
     }
     if (!this.isValidValue(value)) {
-      console.error("Invalid value:", value);
+      console.error(ErrorMessages.INVALID_VALUE_ARRAY);
       return this;
     }
     this._parameters[key] = { '$in': value };
@@ -238,9 +250,11 @@ export class Query extends BaseQuery {
   }
 
   /**
-   * @method NoContainedIn
+   * @method notContainedIn
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value is not contained in the provided array of values
+   * @param {string} key - The field UID to filter on
+   * @param {(string | number | boolean)[]} value - Array of values to exclude
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -252,11 +266,11 @@ export class Query extends BaseQuery {
    */
   notContainedIn(key: string, value: (string | number | boolean)[]): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error(ErrorMessages.INVALID_KEY);
       return this;
     }
     if (!this.isValidValue(value)) {
-      console.error("Invalid value:", value);
+      console.error(ErrorMessages.INVALID_VALUE_ARRAY);
       return this;
     }
     this._parameters[key] = { '$nin': value };
@@ -266,7 +280,8 @@ export class Query extends BaseQuery {
   /**
    * @method exists
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the specified field exists
+   * @param {string} key - The field UID to check for existence
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -278,7 +293,7 @@ export class Query extends BaseQuery {
    */
   exists(key: string): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error(ErrorMessages.INVALID_KEY);
       return this;
     }
     this._parameters[key] = { '$exists': true };
@@ -288,7 +303,8 @@ export class Query extends BaseQuery {
   /**
    * @method notExists
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the specified field does not exist
+   * @param {string} key - The field UID to check for non-existence
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -300,7 +316,7 @@ export class Query extends BaseQuery {
    */
   notExists(key: string): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error(ErrorMessages.INVALID_KEY);
       return this;
     }
     this._parameters[key] = { '$exists': false };
@@ -310,14 +326,15 @@ export class Query extends BaseQuery {
   /**
    * @method or
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Combines multiple queries with OR logic - returns entries that match at least one of the provided queries
+   * @param {...Query} queries - Query instances to combine with OR logic
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query1 = stack.contentType('contenttype_uid').entry().query().containedIn('fieldUID', ['value']);
    * const query2 = stack.contentType('contenttype_uid').entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
-   * const query = await stack.contentType('contenttype_uid').entry().query().or(query1, query2).find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().or(query1, query2).find();
    *  
    * @returns {Query}
    */
@@ -333,14 +350,15 @@ export class Query extends BaseQuery {
   /**
    * @method and
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Combines multiple queries with AND logic - returns entries that match all of the provided queries
+   * @param {...Query} queries - Query instances to combine with AND logic
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query1 = stack.contentType('contenttype_uid').Entry().query().containedIn('fieldUID', ['value']);
-   * const query2 = stack.contentType('contenttype_uid').Entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
-   * const query = await stack.contentType('contenttype_uid').Entry().query().and(query1, query2).find();
+   * const query1 = stack.contentType('contenttype_uid').entry().query().containedIn('fieldUID', ['value']);
+   * const query2 = stack.contentType('contenttype_uid').entry().query().where('fieldUID', QueryOperation.EQUALS, 'value2');
+   * const result = await stack.contentType('contenttype_uid').entry().query().and(query1, query2).find();
    *  
    * @returns {Query}
    */
@@ -356,22 +374,24 @@ export class Query extends BaseQuery {
   /**
    * @method equalTo
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value equals the specified value
+   * @param {string} key - The field UID to filter on
+   * @param {string | number | boolean} value - The value to match
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = await stack.contentType('contenttype_uid').Entry().query().equalTo('fieldUid', 'value').find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().equalTo('fieldUid', 'value').find();
    *  
    * @returns {Query}
    */
   equalTo(key: string, value: string | number | boolean): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error(ErrorMessages.INVALID_KEY);
       return this;
     }
     if (typeof value !== 'string' && typeof value !== 'number') {
-      console.error("Invalid value (expected string or number):", value);
+      console.error(ErrorMessages.INVALID_VALUE_STRING_OR_NUMBER);
       return this;
     }
     this._parameters[key] = value;
@@ -381,22 +401,24 @@ export class Query extends BaseQuery {
   /**
    * @method notEqualTo
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value does not equal the specified value
+   * @param {string} key - The field UID to filter on
+   * @param {string | number | boolean} value - The value to exclude
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = await stack.contentType('contenttype_uid').Entry().query().notEqualTo('fieldUid', 'value').find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().notEqualTo('fieldUid', 'value').find();
    *  
    * @returns {Query}
    */
   notEqualTo(key: string, value: string | number | boolean): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error(ErrorMessages.INVALID_KEY);
       return this;
     }
     if (typeof value !== 'string' && typeof value !== 'number') {
-      console.error("Invalid value (expected string or number):", value);
+      console.error(ErrorMessages.INVALID_VALUE_STRING_OR_NUMBER);
       return this;
     }
     this._parameters[key] = { '$ne': value };
@@ -406,19 +428,21 @@ export class Query extends BaseQuery {
   /**
    * @method referenceIn
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the reference field matches entries from the provided query
+   * @param {string} key - The reference field UID to filter on
+   * @param {Query} query - Query instance to match referenced entries against
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().referenceIn('reference_uid', query).find();
+   * const subQuery = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
+   * const result = await stack.contentType('contenttype_uid').entry().query().referenceIn('reference_uid', subQuery).find();
    *  
    * @returns {Query}
    */
   referenceIn(key: string, query: Query): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error(ErrorMessages.INVALID_KEY);
       return this;
     }
     this._parameters[key] = { '$in_query': query._parameters }
@@ -428,19 +452,21 @@ export class Query extends BaseQuery {
   /**
    * @method referenceNotIn
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the reference field does not match entries from the provided query
+   * @param {string} key - The reference field UID to filter on
+   * @param {Query} query - Query instance to exclude referenced entries against
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().referenceNotIn('reference_uid', query).find();
+   * const subQuery = stack.contentType('contenttype_uid').entry().query().where('title', QueryOperation.EQUALS, 'value');
+   * const result = await stack.contentType('contenttype_uid').entry().query().referenceNotIn('reference_uid', subQuery).find();
    *  
    * @returns {Query}
    */
   referenceNotIn(key: string, query: Query): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error(ErrorMessages.INVALID_KEY);
       return this;
     }
     this._parameters[key] = { '$nin_query': query._parameters }
@@ -450,19 +476,19 @@ export class Query extends BaseQuery {
   /**
    * @method tags
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries that have any of the specified tags
+   * @param {(string | number | boolean)[]} values - Array of tag values to filter by
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().tags(['tag1']).find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().tags(['tag1']).find();
    *  
    * @returns {Query}
    */
   tags(values: (string | number | boolean)[]): Query {
     if (!this.isValidValue(values)) {
-      console.error("Invalid value:", values);
+      console.error(ErrorMessages.INVALID_VALUE_ARRAY);
       return this;
     }
     this._parameters['tags'] = values;
@@ -472,19 +498,19 @@ export class Query extends BaseQuery {
   /**
    * @method search
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Enables typeahead search functionality for the query
+   * @param {string} key - The search term to use for typeahead search
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().search('key').find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().search('key').find();
    *  
    * @returns {Query}
    */
   search(key: string): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error(ErrorMessages.INVALID_KEY);
       return this;
     }
     this._queryParams['typeahead'] = key
@@ -494,23 +520,24 @@ export class Query extends BaseQuery {
   /**
    * @method lessThan
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value is less than the specified value
+   * @param {string} key - The field UID to filter on
+   * @param {string | number} value - The value to compare against
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().lessThan('fieldUid', 'value').find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().lessThan('fieldUid', 100).find();
    *  
    * @returns {Query}
    */
   lessThan(key: string, value: (string | number)): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error(ErrorMessages.INVALID_KEY);
       return this;
     }
     if (typeof value !== 'string' && typeof value !== 'number') {
-      console.error("Invalid value (expected string or number):", value);
+      console.error(ErrorMessages.INVALID_VALUE_STRING_OR_NUMBER);
       return this;
     }
 
@@ -521,23 +548,24 @@ export class Query extends BaseQuery {
   /**
    * @method lessThanOrEqualTo
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value is less than or equal to the specified value
+   * @param {string} key - The field UID to filter on
+   * @param {string | number} value - The value to compare against
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().lessThanOrEqualTo('fieldUid', 'value').find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().lessThanOrEqualTo('fieldUid', 100).find();
    *  
    * @returns {Query}
    */
   lessThanOrEqualTo(key: string, value: (string | number)): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error(ErrorMessages.INVALID_KEY);
       return this;
     }
     if (typeof value !== 'string' && typeof value !== 'number') {
-      console.error("Invalid value (expected string or number):", value);
+      console.error(ErrorMessages.INVALID_VALUE_STRING_OR_NUMBER);
       return this;
     }
     this._parameters[key] = { '$lte': value };
@@ -547,23 +575,24 @@ export class Query extends BaseQuery {
   /**
    * @method greaterThan
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value is greater than the specified value
+   * @param {string} key - The field UID to filter on
+   * @param {string | number} value - The value to compare against
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().greaterThan('fieldUid', 'value').find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().greaterThan('fieldUid', 100).find();
    *  
    * @returns {Query}
    */
   greaterThan(key: string, value: (string | number)): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error(ErrorMessages.INVALID_KEY);
       return this;
     }
     if (typeof value !== 'string' && typeof value !== 'number') {
-      console.error("Invalid value (expected string or number):", value);
+      console.error(ErrorMessages.INVALID_VALUE_STRING_OR_NUMBER);
       return this;
     }
     this._parameters[key] = { '$gt': value };
@@ -573,23 +602,24 @@ export class Query extends BaseQuery {
   /**
    * @method greaterThanOrEqualTo
    * @memberof Query
-   * @description Returns the raw (JSON) query based on the filters applied on Query object.
+   * @description Filters entries where the field value is greater than or equal to the specified value
+   * @param {string} key - The field UID to filter on
+   * @param {string | number} value - The value to compare against
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const query = stack.contentType('contenttype_uid').query().where('title', QueryOperation.EQUALS, 'value');
-   * const entryQuery = await stack.contentType('contenttype_uid').query().greaterThanOrEqualTo('fieldUid', 'value').find();
+   * const result = await stack.contentType('contenttype_uid').entry().query().greaterThanOrEqualTo('fieldUid', 100).find();
    *  
    * @returns {Query}
    */
   greaterThanOrEqualTo(key: string, value: (string | number)): Query {
     if (!this.isValidAlphanumeric(key)) {
-      console.error("Invalid key:", key);
+      console.error(ErrorMessages.INVALID_KEY);
       return this;
     }
     if (typeof value !== 'string' && typeof value !== 'number') {
-      console.error("Invalid value (expected string or number):", value);
+      console.error(ErrorMessages.INVALID_VALUE_STRING_OR_NUMBER);
       return this;
     }
     this._parameters[key] = { '$gte': value };
