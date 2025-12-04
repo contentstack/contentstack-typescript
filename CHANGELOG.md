@@ -1,3 +1,7 @@
+### Version: 4.10.3
+#### Date: Dec-08-2025
+Feat: Improved error messages
+
 ### Version: 4.10.2
 #### Date: Nov-12-2025
 Enhancement: Added logHandler interceptors for request and response logging
