@@ -48,6 +48,12 @@ describe('AssetQuery class', () => {
     expect(assetQuery._queryParams.include_fallback).toBe('true');
   });
 
+  it('should add "include_metadata" in queryParameter when includeMetadata method is called', () => {
+    const returnedValue = assetQuery.includeMetadata();
+    expect(returnedValue).toBeInstanceOf(AssetQuery);
+    expect(assetQuery._queryParams.include_metadata).toBe('true');
+  });
+
   it('should add "locale" in Parameter when locale method is called', () => {
     const returnedValue = assetQuery.locale('en-us');
     expect(returnedValue).toBeInstanceOf(AssetQuery);

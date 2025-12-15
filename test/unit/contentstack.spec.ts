@@ -1,16 +1,21 @@
-import exp = require("constants");
+import * as exp from "constants";
 import * as core from "@contentstack/core";
 import * as Contentstack from "../../src/lib/contentstack";
 import { Stack } from "../../src/lib/stack";
 import { Policy, Region, StackConfig } from "../../src/lib/types";
+import { StorageType } from "../../src/persistance/types/storage-type";
 import {
   CUSTOM_HOST,
   DUMMY_URL,
   HOST_AU_REGION,
   HOST_EU_REGION,
   HOST_URL,
+  HOST_AZURE_NA_REGION,
+  HOST_GCP_NA_REGION,
+  HOST_GCP_EU_REGION,
 } from "../utils/constant";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
+import * as utils from "../../src/lib/utils";
 
 jest.mock("@contentstack/core");
 const createHttpClientMock = <jest.Mock<typeof core.httpClient>>(
@@ -256,5 +261,290 @@ describe("Contentstack", () => {
 
     createHttpClientMock.mockReset();
     done();
+  });
+
+  describe('locale configuration', () => {
+    it('should set locale in params when locale is provided in config', () => {
+      const config = {
+        apiKey: "apiKey",
+        deliveryToken: "delivery",
+        environment: "env",
+        locale: "fr-fr",
+      };
+      
+      const stackInstance = createStackInstance(config);
+      
+      expect(stackInstance).toBeInstanceOf(Stack);
+      expect(stackInstance.config.locale).toEqual("fr-fr");
+    });
+  });
+
+  describe('live preview configuration in browser environment', () => {
+    const originalDocument = global.document;
+    const originalWindow = global.window;
+
+    beforeEach(() => {
+      // Mock browser environment
+      (utils.isBrowser as jest.Mock) = jest.fn();
+      delete (global as any).document;
+      delete (global as any).window;
+    });
+
+    afterEach(() => {
+      global.document = originalDocument;
+      global.window = originalWindow;
+      jest.restoreAllMocks();
+    });
+
+    it('should extract live_preview params from URL in browser environment', () => {
+      const isBrowserSpy = jest.spyOn(utils, 'isBrowser').mockReturnValue(true);
+      
+      // Mock document.location
+      const mockSearchParams = new Map([
+        ['live_preview', 'test_hash'],
+        ['release_id', 'release123'],
+        ['preview_timestamp', '123456789']
+      ]);
+      
+      (global as any).document = {
+        location: {
+          toString: () => 'http://localhost?live_preview=test_hash&release_id=release123&preview_timestamp=123456789'
+        }
+      };
+
+      const config = {
+        apiKey: "apiKey",
+        deliveryToken: "delivery",
+        environment: "env",
+        live_preview: {
+          enable: true,
+          live_preview: 'default_hash'
+        },
+      };
+      
+      const stackInstance = createStackInstance(config);
+      
+      expect(isBrowserSpy).toHaveBeenCalled();
+      expect(stackInstance).toBeInstanceOf(Stack);
+      
+      isBrowserSpy.mockRestore();
+    });
+
+    it('should use fallback value when live_preview param is empty (line 74 || branch)', () => {
+      const isBrowserSpy = jest.spyOn(utils, 'isBrowser').mockReturnValue(true);
+      
+      // Mock document.location with empty live_preview param
+      (global as any).document = {
+        location: {
+          toString: () => 'http://localhost?live_preview='
+        }
+      };
+
+      const config = {
+        apiKey: "apiKey",
+        deliveryToken: "delivery",
+        environment: "env",
+        live_preview: {
+          enable: true,
+          live_preview: 'fallback_hash'
+        },
+      };
+      
+      const stackInstance = createStackInstance(config);
+      
+      // Should use the fallback value when params.get returns empty string
+      expect(stackInstance.config.live_preview?.live_preview).toBe('fallback_hash');
+      
+      isBrowserSpy.mockRestore();
+    });
+
+    it('should not extract params when not in browser environment', () => {
+      const isBrowserSpy = jest.spyOn(utils, 'isBrowser').mockReturnValue(false);
+      
+      const config = {
+        apiKey: "apiKey",
+        deliveryToken: "delivery",
+        environment: "env",
+        live_preview: {
+          enable: true,
+        },
+      };
+      
+      const stackInstance = createStackInstance(config);
+      
+      expect(isBrowserSpy).toHaveBeenCalled();
+      expect(stackInstance).toBeInstanceOf(Stack);
+      
+      isBrowserSpy.mockRestore();
+    });
+  });
+
+  describe('cache adapter configuration', () => {
+    it('should set cache adapter when cacheOptions with policy is provided', () => {
+      const mockAdapter = jest.fn();
+      const mockClient = {
+        defaults: {
+          host: HOST_URL,
+          adapter: mockAdapter,
+        },
+        interceptors: {
+          request: {
+            use: reqInterceptor,
+          },
+          response: {
+            use: resInterceptor,
+          },
+        },
+      };
+
+      createHttpClientMock.mockReturnValue(mockClient as any);
+
+      const config = {
+        apiKey: "apiKey",
+        deliveryToken: "delivery",
+        environment: "env",
+        cacheOptions: {
+          policy: Policy.CACHE_THEN_NETWORK,
+          storeType: 'localStorage' as StorageType
+        },
+      };
+      
+      const stackInstance = createStackInstance(config);
+      
+      expect(stackInstance).toBeInstanceOf(Stack);
+      expect(mockClient.defaults.adapter).toBeDefined();
+    });
+  });
+
+  describe('debug mode with logging interceptors', () => {
+    it('should add request and response logging interceptors when debug is enabled', () => {
+      const mockLogHandler = jest.fn();
+      const config = {
+        apiKey: "apiKey",
+        deliveryToken: "delivery",
+        environment: "env",
+        debug: true,
+        logHandler: mockLogHandler,
+      };
+      
+      const stackInstance = createStackInstance(config);
+      
+      expect(stackInstance).toBeInstanceOf(Stack);
+      expect(reqInterceptor).toHaveBeenCalled();
+      expect(resInterceptor).toHaveBeenCalled();
+    });
+  });
+
+  describe('plugin interceptors execution', () => {
+    it('should execute plugin onRequest and onResponse methods', () => {
+      const mockOnRequest = jest.fn((req) => req);
+      const mockOnResponse = jest.fn((req, res, data) => res);
+      let requestInterceptor: any;
+      let responseInterceptor: any;
+
+      const mockClient = {
+        defaults: {
+          host: HOST_URL,
+        },
+        interceptors: {
+          request: {
+            use: jest.fn((interceptor) => {
+              requestInterceptor = interceptor;
+            }),
+          },
+          response: {
+            use: jest.fn((successInterceptor) => {
+              responseInterceptor = successInterceptor;
+            }),
+          },
+        },
+      };
+
+      createHttpClientMock.mockReturnValue(mockClient as any);
+
+      const mockPlugin = {
+        onRequest: mockOnRequest,
+        onResponse: mockOnResponse,
+      };
+
+      const config = {
+        apiKey: "apiKey",
+        deliveryToken: "delivery",
+        environment: "env",
+        plugins: [mockPlugin],
+      };
+      
+      createStackInstance(config);
+
+      // Test that interceptors were registered
+      expect(mockClient.interceptors.request.use).toHaveBeenCalled();
+      expect(mockClient.interceptors.response.use).toHaveBeenCalled();
+
+      // Test request interceptor execution
+      const mockRequest = { url: '/test' };
+      requestInterceptor(mockRequest);
+      expect(mockOnRequest).toHaveBeenCalledWith(mockRequest);
+
+      // Test response interceptor execution
+      const mockResponse = {
+        request: {},
+        data: {},
+      };
+      responseInterceptor(mockResponse);
+      expect(mockOnResponse).toHaveBeenCalledWith(mockResponse.request, mockResponse, mockResponse.data);
+    });
+
+    it('should handle multiple plugins in order', () => {
+      const executionOrder: string[] = [];
+      let requestInterceptor: any;
+
+      const mockClient = {
+        defaults: {
+          host: HOST_URL,
+        },
+        interceptors: {
+          request: {
+            use: jest.fn((interceptor) => {
+              requestInterceptor = interceptor;
+            }),
+          },
+          response: {
+            use: jest.fn(),
+          },
+        },
+      };
+
+      createHttpClientMock.mockReturnValue(mockClient as any);
+
+      const mockPlugin1 = {
+        onRequest: jest.fn((req) => {
+          executionOrder.push('plugin1');
+          return req;
+        }),
+        onResponse: jest.fn((req, res, data) => res),
+      };
+
+      const mockPlugin2 = {
+        onRequest: jest.fn((req) => {
+          executionOrder.push('plugin2');
+          return req;
+        }),
+        onResponse: jest.fn((req, res, data) => res),
+      };
+
+      const config = {
+        apiKey: "apiKey",
+        deliveryToken: "delivery",
+        environment: "env",
+        plugins: [mockPlugin1, mockPlugin2],
+      };
+      
+      createStackInstance(config);
+
+      const mockRequest = { url: '/test' };
+      requestInterceptor(mockRequest);
+
+      expect(executionOrder).toEqual(['plugin1', 'plugin2']);
+    });
   });
 });

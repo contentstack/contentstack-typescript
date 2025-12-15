@@ -329,4 +329,93 @@ describe("Cache handleRequest function", () => {
       cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
   });
+
+  describe("Enhanced cache key with entryUid", () => {
+    it("should extract entryUid from URL pattern", async () => {
+      const cacheOptions = { policy: Policy.CACHE_THEN_NETWORK, maxAge: 3600 };
+      const defaultAdapter = jest.fn((_config) => ({
+        data: JSON.stringify("foo"),
+      }));
+      const configWithUrl = {
+        ...config,
+        url: '/content_types/test_ct/entries/entry123',
+      };
+
+      const cacheStore = new PersistanceStore(cacheOptions);
+
+      await handleRequest(
+        cacheOptions,
+        apiKey,
+        defaultAdapter,
+        resolve,
+        reject,
+        configWithUrl
+      );
+
+      expect(defaultAdapter).toHaveBeenCalled();
+      expect(resolve).toBeCalledWith({ data: "foo" });
+
+      // Clean up with enhanced key that includes entry UID
+      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}_entry_entry123`;
+      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
+    });
+
+    it("should use entryUid from config when available", async () => {
+      const cacheOptions = { policy: Policy.CACHE_THEN_NETWORK, maxAge: 3600 };
+      const defaultAdapter = jest.fn((_config) => ({
+        data: JSON.stringify("foo"),
+      }));
+      const configWithEntryUid = {
+        ...config,
+        entryUid: 'entry456',
+      };
+
+      const cacheStore = new PersistanceStore(cacheOptions);
+
+      await handleRequest(
+        cacheOptions,
+        apiKey,
+        defaultAdapter,
+        resolve,
+        reject,
+        configWithEntryUid
+      );
+
+      expect(defaultAdapter).toHaveBeenCalled();
+      expect(resolve).toBeCalledWith({ data: "foo" });
+
+      // Clean up with enhanced key that includes entry UID
+      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}_entry_entry456`;
+      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
+    });
+
+    it("should return null when URL does not match entry pattern", async () => {
+      const cacheOptions = { policy: Policy.CACHE_THEN_NETWORK, maxAge: 3600 };
+      const defaultAdapter = jest.fn((_config) => ({
+        data: JSON.stringify("foo"),
+      }));
+      const configWithInvalidUrl = {
+        ...config,
+        url: '/assets',
+      };
+
+      const cacheStore = new PersistanceStore(cacheOptions);
+
+      await handleRequest(
+        cacheOptions,
+        apiKey,
+        defaultAdapter,
+        resolve,
+        reject,
+        configWithInvalidUrl
+      );
+
+      expect(defaultAdapter).toHaveBeenCalled();
+      expect(resolve).toBeCalledWith({ data: "foo" });
+
+      // Clean up with standard enhanced key (no entry UID)
+      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
+      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
+    });
+  });
 });

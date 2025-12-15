@@ -233,4 +233,5 @@ import { Taxonomy } from './taxonomy';
     if (typeof debug === "boolean") this.config.debug = debug;
     return this;
   }
+
 }
