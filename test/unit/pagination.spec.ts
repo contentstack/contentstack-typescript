@@ -25,4 +25,27 @@ describe('Pagination class', () => {
     pageObject.previous();
     expect(pageObject._queryParams).toEqual({ skip: 0, limit: 10 });
   });
+
+  it('should initialize pagination when next is called without prior paginate', () => {
+    const pageObject = new Pagination();
+    pageObject.next();
+    expect(pageObject._queryParams).toEqual({ skip: 10, limit: 10 });
+  });
+
+  it('should initialize pagination when previous is called without prior paginate', () => {
+    const pageObject = new Pagination();
+    pageObject.previous();
+    expect(pageObject._queryParams).toEqual({ skip: 0, limit: 10 });
+  });
+
+  it('should set skip to 0 when previous would result in negative skip', () => {
+    const pageObject = new Pagination().paginate({ skip: 5, limit: 10 });
+    pageObject.previous();
+    expect(pageObject._queryParams.skip).toEqual(0);
+  });
+
+  it('should use default values when paginate is called without arguments', () => {
+    const pageObject = new Pagination().paginate();
+    expect(pageObject._queryParams).toEqual({ skip: 0, limit: 10 });
+  });
 });

@@ -1,6 +1,6 @@
 import { Region, params } from './types';
 
-export function getHost(region: Region = Region.US, host?: string) {
+export function getHostforRegion(region: Region = Region.US, host?: string): string {
   if (host) return host;
 
   let url = 'cdn.contentstack.io';

@@ -2,9 +2,10 @@ import { httpClient, retryRequestHandler, retryResponseErrorHandler, retryRespon
 import { AxiosRequestHeaders } from 'axios';
 import { handleRequest } from './cache';
 import { Stack as StackClass } from './stack';
-import { Policy, StackConfig, ContentstackPlugin } from './types';
+import { Policy, StackConfig, ContentstackPlugin, Region } from './types';
 import * as Utility from './utils';
-export * as Utils from '@contentstack/utils';
+import * as Utils from '@contentstack/utils';
+export { Utils };
 
 let version = '{{VERSION}}';
 
@@ -33,8 +34,10 @@ let version = '{{VERSION}}';
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function stack(config: StackConfig): StackClass {
+  const DEFAULT_HOST = Utility.getHostforRegion(config.region || Region.US, config.host);
+
   let defaultConfig = {
-    defaultHostname: 'cdn.contentstack.io',
+    defaultHostname: DEFAULT_HOST,
     headers: {} as AxiosRequestHeaders,
     params: {} as any,
     live_preview: {} as any,
@@ -42,7 +45,6 @@ export function stack(config: StackConfig): StackClass {
     ...config
   };
 
-  defaultConfig.defaultHostname = config.host || Utility.getHost(config.region, config.host);
   config.host = defaultConfig.defaultHostname;
 
   if (config.apiKey) {
