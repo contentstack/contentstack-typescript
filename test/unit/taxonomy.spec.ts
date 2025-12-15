@@ -34,13 +34,13 @@ describe('ta class', () => {
   });
 
   it('should return all taxonomies in the response data when successful', async () => {
-    mockClient.onGet('/taxonomy-manager').reply(200, taxonomyFindResponseDataMock); //TODO: change to /taxonomies
+    mockClient.onGet('/taxonomies').reply(200, taxonomyFindResponseDataMock);
     const response = await taxonomies.find();
     expect(response).toEqual(taxonomyFindResponseDataMock);
   });
 
   it('should return single taxonomy in the response data when successful', async () => {
-    mockClient.onGet('/taxonomy-manager/taxonomy_testing').reply(200, taxonomyFindResponseDataMock.taxonomies[0]); //TODO: change to /taxonomies/taxonomyUid
+    mockClient.onGet('/taxonomies/taxonomy_testing').reply(200, taxonomyFindResponseDataMock.taxonomies[0]);
     const response = await taxonomy.fetch();
     expect(response).toEqual(taxonomyFindResponseDataMock.taxonomies[0]);
   });
