@@ -53,6 +53,6 @@ function legacyConfig(opts) {
     esbuildOptions(options) {
       options.jsxImportSource = 'preact';
       options.jsx = 'automatic'
-    },
+    }
   }
 }

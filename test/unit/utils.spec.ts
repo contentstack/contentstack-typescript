@@ -1,5 +1,5 @@
+import { getHostforRegion, encodeQueryParams } from "../../src/lib/utils";
 import { Region } from "../../src/lib/types";
-import { getHost } from "../../src/lib/utils";
 import {
   DUMMY_URL,
   HOST_EU_REGION,
@@ -8,11 +8,10 @@ import {
   HOST_URL,
   MOCK_CLIENT_OPTIONS,
   HOST_GCP_EU_REGION,
+  HOST_AZURE_NA_REGION,
 } from "../utils/constant";
 import { httpClient, AxiosInstance } from "@contentstack/core";
 import MockAdapter from "axios-mock-adapter";
-import { assetQueryFindResponseDataMock } from "../utils/mocks";
-import { encodeQueryParams } from "../../src/lib/utils";
 
 let client: AxiosInstance;
 let mockClient: MockAdapter;
@@ -22,36 +21,40 @@ beforeAll(() => {
   mockClient = new MockAdapter(client as any);
 });
 
-describe("Utils", () => {
-  it("should return EU host when region or host is passed", () => {
-    const url = getHost(Region.EU);
-    expect(url).toEqual(HOST_EU_REGION);
-  });
-  it("should return AU host when region or host is passed", () => {
-    const url = getHost(Region.AU);
-    expect(url).toEqual(HOST_AU_REGION);
-  });
-  it("should return GCP NA host when region or host is passed", () => {
-    const url = getHost(Region.GCP_NA);
-    expect(url).toEqual(HOST_GCP_NA_REGION);
-  });
-  it("should return GCP EU host when region or host is passed", () => {
-    const url = getHost(Region.GCP_EU);
-    expect(url).toEqual(HOST_GCP_EU_REGION);
-  });
-  it("should return proper US region when nothing is passed", () => {
-    const url = getHost();
-    expect(url).toEqual(HOST_URL);
-  });
-
-  it("should return the host url if host is passed instead of region", () => {
-    const host = DUMMY_URL;
-    const url = getHost(Region.US, host);
-    expect(url).toEqual(DUMMY_URL);
-  });
-});
-
 describe("Utils functions", () => {
+  describe("getHostforRegion function", () => {
+    it("should return custom host when provided", () => {
+      const customHost = "custom.example.com";
+      const result = getHostforRegion(Region.EU, customHost);
+      expect(result).toBe(customHost);
+    });
+
+    it("should return default host when no region is provided", () => {
+      const result = getHostforRegion();
+      expect(result).toBe(HOST_URL);
+    });
+
+    it("should return correct host for each region using Region enum", () => {
+      // Test using Region enum values
+      expect(getHostforRegion(Region.EU)).toBe(HOST_EU_REGION);
+      expect(getHostforRegion(Region.AU)).toBe(HOST_AU_REGION);
+      expect(getHostforRegion(Region.AZURE_NA)).toBe(HOST_AZURE_NA_REGION);
+      expect(getHostforRegion(Region.AZURE_EU)).toBe("azure-eu-cdn.contentstack.com");
+      expect(getHostforRegion(Region.GCP_NA)).toBe(HOST_GCP_NA_REGION);
+      expect(getHostforRegion(Region.GCP_EU)).toBe(HOST_GCP_EU_REGION);
+    });
+
+    it("should return default host for US region", () => {
+      expect(getHostforRegion(Region.US)).toBe(HOST_URL);
+    });
+
+    it("should prioritize custom host over region", () => {
+      const customHost = "priority.example.com";
+      const result = getHostforRegion(Region.EU, customHost);
+      expect(result).toBe(customHost);
+    });
+  });
+
   describe("encodeQueryParams function", () => {
     it("should encode special characters in strings", () => {
       const testParams = {
