@@ -19,7 +19,7 @@ export class TermQuery {
   constructor(client: AxiosInstance, taxonomyUid: string) {
     this._client = client;
     this._taxonomyUid = taxonomyUid;
-    this._urlPath = `/taxonomy-manager/${this._taxonomyUid}/terms`;
+    this._urlPath = `/taxonomies/${this._taxonomyUid}/terms`;
   }
   
   /**
