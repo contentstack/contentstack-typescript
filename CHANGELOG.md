@@ -1,6 +1,20 @@
-### Version: 4.10.1
-#### Date: Oct-01-2025
+### Version: 4.10.2
+#### Date: Dec-15-2025
+Build: bump @contentstack/core version to ^1.3.4
+
+### Version: 4.10.3
+#### Date: Nov-13-2025
+Fix: reverts the endpoints helper method integration
+
+### Version: 4.10.2
+#### Date: Nov-12-2025
 Enhancement: Added logHandler interceptors for request and response logging
+Enhancement: Upgraded @contentstack/utils dependency to version 1.6.2
+Refactor: Replaced region handling logic to use getContentstackEndpoint from @contentstack/utils
+
+### Version: 4.10.1
+#### Date: Oct-27-2025
+Fix: Upgrade dependecies
 
 ### Version: 4.10.0
 #### Date: Sep-22-2025
