@@ -19,7 +19,7 @@ describe('TermQuery class', () => {
   });
 
   it('should return response data when successful', async () => {
-    mockClient.onGet('/taxonomy-manager/taxonomy_testing/terms').reply(200, termQueryFindResponseDataMock);
+    mockClient.onGet('/taxonomies/taxonomy_testing/terms').reply(200, termQueryFindResponseDataMock);
     const response = await termQuery.find();
     expect(response).toEqual(termQueryFindResponseDataMock);
   });

@@ -21,7 +21,7 @@ export class Taxonomy {
   constructor(client: AxiosInstance, taxonomyUid: string) {
     this._client = client;
     this._taxonomyUid = taxonomyUid;
-    this._urlPath = `/taxonomy-manager/${this._taxonomyUid}`; // TODO: change to /taxonomies/${this._taxonomyUid}
+    this._urlPath = `/taxonomies/${this._taxonomyUid}`;
   }
 
   /**

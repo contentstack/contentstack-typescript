@@ -20,7 +20,7 @@ export class Term {
     this._client = client;
     this._taxonomyUid = taxonomyUid;
     this._termUid = termUid;
-    this._urlPath = `/taxonomy-manager/${this._taxonomyUid}/terms/${this._termUid}`; // TODO: change to /taxonomies
+    this._urlPath = `/taxonomies/${this._taxonomyUid}/terms/${this._termUid}`;
   }
 
   /**

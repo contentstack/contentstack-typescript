@@ -21,7 +21,7 @@ export class TaxonomyQuery extends Query {
    * const result = await taxonomyQuery.find();
    */
   override async find<T>(): Promise<FindResponse<T>> {
-    this._urlPath = "/taxonomy-manager"; // TODO: change to /taxonomies
+    this._urlPath = "/taxonomies";
     const response = await getData(this._client, this._urlPath, {
       params: this._queryParams,
     });
