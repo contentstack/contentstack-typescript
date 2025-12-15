@@ -2,7 +2,7 @@ import { httpClient, retryRequestHandler, retryResponseErrorHandler, retryRespon
 import { AxiosRequestHeaders } from 'axios';
 import { handleRequest } from './cache';
 import { Stack as StackClass } from './stack';
-import { Policy, StackConfig, ContentstackPlugin } from './types';
+import { Policy, StackConfig, ContentstackPlugin, Region } from './types';
 import * as Utility from './utils';
 import * as Utils from '@contentstack/utils';
 export { Utils };
@@ -34,7 +34,7 @@ let version = '{{VERSION}}';
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function stack(config: StackConfig): StackClass {
-  const DEFAULT_HOST = Utility.getHostforRegion(config.region || "aws_na", config.host);
+  const DEFAULT_HOST = Utility.getHostforRegion(config.region || Region.US, config.host);
 
   let defaultConfig = {
     defaultHostname: DEFAULT_HOST,
