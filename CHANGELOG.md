@@ -7,6 +7,14 @@ Feat: Improved error messages
 fix: reverts the endpoints helper method integration
 
 ### Version: 4.10.2
+#### Date: Dec-15-2025
+Build: bump @contentstack/core version to ^1.3.4
+
+### Version: 4.10.3
+#### Date: Nov-13-2025
+Fix: reverts the endpoints helper method integration
+
+### Version: 4.10.2
 #### Date: Nov-12-2025
 Enhancement: Added logHandler interceptors for request and response logging
 Enhancement: Upgraded @contentstack/utils dependency to version 1.6.2
