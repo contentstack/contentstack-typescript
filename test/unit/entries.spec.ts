@@ -5,6 +5,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { entryFetchMock, entryFindMock } from '../utils/mocks';
 import { Query } from '../../src/lib/query';
 import { QueryOperation, QueryOperator, TaxonomyQueryOperation } from '../../src/lib/types';
+import { ErrorMessages } from '../../src/lib/error-messages';
 
 describe('Entries class', () => {
   let entry: Entries;
@@ -46,7 +47,7 @@ describe('Entries class', () => {
   it('should log error when includeReference called with no arguments', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     entry.includeReference();
-    expect(consoleErrorSpy).toHaveBeenCalledWith('Argument should be a String or an Array.');
+    expect(consoleErrorSpy).toHaveBeenCalledWith(ErrorMessages.INVALID_ARGUMENT_STRING_OR_ARRAY);
     consoleErrorSpy.mockRestore();
   });
 
