@@ -20,7 +20,7 @@ export class Stack {
 
   /**
    * @method asset
-   * @memberOf Stack
+   * @memberof Stack
    * @param {String} uid - uid of the asset
    * @description Creates an object for all assets of a stack by default. To retrieve a single asset, specify its UID.
    *
@@ -44,9 +44,9 @@ export class Stack {
 
   /**
    * @method contentType
-   * @memberOf Stack
-   * @param {String} uid - uid of the asset
-   * @description Retrieves all contentTypes of a stack by default. To retrieve a single asset, specify its UID.
+   * @memberof Stack
+   * @param {String} uid - uid of the contentType
+   * @description Retrieves all contentTypes of a stack by default. To retrieve a single contentType, specify its UID.
    *
    * @returns {ContentType}
    * @example
@@ -67,11 +67,12 @@ export class Stack {
 
   /**
    * @method Taxonomy
-   * @memberOf Stack
+   * @memberof Stack
    * @description Sets the url to /taxonomies/entries. Pass a query to fetch entries with taxonomies
    *
-   * @returns {TaxonomyQuery} * @example
-   * import contentstack from '@contentstack/typescript'
+   * @returns {TaxonomyQuery}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
 
@@ -83,14 +84,18 @@ export class Stack {
 
   /**
    * @method GlobalField
-   * @memberOf Stack
-   * @param {String} uid - uid of the asset
-   * @description Retrieves all contentTypes of a stack by default. To retrieve a single asset, specify its UID.
+   * @memberof Stack
+   * @param {String} uid - uid of the globalField
+   * @description Retrieves all globalFields of a stack by default. To retrieve a single globalField, specify its UID.
    *
-   * @returns {ContentType}
-   * const contentType = stack.contentType() // For collection of contentType
+   * @returns {GlobalField}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const globalField = stack.globalField() // For collection of globalField
    * // OR
-   * const contentType = stack.contentType('contentTypeUid') // For a single contentType with uid 'contentTypeUid'
+   * const globalField = stack.globalField('globalFieldUid') // For a single globalField with uid 'globalFieldUid'
    */
   globalField(): GlobalFieldQuery;
   globalField(uid: string): GlobalField;
@@ -102,7 +107,7 @@ export class Stack {
 
   /**
    * @method setLocale
-   * @memberOf Stack
+   * @memberof Stack
    * @description Sets the locale of the API server
    * @param {String} locale - valid locale e.g. fr-fr
    * @return {Stack}
@@ -119,25 +124,46 @@ export class Stack {
 
   /**
    * @method sync
-   * @memberOf Stack
+   * @memberof Stack
    * @description Syncs your Contentstack data with your app and ensures that the data is always up-to-date by providing delta updates
-   * @param {object} params - params is an object that supports ‘locale’, ‘start_date’, ‘content_type_uid’, and ‘type’ queries.
+   * @param {object} params - params is an object that supports 'locale', 'start_date', 'content_type_uid', and 'type' queries.
    * @example
-   * Stack.sync()        // For initializing sync
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * await stack.sync()        // For initializing sync
    * @example
-   * Stack.sync({ 'locale': 'en-us'})     //For initializing sync with entries of a specific locale
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * await stack.sync({ 'locale': 'en-us'})     //For initializing sync with entries of a specific locale
    * @example
-   * Stack.sync({ 'start_date': '2018-10-22'})    //For initializing sync with entries published after a specific date
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * await stack.sync({ 'start_date': '2018-10-22'})    //For initializing sync with entries published after a specific date
    * @example
-   * Stack.sync({ 'content_type_uid': 'session'})   //For initializing sync with entries of a specific content type
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * await stack.sync({ 'content_type_uid': 'session'})   //For initializing sync with entries of a specific content type
    * @example
-   * Stack.sync({ 'type': 'entry_published'})
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * await stack.sync({ 'type': 'entry_published'})
    * //Use the type parameter to get a specific type of content. Supports'asset_published',
    * // 'entry_published', 'asset_unpublished', 'entry_unpublished', 'asset_deleted', 'entry_deleted', 'content_type_deleted'.
    * @example
-   * Stack.sync({'pagination_token': '<page_tkn>'})    // For fetching the next batch of entries using pagination token
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * await stack.sync({'pagination_token': '<page_tkn>'})    // For fetching the next batch of entries using pagination token
    * @example
-   * Stack.sync({'sync_token': '<sync_tkn>'})    // For performing subsequent sync after initial sync
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * await stack.sync({'sync_token': '<sync_tkn>'})    // For performing subsequent sync after initial sync
    * @instance
    */
   async sync(params: SyncType | SyncStack = {}, recursive = false) {
@@ -204,7 +230,7 @@ export class Stack {
 
   /**
    * @method setPort
-   * @memberOf Stack
+   * @memberof Stack
    * @description Sets the port of the host
    * @param {Number} port - Port Number
    * @return {Stack}
@@ -217,9 +243,9 @@ export class Stack {
 
   /**
    * @method setDebug
-   * @memberOf Stack
+   * @memberof Stack
    * @description Sets the debug option
-   * @param {Number} debug - Debug value
+   * @param {boolean} debug - Debug value
    * @return {Stack}
    * @instance
    * */
@@ -227,5 +253,4 @@ export class Stack {
     if (typeof debug === "boolean") this.config.debug = debug;
     return this;
   }
-
 }

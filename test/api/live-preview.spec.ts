@@ -131,9 +131,9 @@ describe("Live preview query Entry API tests", () => {
       expect(result.updated_by).toBeDefined();
     } catch (error: any) {
       expect(error).toBeDefined();
-      // AxiosError: error.response contains the response object
-      expect(error.response).toBeDefined();
-      expect(error.response.status).toEqual(403);
+      // AxiosError: error contains the response object
+      expect(error).toBeDefined();
+      expect(error.status).toEqual(403);
     }
   });
 

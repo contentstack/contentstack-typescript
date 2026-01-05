@@ -13,7 +13,7 @@ export class ContentTypeQuery {
   /**
    * @method includeGlobalFieldSchema
    * @memberof ContentTypeQuery
-   * @description The assets published in the locale will be fetched
+   * @description Includes the global field schema in the content type response
    * @returns {ContentTypeQuery}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
@@ -31,7 +31,7 @@ export class ContentTypeQuery {
    * @method find
    * @memberof ContentTypeQuery
    * @description Fetches all contentTypes of the stack
-   * @returns {ContentTypeQuery}
+   * @returns {Promise<FindResponse<T>>} Promise that resolves to the find response containing content types
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
