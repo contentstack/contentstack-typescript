@@ -76,7 +76,7 @@ export interface StackConfig extends HttpClientParams {
   environment: string;
   branch?: string;
   early_access?: string[];
-  region?: string;
+  region?: Region;
   locale?: string;
   plugins?: ContentstackPlugin[];
   logHandler?: (level: string, data: any) => void;

@@ -1,3 +1,7 @@
+### Version: 4.10.5
+#### Date: Jan-05-2026
+Fix: Fix security issues
+
 ### Version: 4.10.4
 #### Date: Dec-08-2025
 Feat: Improved error messages
@@ -5,6 +9,14 @@ Feat: Improved error messages
 ### Version: 4.10.3
 #### Date: Nov-12-2025
 fix: reverts the endpoints helper method integration
+
+### Version: 4.10.2
+#### Date: Dec-15-2025
+Build: bump @contentstack/core version to ^1.3.4
+
+### Version: 4.10.3
+#### Date: Nov-13-2025
+Fix: reverts the endpoints helper method integration
 
 ### Version: 4.10.2
 #### Date: Nov-12-2025
