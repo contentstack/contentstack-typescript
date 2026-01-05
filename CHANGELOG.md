@@ -1,3 +1,7 @@
+### Version: 4.10.5
+#### Date: Jan-05-2026
+Fix: Fix security issues
+
 ### Version: 4.10.4
 #### Date: Dec-08-2025
 Feat: Improved error messages
