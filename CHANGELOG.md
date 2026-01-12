@@ -1,5 +1,9 @@
 ### Version: 4.10.5
 #### Date: Jan-05-2026
+Fix: update esm export path to include .js extension (upgrade contentstack-js-core dependency)
+
+### Version: 4.10.5
+#### Date: Jan-05-2026
 Fix: Fix security issues
 
 ### Version: 4.10.4
