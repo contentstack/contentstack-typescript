@@ -29,9 +29,9 @@ export class Asset {
 
   /**
    * @method includeMetadata
-   * @memberof Entries
-   * @description Include the metadata for getting metadata content for the entry.
-   * @returns {Entries}
+   * @memberof Asset
+   * @description Include the metadata for getting metadata content for the asset.
+   * @returns {Asset}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -115,7 +115,7 @@ export class Asset {
   /**
    * @method locale
    * @memberof Asset
-   * @description The assets published in the locale will be fetched
+   * @description The asset published in the locale will be fetched
    * @returns {Asset}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
@@ -133,7 +133,7 @@ export class Asset {
    * @method fetch
    * @memberof Asset
    * @description Fetches the asset data on the basis of the asset uid
-   * @returns {Asset}
+   * @returns {Promise<T>} Promise that resolves to the asset data
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
