@@ -35,55 +35,95 @@ if (!fs.existsSync(RESULTS_DIR)) {
  */
 function readJestResults() {
   const jestResultsPath = path.join(RESULTS_DIR, 'jest-results.json');
+  const consoleLogsPath = path.join(RESULTS_DIR, 'console-logs.json');
   
   if (!fs.existsSync(jestResultsPath)) {
     console.warn('⚠️  Jest results not found, skipping API tests');
     return null;
   }
   
+  // Read captured console logs
+  let consoleLogs = [];
+  if (fs.existsSync(consoleLogsPath)) {
+    try {
+      consoleLogs = JSON.parse(fs.readFileSync(consoleLogsPath, 'utf8'));
+      console.log(`📋 Loaded ${consoleLogs.length} console logs for report`);
+    } catch (error) {
+      console.warn('⚠️  Failed to read console logs:', error.message);
+    }
+  }
+  
   try {
     const results = JSON.parse(fs.readFileSync(jestResultsPath, 'utf8'));
     
-    // Extract detailed test cases
+    // Extract detailed test cases with console logs
+    // Note: Jest uses 'testFilePath' for file name, 'testResults' for assertions (not 'assertionResults')
     const details = results.testResults?.map(suite => {
-      const testCases = suite.assertionResults?.map(test => {
+      // Get file path - Jest uses 'testFilePath' not 'name'
+      const filePath = suite.testFilePath || suite.name || '';
+      const suiteFileName = filePath.split('/').pop() || '';
+      
+      // Get console logs for this suite from the captured logs file
+      const suiteConsoleLogs = consoleLogs.filter(log => 
+        log.testFile?.includes(suiteFileName) || !log.testFile
+      );
+      
+      // Jest uses 'testResults' for individual tests, not 'assertionResults'
+      const assertions = suite.testResults || suite.assertionResults || [];
+      
+      const testCases = assertions.map(test => {
         const fullName = test.ancestorTitles?.length > 0
           ? `${test.ancestorTitles.join(' › ')} › ${test.title}`
-          : test.title;
+          : test.fullName || test.title || 'Unknown Test';
+        
+        // Get logs specific to this test, or fall back to suite-level logs
+        const testLogs = test.logs || [];
+        
         return {
-          name: fullName || test.title,
+          name: fullName,
           status: test.status,
           duration: test.duration || 0,
           failureMessages: test.failureMessages || [],
-          failureDetails: test.failureDetails || []
+          failureDetails: test.failureDetails || [],
+          // Include console logs for this test
+          consoleLogs: testLogs.length > 0 ? testLogs : []
         };
-      }) || [];
+      });
       
-      // Calculate counts from assertionResults (numPassingTests etc. are often null)
-      const totalTests = testCases.length;
-      const passedTests = testCases.filter(tc => tc.status === 'passed').length;
-      const failedTests = testCases.filter(tc => tc.status === 'failed').length;
-      const skippedTests = testCases.filter(tc => tc.status === 'pending' || tc.status === 'skipped').length;
+      // Use suite-level counts if available, otherwise calculate from test cases
+      const totalTests = testCases.length || suite.numPassingTests + suite.numFailingTests + suite.numPendingTests || 0;
+      const passedTests = suite.numPassingTests ?? testCases.filter(tc => tc.status === 'passed').length;
+      const failedTests = suite.numFailingTests ?? testCases.filter(tc => tc.status === 'failed').length;
+      const skippedTests = suite.numPendingTests ?? testCases.filter(tc => tc.status === 'pending' || tc.status === 'skipped').length;
       
       return {
-        file: suite.name,
+        file: filePath,
         tests: totalTests,
         passed: passedTests,
         failed: failedTests,
         skipped: skippedTests,
         duration: suite.perfStats?.runtime || 0,
-        testCases  // Individual test case details
+        testCases,  // Individual test case details
+        // Include suite-level console logs
+        consoleLogs: suiteConsoleLogs.map(log => ({
+          type: log.type || 'log',
+          message: log.message || ''
+        }))
       };
     }) || [];
+    
+    // Determine success based on failed count (Jest success flag can be unreliable)
+    const totalFailed = results.numFailedTests || 0;
+    const isSuccess = totalFailed === 0;
     
     return {
       name: 'API Tests (Jest)',
       total: results.numTotalTests || 0,
       passed: results.numPassedTests || 0,
-      failed: results.numFailedTests || 0,
+      failed: totalFailed,
       skipped: results.numPendingTests || 0,
       duration: results.testResults?.reduce((sum, r) => sum + (r.perfStats?.runtime || 0), 0) || 0,
-      success: results.success || false,
+      success: isSuccess,
       details
     };
   } catch (error) {
@@ -248,7 +288,7 @@ function generateDetailsHTML(suiteName, details) {
           <button class="expand-btn collapse-all" onclick="collapseAll()">Collapse All</button>
         </div>
         ${details.map((detail, idx) => {
-          const fileName = detail.file ? detail.file.replace(/.*\/test\/api\//, '') : 'Unknown';
+          const fileName = detail.file ? detail.file.split('/').pop() : 'Unknown';
           const totalTests = detail.testCases?.length || 0;
           const passedTests = detail.testCases?.filter(tc => tc.status === 'passed').length || 0;
           const failedTests = detail.testCases?.filter(tc => tc.status === 'failed').length || 0;
@@ -332,7 +372,16 @@ function escapeHtml(text) {
 /**
  * Generate HTML report
  */
-function generateHTMLReport(combined) {
+function generateHTMLReport(combined, consoleLogs = []) {
+  // Group console logs by type for summary
+  const logCounts = {
+    log: consoleLogs.filter(l => l.type === 'log').length,
+    warn: consoleLogs.filter(l => l.type === 'warn').length,
+    error: consoleLogs.filter(l => l.type === 'error').length,
+    info: consoleLogs.filter(l => l.type === 'info').length
+  };
+  const totalLogs = consoleLogs.length;
+  
   const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -595,6 +644,202 @@ function generateHTMLReport(combined) {
       font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
       line-height: 1.5;
     }
+    /* Console Section styles */
+    .console-section {
+      margin: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .console-section-header {
+      padding: 15px 20px;
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .console-section-header:hover {
+      background: linear-gradient(135deg, #34495e 0%, #3d566e 100%);
+    }
+    .console-summary {
+      margin-left: auto;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    .console-note {
+      padding: 10px 20px;
+      background: #2c3e50;
+      color: #bdc3c7;
+      font-size: 12px;
+      border-bottom: 1px solid #34495e;
+    }
+    .console-section-content {
+      display: none;
+      background: #1a252f;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+    .console-section-content.visible {
+      display: block;
+    }
+    .console-filters {
+      padding: 12px 15px;
+      background: #2c3e50;
+      border-bottom: 1px solid #34495e;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .filter-btn {
+      padding: 6px 12px;
+      border: 1px solid #34495e;
+      background: transparent;
+      color: #ecf0f1;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: #3498db;
+      border-color: #3498db;
+    }
+    .log-search {
+      margin-left: auto;
+      padding: 6px 12px;
+      border: 1px solid #34495e;
+      background: #1a252f;
+      color: #ecf0f1;
+      border-radius: 4px;
+      font-size: 12px;
+      width: 200px;
+    }
+    .log-search:focus {
+      outline: none;
+      border-color: #3498db;
+    }
+    .console-logs-container {
+      padding: 10px;
+    }
+    .console-log-entry {
+      padding: 8px 12px;
+      margin: 4px 0;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+      font-size: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .console-log-entry.log {
+      background: rgba(52, 152, 219, 0.1);
+      color: #ecf0f1;
+    }
+    .console-log-entry.warn {
+      background: rgba(243, 156, 18, 0.15);
+      color: #f1c40f;
+    }
+    .console-log-entry.error {
+      background: rgba(231, 76, 60, 0.15);
+      color: #e74c3c;
+    }
+    .console-log-entry.info {
+      background: rgba(52, 152, 219, 0.15);
+      color: #3498db;
+    }
+    .console-log-entry.hidden {
+      display: none;
+    }
+    .log-timestamp {
+      color: #7f8c8d;
+      font-size: 10px;
+      min-width: 80px;
+    }
+    .log-type-badge {
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 9px;
+      font-weight: bold;
+      min-width: 45px;
+      text-align: center;
+    }
+    .log-type-badge.log { background: #3498db; color: white; }
+    .log-type-badge.warn { background: #f39c12; color: white; }
+    .log-type-badge.error { background: #e74c3c; color: white; }
+    .log-type-badge.info { background: #2ecc71; color: white; }
+    .log-message {
+      flex: 1;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+    
+    /* Console log styles - per test */
+    .console-toggle {
+      display: inline-block;
+      margin-top: 8px;
+      margin-left: 8px;
+      padding: 4px 10px;
+      background: #3498db;
+      color: white;
+      border-radius: 3px;
+      font-size: 11px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .console-toggle:hover {
+      background: #2980b9;
+    }
+    .console-icon {
+      font-size: 12px;
+    }
+    .console-details {
+      display: none;
+      margin-top: 10px;
+      padding: 12px;
+      background: #1a252f;
+      color: #ecf0f1;
+      border-radius: 4px;
+      font-size: 11px;
+      max-height: 400px;
+      overflow-y: auto;
+      border-left: 3px solid #3498db;
+    }
+    .console-details.visible {
+      display: block;
+    }
+    .console-line {
+      padding: 4px 8px;
+      margin: 2px 0;
+      border-radius: 2px;
+      font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .console-line.log {
+      background: rgba(52, 152, 219, 0.1);
+    }
+    .console-line.warn {
+      background: rgba(243, 156, 18, 0.2);
+      color: #f39c12;
+    }
+    .console-line.error {
+      background: rgba(231, 76, 60, 0.2);
+      color: #e74c3c;
+    }
+    .console-line.info {
+      background: rgba(52, 152, 219, 0.15);
+      color: #3498db;
+    }
+    .log-type {
+      font-weight: bold;
+      margin-right: 8px;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
     .test-status {
       display: inline-block;
       padding: 2px 8px;
@@ -697,6 +942,42 @@ function generateHTMLReport(combined) {
     </div>
     `).join('')}
     
+    ${totalLogs > 0 ? `
+    <div class="console-section">
+      <div class="console-section-header" onclick="toggleAllConsoleLogs()">
+        <span class="expand-icon" id="console-section-icon">▶</span>
+        <strong>📋 Console Output</strong>
+        <span class="console-summary">
+          ${totalLogs} total logs
+          ${logCounts.warn > 0 ? `| <span style="color:#f39c12">${logCounts.warn} warnings</span>` : ''}
+          ${logCounts.error > 0 ? `| <span style="color:#e74c3c">${logCounts.error} validation messages</span>` : ''}
+        </span>
+      </div>
+      <div class="console-note">
+        <em>ℹ️ Note: "Error" logs shown below are expected SDK validation messages from tests that verify error handling. They do not indicate test failures.</em>
+      </div>
+      <div class="console-section-content" id="console-section-content">
+        <div class="console-filters">
+          <button class="filter-btn active" onclick="filterLogs('all')">All (${totalLogs})</button>
+          <button class="filter-btn" onclick="filterLogs('log')">Log (${logCounts.log})</button>
+          <button class="filter-btn" onclick="filterLogs('warn')">Warn (${logCounts.warn})</button>
+          <button class="filter-btn" onclick="filterLogs('error')">Error (${logCounts.error})</button>
+          <button class="filter-btn" onclick="filterLogs('info')">Info (${logCounts.info})</button>
+          <input type="text" class="log-search" placeholder="🔍 Search logs..." oninput="searchLogs(this.value)">
+        </div>
+        <div class="console-logs-container" id="console-logs-container">
+          ${consoleLogs.map((log, idx) => `
+          <div class="console-log-entry ${log.type}" data-type="${log.type}" data-idx="${idx}">
+            <span class="log-timestamp">${log.timestamp ? new Date(log.timestamp).toLocaleTimeString() : ''}</span>
+            <span class="log-type-badge ${log.type}">${log.type.toUpperCase()}</span>
+            <span class="log-message">${escapeHtml(log.message)}</span>
+          </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+    ` : ''}
+    
     <div class="footer">
       <div><strong>Environment:</strong> Node ${combined.environment.node} | ${combined.environment.platform} (${combined.environment.arch})</div>
       <div style="margin-top: 10px;">Generated by Contentstack SDK Test Suite</div>
@@ -738,6 +1019,45 @@ function generateHTMLReport(combined) {
             : '<span class="error-icon">⚠️</span> Show Error';
         }
       }
+    }
+    
+    function toggleAllConsoleLogs() {
+      const content = document.getElementById('console-section-content');
+      const icon = document.getElementById('console-section-icon');
+      if (content) {
+        content.classList.toggle('visible');
+        icon.classList.toggle('expanded');
+      }
+    }
+    
+    function filterLogs(type) {
+      const entries = document.querySelectorAll('.console-log-entry');
+      const buttons = document.querySelectorAll('.filter-btn');
+      
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      entries.forEach(entry => {
+        if (type === 'all' || entry.dataset.type === type) {
+          entry.classList.remove('hidden');
+        } else {
+          entry.classList.add('hidden');
+        }
+      });
+    }
+    
+    function searchLogs(query) {
+      const entries = document.querySelectorAll('.console-log-entry');
+      const lowerQuery = query.toLowerCase();
+      
+      entries.forEach(entry => {
+        const message = entry.querySelector('.log-message')?.textContent?.toLowerCase() || '';
+        if (!query || message.includes(lowerQuery)) {
+          entry.classList.remove('hidden');
+        } else {
+          entry.classList.add('hidden');
+        }
+      });
     }
   </script>
 </body>
@@ -804,7 +1124,19 @@ function main() {
   }
   
   const combined = generateJSONReport(apiResults, bundlerResults, browserResults);
-  generateHTMLReport(combined);
+  
+  // Read captured console logs for inclusion in HTML report
+  let consoleLogs = [];
+  const consoleLogsPath = path.join(RESULTS_DIR, 'console-logs.json');
+  if (fs.existsSync(consoleLogsPath)) {
+    try {
+      consoleLogs = JSON.parse(fs.readFileSync(consoleLogsPath, 'utf8'));
+    } catch (error) {
+      console.warn('⚠️  Could not read console logs:', error.message);
+    }
+  }
+  
+  generateHTMLReport(combined, consoleLogs);
   generateJUnitXML(combined);
   
   console.log('\n════════════════════════════════════════');

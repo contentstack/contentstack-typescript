@@ -508,7 +508,8 @@ describe('Entry Variants Comprehensive Tests', () => {
       expect(result).toBeDefined();
 
       if (result.variants && result.variants.length > 0) {
-        const globalFields = ['seo', 'page_header', 'related_content', 'authors'];
+        // Field names that exist in cybersecurity content type (which uses global fields)
+        const globalFields = ['seo', 'search', 'content_block', 'video_experience'];
         
         result.variants.forEach((variant: any, index: number) => {
           console.log(`Variant ${index + 1} global fields:`, {
