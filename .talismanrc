@@ -38,7 +38,7 @@ fileignoreconfig:
   checksum: 359c8601c6205a65f3395cc209a93b278dfe7f5bb547c91b2eeab250b2c85aa3
 - filename: package-lock.json
   checksum: 993afd503e9f5d399fac30ae230cb47538cec2c61c5364e88be72726fb723dda
-  ignore_detectors: [base64, filecontent]
+  ignore_detectors: [ base64, filecontent ]
 - filename: src/lib/global-field.ts
   checksum: 70b9652bcba16ddc4d853ac212ad909a8ecfc76f491c55a05e4e3cdf9ce476b5
 - filename: src/lib/content-type.ts
