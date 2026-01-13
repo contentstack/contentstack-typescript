@@ -360,7 +360,7 @@ describe('Hierarchical Taxonomy Tests - Country Taxonomies', () => {
 
         it('should query parent hierarchy with eq_above', async () => {
             // Use actual city from taxonomy: san_diago (parent: california)
-            const city = process.env.TAX_USA_CITY || 'san_diago';
+            const city = process.env.TAX_USA_STATE || process.env.TAX_USA_CITY || 'california';
             
             // Get entries tagged with san_diago AND its parent california
             const taxonomy = stack.taxonomy()
@@ -376,7 +376,7 @@ describe('Hierarchical Taxonomy Tests - Country Taxonomies', () => {
 
         it('should query only parents with above (exclude current term)', async () => {
             // Use actual city from taxonomy: san_diago (parent: california)
-            const city = process.env.TAX_USA_CITY || 'san_diago';
+            const city = process.env.TAX_USA_STATE || process.env.TAX_USA_CITY || 'california';
             
             // Get only entries tagged with california (parent), exclude san_diago itself
             const taxonomy = stack.taxonomy()

@@ -67,4 +67,6 @@ fileignoreconfig:
   checksum: f7200cb6e3b9ff681439482faaf882781dfb5f6ab6fefd4c98203ba8bf30d5e6
 - filename: test/api/base-query-casting.specs.ts
   checksum: 9185df498914e2966d78d9d216acaaa910d43cd7ac9a5e9a26e7241ac9edc9b5
+- filename: test/reporting/generate-unified-report.js
+  checksum: 9e7a4696561b790cb93f3be8406a70ec6fdc90a3f8bbb9739504495690158fe3
 version: "1.0"

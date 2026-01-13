@@ -51,7 +51,7 @@ describe('Metadata and Branch Operations API Tests', () => {
     });
 
     it('should include metadata in single asset fetch', async () => {
-      const assetUid = process.env.ASSET_UID || 'sample_asset';
+      const assetUid = process.env.IMAGE_ASSET_UID || 'sample_asset';
       const result = await stack.asset()
         .includeMetadata()
         .find();
@@ -92,7 +92,8 @@ describe('Metadata and Branch Operations API Tests', () => {
 
   describe('Global Field Operations', () => {
     it('should fetch global field successfully', async () => {
-      const globalFieldUid = process.env.GLOBAL_FIELD_UID || 'sample_global_field';
+      // Use GLOBAL_FIELD_UID from env, fallback to 'seo' which exists in the test stack
+      const globalFieldUid = process.env.SIMPLE_GLOBAL_FIELD_UID || process.env.GLOBAL_FIELD_UID || 'seo';
       
       try {
         const result = await stack.globalField(globalFieldUid).fetch();

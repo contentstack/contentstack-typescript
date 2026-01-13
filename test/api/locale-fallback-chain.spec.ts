@@ -239,7 +239,8 @@ describe('Locale Fallback Chain Tests', () => {
       expect(result).toBeDefined();
 
       // Check global fields for locale-specific content
-      const globalFields = ['seo', 'hero_banner', 'related_content', 'featured_content'];
+      // Field names that exist in content types (seo, search are common global fields)
+      const globalFields = ['seo', 'search', 'content_block', 'referenced_data'];
       const globalFieldAnalysis: Record<string, any> = {};
 
       globalFields.forEach(field => {

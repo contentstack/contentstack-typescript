@@ -7,7 +7,7 @@ const stack = stackInstance();
 // Content Type UIDs (use env vars with fallback defaults)
 const COMPLEX_CT = process.env.COMPLEX_CONTENT_TYPE_UID || 'complex_content_type';
 const MEDIUM_CT = process.env.MEDIUM_CONTENT_TYPE_UID || 'medium_content_type';
-const PRODUCT_CT = process.env.PRODUCT_CONTENT_TYPE_UID || 'product_content_type';
+const PRODUCT_CT = process.env.COMPLEX_BLOCKS_CONTENT_TYPE_UID || 'page_builder';
 
 describe('Boolean Field Queries', () => {
   describe('Boolean field queries', () => {

@@ -8,7 +8,7 @@ dotenv.config();
 const apiKey = process.env.API_KEY as string;
 const deliveryToken = process.env.DELIVERY_TOKEN as string;
 const environment = process.env.ENVIRONMENT as string;
-const branch = process.env.BRANCH as string;
+const branch = process.env.BRANCH_UID as string;
 // Using new standardized env variable names
 // Use MEDIUM_ENTRY_UID for article content type (MEDIUM_CT)
 const entryUid = (process.env.MEDIUM_ENTRY_UID || process.env.COMPLEX_ENTRY_UID || '') as string;
