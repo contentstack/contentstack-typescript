@@ -1,8 +1,6 @@
 import { defineConfig } from 'tsup'
 import { esbuildPluginFilePathExtensions } from 'esbuild-plugin-file-path-extensions'
 import packageJson from './package.json' assert { type: "json" };
-import { copyFileSync, existsSync, mkdirSync } from 'fs';
-import { dirname, join } from 'path';
 
 export default defineConfig([
   modernConfig({
@@ -32,21 +30,7 @@ function modernConfig(opts) {
     replace: {
       '{{VERSION}}': `"${packageJson.version}"`,
     },
-    esbuildPlugins: [esbuildPluginFilePathExtensions({ esmExtension: 'js' })],
-    onSuccess: async () => {
-      // Copy regions.json to dist/modern/assets/ (industry standard structure)
-      const sourceFile = 'src/assets/regions.json';
-      const targetFile = join('dist/modern/assets', 'regions.json');
-      
-      if (existsSync(sourceFile)) {
-        const targetDir = dirname(targetFile);
-        if (!existsSync(targetDir)) {
-          mkdirSync(targetDir, { recursive: true });
-        }
-        copyFileSync(sourceFile, targetFile);
-        console.log('✓ Copied regions.json to dist/modern/assets');
-      }
-    }
+    esbuildPlugins: [esbuildPluginFilePathExtensions({ esmExtension: 'js' })]
   }
 }
 
@@ -69,20 +53,6 @@ function legacyConfig(opts) {
     esbuildOptions(options) {
       options.jsxImportSource = 'preact';
       options.jsx = 'automatic'
-    },
-    onSuccess: async () => {
-      // Copy regions.json to dist/legacy/assets/ (industry standard structure)
-      const sourceFile = 'src/assets/regions.json';
-      const targetFile = join('dist/legacy/assets', 'regions.json');
-      
-      if (existsSync(sourceFile)) {
-        const targetDir = dirname(targetFile);
-        if (!existsSync(targetDir)) {
-          mkdirSync(targetDir, { recursive: true });
-        }
-        copyFileSync(sourceFile, targetFile);
-        console.log('✓ Copied regions.json to dist/legacy/assets');
-      }
     }
   }
 }

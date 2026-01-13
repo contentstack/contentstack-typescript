@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import * as contentstack from "../../src/lib/contentstack";
 import { TEntry } from "./types";
 import dotenv from "dotenv";
@@ -9,7 +10,8 @@ const deliveryToken = process.env.DELIVERY_TOKEN as string;
 const environment = process.env.ENVIRONMENT as string;
 const branch = process.env.BRANCH as string;
 // Using new standardized env variable names
-const entryUid = (process.env.COMPLEX_ENTRY_UID || process.env.MEDIUM_ENTRY_UID || '') as string;
+// Use MEDIUM_ENTRY_UID for article content type (MEDIUM_CT)
+const entryUid = (process.env.MEDIUM_ENTRY_UID || process.env.COMPLEX_ENTRY_UID || '') as string;
 const previewToken = process.env.PREVIEW_TOKEN as string;
 const managementToken = process.env.MANAGEMENT_TOKEN as string;
 const host = process.env.HOST as string;
@@ -135,9 +137,9 @@ describe("Live preview query Entry API tests", () => {
       expect(result.updated_by).toBeDefined();
     } catch (error: any) {
       expect(error).toBeDefined();
-      // AxiosError: error.response contains the response object
-      expect(error.response).toBeDefined();
-      expect(error.response.status).toEqual(403);
+      // AxiosError: error contains the response object
+      expect(error).toBeDefined();
+      expect(error.status).toEqual(403);
     }
   });
 
@@ -175,7 +177,7 @@ describe("Live preview query Entry API tests", () => {
       // 422 errors may occur with management token configuration
       if (error.response?.status === 422) {
         console.log('⚠️ Live preview with management token returned 422 (configuration or permissions issue)');
-        expect(error.response.status).toBe(422);
+        expect(error.status).toBe(422);
       } else {
         throw error;
       }
@@ -216,7 +218,7 @@ describe("Live preview query Entry API tests", () => {
       // 422 errors may occur with preview token configuration
       if (error.response?.status === 422) {
         console.log('⚠️ Live preview with preview token returned 422 (configuration or permissions issue)');
-        expect(error.response.status).toBe(422);
+        expect(error.status).toBe(422);
       } else {
         throw error;
       }

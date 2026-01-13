@@ -1,3 +1,4 @@
+import { describe, it, expect } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
 import { BaseEntry, QueryOperation } from '../../src';
 import * as contentstack from '../../src/lib/contentstack';
@@ -717,12 +718,12 @@ describe('Live Preview Comprehensive Tests', () => {
       } catch (error: any) {
         // Management token may return 403 (forbidden) or 422 (unprocessable entity)
         // depending on permissions and configuration
-        if (error.response?.status === 403) {
+        if (error.status === 403) {
           console.log('⚠️  Management token returned 403 (forbidden - expected behavior)');
-          expect(error.response.status).toBe(403);
-        } else if (error.response?.status === 422) {
+          expect(error.status).toBe(403);
+        } else if (error.status === 422) {
           console.log('⚠️  Management token returned 422 (configuration issue - expected)');
-          expect(error.response.status).toBe(422);
+          expect(error.status).toBe(422);
         } else {
           console.log('✅ Entry fetched successfully with management token');
           throw error;
@@ -771,12 +772,12 @@ describe('Live Preview Comprehensive Tests', () => {
         });
       } catch (error: any) {
         // 422 errors may occur with management token configuration
-        if (error.response?.status === 422) {
+        if (error.status === 422) {
           console.log('⚠️  Management token with live preview disabled returned 422 (expected)');
-          expect(error.response.status).toBe(422);
-        } else if (error.response?.status === 403) {
+          expect(error.status).toBe(422);
+        } else if (error.status === 403) {
           console.log('⚠️  Management token returned 403 (forbidden - expected)');
-          expect(error.response.status).toBe(403);
+          expect(error.status).toBe(403);
         } else {
           throw error;
         }
@@ -820,9 +821,9 @@ describe('Live Preview Comprehensive Tests', () => {
           limit: 5
         });
       } catch (error: any) {
-        if (error.response?.status === 403 || error.response?.status === 422) {
-          console.log(`⚠️  Management token query returned ${error.response.status} (expected behavior)`);
-          expect([403, 422]).toContain(error.response.status);
+        if (error.status === 403 || error.status === 422) {
+          console.log(`⚠️  Management token query returned ${error.status} (expected behavior)`);
+          expect([403, 422]).toContain(error.status);
         } else {
           throw error;
         }
@@ -874,9 +875,9 @@ describe('Live Preview Comprehensive Tests', () => {
         // Management token operations should complete reasonably
         expect(duration).toBeLessThan(10000); // 10 seconds max
       } catch (error: any) {
-        if (error.response?.status === 403 || error.response?.status === 422) {
-          console.log(`⚠️  Management token returned ${error.response.status} (expected, skipping performance check)`);
-          expect([403, 422]).toContain(error.response.status);
+        if (error.status === 403 || error.status === 422) {
+          console.log(`⚠️  Management token returned ${error.status} (expected, skipping performance check)`);
+          expect([403, 422]).toContain(error.status);
         } else {
           throw error;
         }
@@ -947,9 +948,9 @@ describe('Live Preview Comprehensive Tests', () => {
           ratio: (mgmtTime / previewTime).toFixed(2)
         });
       } catch (error: any) {
-        if (error.response?.status === 403 || error.response?.status === 422) {
-          console.log(`⚠️  Token returned ${error.response.status} (expected, skipping comparison)`);
-          expect([403, 422]).toContain(error.response.status);
+        if (error.status === 403 || error.status === 422) {
+          console.log(`⚠️  Token returned ${error.status} (expected, skipping comparison)`);
+          expect([403, 422]).toContain(error.status);
         } else {
           throw error;
         }
@@ -991,12 +992,12 @@ describe('Live Preview Comprehensive Tests', () => {
         });
       } catch (error: any) {
         console.log('Invalid management token properly rejected:', {
-          status: error.response?.status,
+          status: error.status,
           message: error.message
         });
         
         // Should return 401 (unauthorized) or 403 (forbidden)
-        expect([401, 403, 422]).toContain(error.response?.status);
+        expect([401, 403, 422]).toContain(error.status);
       }
     });
 
@@ -1078,13 +1079,13 @@ describe('Live Preview Comprehensive Tests', () => {
         expect(result).toBeDefined();
       } catch (error: any) {
         console.log('Management token permission error (expected):', {
-          status: error.response?.status,
+          status: error.status,
           message: error.message
         });
         
         // 403 (forbidden) expected for permission issues
-        if (error.response?.status === 403) {
-          expect(error.response.status).toBe(403);
+        if (error.status === 403) {
+          expect(error.status).toBe(403);
         } else {
           throw error;
         }
@@ -1119,12 +1120,12 @@ describe('Live Preview Comprehensive Tests', () => {
         console.log('Non-existent entry with management token handled:', result);
       } catch (error: any) {
         console.log('Non-existent entry with management token properly rejected:', {
-          status: error.response?.status,
+          status: error.status,
           message: error.message
         });
         
         // Should return 404 (not found) or 403 (forbidden)
-        expect([404, 403, 422]).toContain(error.response?.status);
+        expect([404, 403, 422]).toContain(error.status);
       }
     });
 
@@ -1187,9 +1188,9 @@ describe('Live Preview Comprehensive Tests', () => {
           bothSuccessful: !!result1 && !!result2
         });
       } catch (error: any) {
-        if (error.response?.status === 403 || error.response?.status === 422) {
-          console.log(`⚠️  Management token configuration change returned ${error.response.status} (expected)`);
-          expect([403, 422]).toContain(error.response.status);
+        if (error.status === 403 || error.status === 422) {
+          console.log(`⚠️  Management token configuration change returned ${error.status} (expected)`);
+          expect([403, 422]).toContain(error.status);
         } else {
           throw error;
         }
@@ -1249,9 +1250,9 @@ describe('Live Preview Comprehensive Tests', () => {
         expect(results.length).toBe(3);
         expect(duration).toBeLessThan(20000); // 20 seconds max
       } catch (error: any) {
-        if (error.response?.status === 403 || error.response?.status === 422) {
-          console.log(`⚠️  Concurrent management token queries returned ${error.response.status} (expected)`);
-          expect([403, 422]).toContain(error.response.status);
+        if (error.status === 403 || error.status === 422) {
+          console.log(`⚠️  Concurrent management token queries returned ${error.status} (expected)`);
+          expect([403, 422]).toContain(error.status);
         } else {
           throw error;
         }

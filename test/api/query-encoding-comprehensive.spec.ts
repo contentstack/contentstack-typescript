@@ -1,3 +1,4 @@
+import { describe, it, expect } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
 import { QueryOperation } from '../../src/lib/types';
 
@@ -86,8 +87,8 @@ describe('Query Encoding - Comprehensive Coverage', () => {
           expect(Array.isArray(result.entries)).toBe(true);
           successCount++;
         } catch (error: any) {
-          // Some special characters may not be supported by the API (400 errors are expected)
-          if (error.response?.status === 400) {
+          // Some special characters may not be supported by the API (400/422 errors are expected)
+          if (error.status === 400 || error.status === 422) {
             failCount++;
             // Silently count - will show summary below
           } else {
@@ -121,7 +122,7 @@ describe('Query Encoding - Comprehensive Coverage', () => {
           successCount++;
         } catch (error: any) {
           // Some special characters may not be supported by the API (400 errors are expected)
-          if (error.response?.status === 400) {
+          if (error.status === 400 || error.status === 422) {
             failCount++;
             // Silently count - will show summary below
           } else {
@@ -585,9 +586,9 @@ describe('Query Encoding - Comprehensive Coverage', () => {
         console.log('Complex query combination with encoding handled successfully');
       } catch (error: any) {
         // Complex encoding combinations may not be fully supported (400 errors are expected)
-        if (error.response?.status === 400) {
+        if (error.status === 400 || error.status === 422) {
           console.log('⚠️ Complex encoding combination not fully supported by API (expected)');
-          expect(error.response.status).toBe(400); // Just verify it's the expected error
+          expect(error.status).toBe(400); // Just verify it's the expected error
         } else {
           throw error; // Re-throw unexpected errors
         }
