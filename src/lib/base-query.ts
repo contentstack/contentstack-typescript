@@ -51,7 +51,7 @@ export class BaseQuery extends Pagination {
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.orderByAscending("field_uid").find()
    * // OR
-   * const asset = await stack.asset().orderByAscending().find()
+   * const asset = await stack.asset().orderByAscending("field_uid").find()
    *
    * @returns {Query}
    */
@@ -72,7 +72,7 @@ export class BaseQuery extends Pagination {
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.orderByDescending("field_uid").find()
    * // OR
-   * const asset = await stack.asset().orderByDescending().find()
+   * const asset = await stack.asset().orderByDescending("field_uid").find()
    *
    * @returns {Query}
    */
@@ -91,7 +91,7 @@ export class BaseQuery extends Pagination {
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
-   * const result = await query.limit("limit_value").find()
+   * const result = await query.limit(10).find()
    * // OR
    * const asset = await stack.asset().limit(5).find()
    *
@@ -112,7 +112,7 @@ export class BaseQuery extends Pagination {
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
-   * const result = await query.skip("skip_value").find()
+   * const result = await query.skip(10).find()
    * // OR
    * const asset = await stack.asset().skip(5).find()
    *
@@ -191,9 +191,10 @@ export class BaseQuery extends Pagination {
 
   /**
    * @method find
-   * @memberof AssetQuery
-   * @description The assets of the stack will be fetched
-   * @returns {Collection}
+   * @memberof BaseQuery
+   * @description Fetches the data based on the query parameters
+   * @param {boolean} encode - Whether to encode query parameters
+   * @returns {Promise<FindResponse<T>>} Promise that resolves to the find response
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -208,7 +209,7 @@ export class BaseQuery extends Pagination {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.asset(asset_uid).fetch();
+   * const result = await stack.contentType("contentTypeUid").entry().query().find();
    */
 
   async find<T>(encode: boolean = false): Promise<FindResponse<T>> {
