@@ -1,8 +1,8 @@
 import { httpClient, retryRequestHandler, retryResponseErrorHandler, retryResponseHandler } from '@contentstack/core';
-import { AxiosRequestHeaders, InternalAxiosRequestConfig } from 'axios';
+import { AxiosRequestHeaders } from 'axios';
 import { handleRequest } from './cache';
 import { Stack as StackClass } from './stack';
-import { Policy, StackConfig, ContentstackPlugin } from './types';
+import { Policy, StackConfig, ContentstackPlugin, Region } from './types';
 import * as Utility from './utils';
 import * as Utils from '@contentstack/utils';
 export { Utils };
@@ -14,7 +14,7 @@ let version = '{{VERSION}}';
  * @memberof Contentstack
  * @description Creates a stack instance
  * @param {StackConfig} config - config object for stack with apiKey, deliveryToken and environment as required fields
- *
+ * @returns {StackClass} Stack instance
  * @example
  * import contentstack from '@contentstack/delivery-sdk'
  * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
@@ -30,11 +30,11 @@ let version = '{{VERSION}}';
  *    policy: Policy.CACHE_THEN_NETWORK,
  *    storeType: 'localStorage'
  *   }
- * }
+ * });
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function stack(config: StackConfig): StackClass {
-  const DEFAULT_HOST = Utility.getHostforRegion(config.region, config.host);
+  const DEFAULT_HOST = Utility.getHostforRegion(config.region || Region.US, config.host);
 
   let defaultConfig = {
     defaultHostname: DEFAULT_HOST,

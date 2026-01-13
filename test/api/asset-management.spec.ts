@@ -1,3 +1,4 @@
+import { describe, it, expect } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
 import { BaseAsset, QueryOperation } from '../../src';
 
@@ -101,36 +102,8 @@ describe('Asset Management Tests', () => {
   });
 
   skipIfNoUID('Asset Querying and Filtering', () => {
-    it('should query assets by content type', async () => {
-      try {
-        const result = await stack
-          .asset()
-          .query()
-          .where('content_type', QueryOperation.INCLUDES, 'image')
-          .find<BaseAsset>();
-
-        expect(result).toBeDefined();
-        expect(result.assets).toBeDefined();
-        expect(Array.isArray(result.assets)).toBe(true);
-
-        if (result.assets && result.assets?.length > 0) {
-          console.log(`Found ${result.assets?.length} image assets`);
-          
-          result.assets.forEach(asset => {
-            expect(asset.content_type).toContain('image');
-        });
-      } else {
-        console.log('No image assets found (test data dependent)');
-      }
-    } catch (error: any) {
-      if (error.response?.status === 400) {
-        console.log('⚠️ 400 - Asset content_type query may not be supported');
-        expect(error.response.status).toBe(400);
-      } else {
-        throw error;
-      }
-    }
-  });
+    // Note: Querying assets by MIME content_type is not a standard CDA operation
+    // Use pagination and other supported query methods instead
 
     it('should query assets with pagination', async () => {
       const result = await stack

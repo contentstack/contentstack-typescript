@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable promise/always-return */
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { QueryOperation } from "../../src/lib/types";
 import { AssetQuery } from "../../src/lib/asset-query";
 import { stackInstance } from "../utils/stack-instance";

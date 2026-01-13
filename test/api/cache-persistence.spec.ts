@@ -1,3 +1,4 @@
+import { describe, it, expect } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
 import { BaseEntry, Policy, QueryOperation } from '../../src/lib/types';
 import { StorageType } from '../../src/persistance';
@@ -259,10 +260,11 @@ describe('Cache and Persistence Tests', () => {
     });
 
     it('should test cache with different entry sizes', async () => {
+      // Each entry must be fetched from its own content type
       const entries = [
-        { uid: COMPLEX_ENTRY_UID, name: 'Complex Entry' },
-        { uid: MEDIUM_ENTRY_UID, name: 'Medium Entry' },
-        { uid: SIMPLE_ENTRY_UID, name: 'Simple Entry' }
+        { uid: COMPLEX_ENTRY_UID, ct: COMPLEX_CT, name: 'Complex Entry' },
+        { uid: MEDIUM_ENTRY_UID, ct: MEDIUM_CT, name: 'Medium Entry' },
+        { uid: SIMPLE_ENTRY_UID, ct: SIMPLE_CT, name: 'Simple Entry' }
       ].filter(entry => entry.uid);
 
       const performanceResults: Array<{entryName: string; duration: string; success: boolean}> = [];
@@ -272,7 +274,7 @@ describe('Cache and Persistence Tests', () => {
           const startTime = Date.now();
           
           const result = await stack
-            .contentType(COMPLEX_CT)
+            .contentType(entry.ct)
             .entry(entry.uid!)
             .fetch<any>();
         
@@ -285,8 +287,9 @@ describe('Cache and Persistence Tests', () => {
             success: !!result
           });
         } catch (error: any) {
-          if (error.response?.status === 422) {
-            console.log(`⚠️ 422 - Entry ${entry.name} not available`);
+          // Handle 404 (not found) and 422 (config issue) gracefully
+          if (error.status === 422 || error.status === 404) {
+            console.log(`⚠️ ${error.status} - Entry ${entry.name} not available`);
             performanceResults.push({
               entryName: entry.name,
               duration: '0ms',

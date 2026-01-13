@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable promise/always-return */
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { BaseAsset } from 'src';
 import { Asset } from '../../src/lib/asset';
 import { stackInstance } from '../utils/stack-instance';

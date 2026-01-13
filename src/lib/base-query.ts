@@ -2,6 +2,7 @@ import { AxiosInstance, getData } from '@contentstack/core';
 import { Pagination } from './pagination';
 import { FindResponse, params } from './types';
 import { encodeQueryParams } from './utils';
+import type { Query } from './query';
 
 export class BaseQuery extends Pagination {
   _parameters: params = {}; // Params of query class ?query={}
@@ -9,6 +10,14 @@ export class BaseQuery extends Pagination {
   protected _client!: AxiosInstance;
   protected _urlPath!: string;
   protected _variants!: string;
+
+  /**
+   * Helper method to cast this instance to Query type
+   * @private
+   */
+  protected asQuery(): Query {
+    return this as unknown as Query;
+  }
 
   /**
    * @method includeCount
@@ -23,12 +32,12 @@ export class BaseQuery extends Pagination {
    * // OR
    * const asset = await stack.asset().includeCount().find()
    *
-   * @returns {BaseQuery}
+   * @returns {Query}
    */
-  includeCount(): BaseQuery {
+  includeCount(): Query {
     this._queryParams.include_count = 'true';
 
-    return this;
+    return this.asQuery();
   }
 
   /**
@@ -42,14 +51,14 @@ export class BaseQuery extends Pagination {
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.orderByAscending("field_uid").find()
    * // OR
-   * const asset = await stack.asset().orderByAscending().find()
+   * const asset = await stack.asset().orderByAscending("field_uid").find()
    *
-   * @returns {BaseQuery}
+   * @returns {Query}
    */
-  orderByAscending(key: string): BaseQuery {
+  orderByAscending(key: string): Query {
     this._queryParams.asc = key;
 
-    return this;
+    return this.asQuery();
   }
 
   /**
@@ -63,14 +72,14 @@ export class BaseQuery extends Pagination {
    * const query = stack.contentType("contentTypeUid").entry().query();
    * const result = await query.orderByDescending("field_uid").find()
    * // OR
-   * const asset = await stack.asset().orderByDescending().find()
+   * const asset = await stack.asset().orderByDescending("field_uid").find()
    *
-   * @returns {BaseQuery}
+   * @returns {Query}
    */
-  orderByDescending(key: string): BaseQuery {
+  orderByDescending(key: string): Query {
     this._queryParams.desc = key;
 
-    return this;
+    return this.asQuery();
   }
 
   /**
@@ -82,16 +91,16 @@ export class BaseQuery extends Pagination {
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
-   * const result = await query.limit("limit_value").find()
+   * const result = await query.limit(10).find()
    * // OR
    * const asset = await stack.asset().limit(5).find()
    *
-   * @returns {BaseQuery}
+   * @returns {Query}
    */
-  limit(key: number): BaseQuery {
+  limit(key: number): Query {
     this._queryParams.limit = key;
 
-    return this;
+    return this.asQuery();
   }
 
   /**
@@ -103,16 +112,16 @@ export class BaseQuery extends Pagination {
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const query = stack.contentType("contentTypeUid").entry().query();
-   * const result = await query.skip("skip_value").find()
+   * const result = await query.skip(10).find()
    * // OR
    * const asset = await stack.asset().skip(5).find()
    *
-   * @returns {BaseQuery}
+   * @returns {Query}
    */
-  skip(key: number): BaseQuery {
+  skip(key: number): Query {
     this._queryParams.skip = key;
 
-    return this;
+    return this.asQuery();
   }
 
 
@@ -130,12 +139,12 @@ export class BaseQuery extends Pagination {
    * // OR
    * const asset = await stack.asset().param("key", "value").find()
    *
-   * @returns {BaseQuery}
+   * @returns {Query}
    */
-  param(key: string, value: string | number): BaseQuery {
+  param(key: string, value: string | number): Query {
     this._queryParams[key] = value;
 
-    return this;
+    return this.asQuery();
   }
 
   /**
@@ -151,12 +160,12 @@ export class BaseQuery extends Pagination {
    * // OR
    * const asset = await stack.asset().addParams({"key": "value"}).find()
    *
-   * @returns {BaseQuery}
+   * @returns {Query}
    */
-  addParams(paramObj: { [key: string]: string | boolean | number }): BaseQuery {
+  addParams(paramObj: { [key: string]: string | boolean | number }): Query {
     this._queryParams = { ...this._queryParams, ...paramObj };
 
-    return this;
+    return this.asQuery();
   }
 
   /**
@@ -172,19 +181,20 @@ export class BaseQuery extends Pagination {
    * // OR
    * const asset = await stack.asset().removeParam("query_param_key").find()
    *
-   * @returns {BaseQuery}
+   * @returns {Query}
    */
-  removeParam(key: string): BaseQuery {
+  removeParam(key: string): Query {
     delete this._queryParams[key];
 
-    return this;
+    return this.asQuery();
   }
 
   /**
    * @method find
-   * @memberof AssetQuery
-   * @description The assets of the stack will be fetched
-   * @returns {Collection}
+   * @memberof BaseQuery
+   * @description Fetches the data based on the query parameters
+   * @param {boolean} encode - Whether to encode query parameters
+   * @returns {Promise<FindResponse<T>>} Promise that resolves to the find response
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
@@ -199,7 +209,7 @@ export class BaseQuery extends Pagination {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.asset(asset_uid).fetch();
+   * const result = await stack.contentType("contentTypeUid").entry().query().find();
    */
 
   async find<T>(encode: boolean = false): Promise<FindResponse<T>> {

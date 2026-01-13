@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
 import { BaseEntry } from '../../src';
 
@@ -77,7 +78,7 @@ describe('Locale Fallback Chain Tests', () => {
             hasContent: !!result.title
           });
         } catch (error: any) {
-          if (error.response?.status === 422) {
+          if (error.status === 422) {
             console.log(`⚠️ Locale '${locale}' not available (422)`);
             results.push({ locale, error: '422' });
           } else {
@@ -145,9 +146,9 @@ describe('Locale Fallback Chain Tests', () => {
           locale: result.locale
         });
       } catch (error: any) {
-        if (error.response?.status === 422) {
+        if (error.status === 422) {
           console.log('⚠️ API returned 422 for non-existent locale (expected behavior)');
-          expect(error.response.status).toBe(422);
+          expect(error.status).toBe(422);
         } else {
           throw error;
         }
@@ -178,9 +179,9 @@ describe('Locale Fallback Chain Tests', () => {
 
         console.log('Partial locale content analysis (fr-fr):', fieldAnalysis);
       } catch (error: any) {
-        if (error.response?.status === 422) {
+        if (error.status === 422) {
           console.log('⚠️ Entry not available in fr-fr locale (422)');
-          expect(error.response.status).toBe(422);
+          expect(error.status).toBe(422);
         } else {
           throw error;
         }
@@ -344,9 +345,9 @@ describe('Locale Fallback Chain Tests', () => {
           hasContent: !!result.title
         });
       } catch (error: any) {
-        if (error.response?.status === 422) {
+        if (error.status === 422) {
           console.log('⚠️ API rejected invalid locale format (expected)');
-          expect(error.response.status).toBe(422);
+          expect(error.status).toBe(422);
         } else {
           throw error;
         }
@@ -450,7 +451,7 @@ describe('Locale Fallback Chain Tests', () => {
             titleLength: result.title ? result.title.length : 0
           });
         } catch (error: any) {
-          if (error.response?.status === 422) {
+          if (error.status === 422) {
             console.log(`⚠️ Locale '${locale}' not available (422)`);
             chainResults.push({
               requestedLocale: locale,

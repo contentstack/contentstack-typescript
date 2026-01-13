@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeAll } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
 import { TEntry } from './types';
 import { QueryOperation } from '../../src/lib/types';
@@ -165,18 +166,19 @@ describe('Query Operators API test cases - Simplified', () => {
     if (!testData) return;
 
     try {
+      // cybersecurity content type has 'related_content' reference field
       const query = makeEntries(CT_UID).query()
         .where('title', QueryOperation.EXISTS, true);
       const entryQuery = await makeEntries(CT_UID).query()
-        .referenceIn('reference', query)
+        .referenceIn('related_content', query)
         .find<TEntry>();
 
       expect(entryQuery.entries).toBeDefined();
       console.log(`ReferenceIn returned ${entryQuery.entries?.length || 0} entries`);
     } catch (error: any) {
-      if (error.response?.status === 422) {
+      if (error.status === 422 || error.response?.status === 422) {
         console.log('⚠️ 422 - Reference field may not exist (expected)');
-        expect(error.response.status).toBe(422);
+        expect(error.status || error.response?.status).toBe(422);
       } else {
         throw error;
       }
@@ -187,18 +189,19 @@ describe('Query Operators API test cases - Simplified', () => {
     if (!testData) return;
 
     try {
+      // cybersecurity content type has 'related_content' reference field
       const query = makeEntries(CT_UID).query()
         .where('title', QueryOperation.EXISTS, true);
       const entryQuery = await makeEntries(CT_UID).query()
-        .referenceNotIn('reference', query)
+        .referenceNotIn('related_content', query)
         .find<TEntry>();
 
       expect(entryQuery.entries).toBeDefined();
       console.log(`ReferenceNotIn returned ${entryQuery.entries?.length || 0} entries`);
     } catch (error: any) {
-      if (error.response?.status === 422) {
+      if (error.status === 422 || error.response?.status === 422) {
         console.log('⚠️ 422 - Reference field may not exist (expected)');
-        expect(error.response.status).toBe(422);
+        expect(error.status || error.response?.status).toBe(422);
       } else {
         throw error;
       }

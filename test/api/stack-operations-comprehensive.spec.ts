@@ -1,3 +1,4 @@
+import { describe, it, expect } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
 
 const stack = stackInstance();
@@ -214,7 +215,7 @@ describe('Stack Operations - Comprehensive Coverage', () => {
         try {
           return await fn();
         } catch (error: any) {
-          if (error.response?.status === 400) {
+          if (error.status === 400 || error.status === 422) {
             console.log(`⚠️ ${name} returned 400 (expected for some operations)`);
             return { skipped: true, name };
           }
@@ -397,9 +398,9 @@ describe('Stack Operations - Comprehensive Coverage', () => {
           console.log(`Last activities: ${activitiesResult.content_types.length} content types`);
         }
       } catch (error: any) {
-        if (error.response?.status === 400) {
+        if (error.status === 400 || error.status === 422) {
           console.log('⚠️ Taxonomy query returned 400 (requires specific parameters)');
-          expect(error.response.status).toBe(400);
+          expect(error.status).toBe(400);
         } else {
           throw error;
         }

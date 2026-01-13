@@ -1,32 +1,29 @@
 import { Region, params } from './types';
-import regionsData from '../assets/regions.json';
 
-export function getHostforRegion(cloudRegion: string = "aws_na", host?: string): string {
+export function getHostforRegion(region: Region = Region.US, host?: string): string {
   if (host) return host;
 
-  // Handle null, undefined, or empty string cases
-  if (!cloudRegion || typeof cloudRegion !== 'string') {
-    throw new Error("Unable to set host using the provided region. Please provide a valid region.");
+  let url = 'cdn.contentstack.io';
+  if (region !== Region.US) {
+    url = region.toString().toLowerCase() + '-cdn.contentstack.com';
   }
 
-  const normalizedRegion = cloudRegion.toLowerCase();
-
-  const regionObj = regionsData.regions.find(r =>
-    r.id === normalizedRegion ||
-    r.alias.some(alias => alias === normalizedRegion)
-  );
-
-  if (!regionObj) {
-    throw new Error("Unable to set host using the provided region. Please provide a valid region.");
-  }
-
-  return regionObj ? regionObj.endpoints.contentDelivery.replace(/^https?:\/\//, '') : 'cdn.contentstack.io';
+  return url;
 }
 
+/**
+ * Checks if the code is running in a browser environment
+ * @returns {boolean} True if running in browser, false otherwise
+ */
 export function isBrowser() {
   return (typeof window !== "undefined");
 }
 
+/**
+ * Encodes query parameters recursively, handling nested objects
+ * @param {params} params - Query parameters object to encode
+ * @returns {params} Encoded query parameters object
+ */
 export function encodeQueryParams(params: params): params {
   const encodedParams: params = {};
   

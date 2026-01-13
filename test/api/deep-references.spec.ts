@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
 import { BaseEntry } from '../../src';
 
@@ -117,13 +118,13 @@ describe('Deep Reference Chains Tests', () => {
   skipIfNoUID('4-Level Deep References', () => {
     it('should fetch 4-level deep reference chain', async () => {
       // Use page_builder entry for 4-level chain (page_footer.references.reference)
-      const PAGE_BUILDER_CT = process.env.PAGE_BUILDER_CONTENT_TYPE_UID || 'page_builder';
-      const PAGE_BUILDER_ENTRY_UID = process.env.PAGE_BUILDER_ENTRY_UID || 'example_page_builder_uid';
+      const PAGE_BUILDER_CT = process.env.COMPLEX_BLOCKS_CONTENT_TYPE_UID || 'page_builder';
+      const PAGE_BUILDER_ENTRY_UID = process.env.COMPLEX_BLOCKS_ENTRY_UID || COMPLEX_ENTRY_UID!;
       
       try {
         const result = await stack
           .contentType(PAGE_BUILDER_CT)
-          .entry(PAGE_BUILDER_ENTRY_UID)
+          .entry(PAGE_BUILDER_ENTRY_UID!)
           .includeReference([
             'page_footer',
             'page_footer.references',
@@ -439,11 +440,18 @@ describe('Deep Reference Chains Tests', () => {
     skipIfNoMultiLevelUID('should handle multiple entry types with deep references', () => {
       it('should handle multiple entry types with deep references', async () => {
         try {
+          // Use MEDIUM_ENTRY_UID for MEDIUM_CT (article), COMPLEX_ENTRY_UID for COMPLEX_CT
+          const mediumEntryUid = process.env.MEDIUM_ENTRY_UID;
+          if (!mediumEntryUid) {
+            console.log('⚠️ Skipping: MEDIUM_ENTRY_UID not configured');
+            return;
+          }
+          
           const results = await Promise.all([
             stack.contentType(COMPLEX_CT).entry(COMPLEX_ENTRY_UID!)
               .includeReference(['related_content', 'related_content.authors'])
               .fetch<any>(),
-            stack.contentType(MEDIUM_CT).entry(SIMPLE_ENTRY_UID!)
+            stack.contentType(MEDIUM_CT).entry(mediumEntryUid)
               .includeReference(['reference', 'reference.authors'])
               .fetch<any>()
           ]);
@@ -461,9 +469,9 @@ describe('Deep Reference Chains Tests', () => {
 
           compareStructures(results[0], results[1]);
         } catch (error: any) {
-          if (error.response?.status === 422) {
-            console.log('⚠️ Entry/Content Type mismatch (422) - check SIMPLE_ENTRY_UID belongs to MEDIUM_CT');
-            expect(error.response.status).toBe(422);
+          if (error.status === 422) {
+            console.log('⚠️ Entry/Content Type mismatch (422) - check MEDIUM_ENTRY_UID belongs to MEDIUM_CT');
+            expect(error.status).toBe(422);
           } else {
             throw error;
           }

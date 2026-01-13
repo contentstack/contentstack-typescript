@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
 import { BaseEntry } from '../../src';
 
