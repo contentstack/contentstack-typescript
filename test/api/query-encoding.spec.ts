@@ -1,13 +1,17 @@
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { QueryOperation } from "../../src/lib/types";
 import { stackInstance } from "../utils/stack-instance";
 import { TEntries } from "./types";
 
 const stack = stackInstance();
 
+// Using new standardized env variable names
+const MEDIUM_CT = process.env.MEDIUM_CONTENT_TYPE_UID || 'article';
+
 describe("Query Encoding API tests", () => {
   
   it("should handle regular query parameters without encoding", async () => {
-    const query = stack.contentType("blog_post").entry().query();
+    const query = stack.contentType(MEDIUM_CT).entry().query();
     query._parameters = { title: "Simple Title" };
     
     const result = await query.find<TEntries>();
@@ -16,7 +20,7 @@ describe("Query Encoding API tests", () => {
   });
 
   it("should handle special characters in query parameters with encoding enabled", async () => {
-    const query = stack.contentType("blog_post").entry().query();
+    const query = stack.contentType(MEDIUM_CT).entry().query();
     query._parameters = { 
       title: "Title with & special + characters!",
       category: "news+tech"
@@ -28,7 +32,7 @@ describe("Query Encoding API tests", () => {
   });
 
   it("should handle URL-sensitive characters with encoding", async () => {
-    const query = stack.contentType("blog_post").entry().query();
+    const query = stack.contentType(MEDIUM_CT).entry().query();
     query._parameters = { 
       url: "https://example.com?param=value&other=test",
       email: "user@domain.com"
@@ -40,7 +44,7 @@ describe("Query Encoding API tests", () => {
   });
 
   it("should handle unicode characters with encoding", async () => {
-    const query = stack.contentType("blog_post").entry().query();
+    const query = stack.contentType(MEDIUM_CT).entry().query();
     query._parameters = { 
       title: "Café français",
       description: "Testing unicode characters: ñáéíóú"
@@ -52,7 +56,7 @@ describe("Query Encoding API tests", () => {
   });
 
   it("should handle nested objects with special characters when encoding", async () => {
-    const query = stack.contentType("blog_post").entry().query();
+    const query = stack.contentType(MEDIUM_CT).entry().query();
     query._parameters = { 
       title: "Test & Title",
       author: {
@@ -67,7 +71,7 @@ describe("Query Encoding API tests", () => {
   });
 
   it("should preserve behavior with mixed data types when encoding", async () => {
-    const query = stack.contentType("blog_post").entry().query();
+    const query = stack.contentType(MEDIUM_CT).entry().query();
     query._parameters = { 
       title: "Test & Title",
       count: 5,
@@ -82,7 +86,7 @@ describe("Query Encoding API tests", () => {
 
   it("should work with query chaining and encoding", async () => {
     const result = await stack
-      .contentType("blog_post")
+      .contentType(MEDIUM_CT)
       .entry()
       .query()
       .limit(5)
@@ -94,7 +98,7 @@ describe("Query Encoding API tests", () => {
   });
 
   it("should handle empty parameters with encoding enabled", async () => {
-    const query = stack.contentType("blog_post").entry().query();
+    const query = stack.contentType(MEDIUM_CT).entry().query();
     query._parameters = {};
     
     const result = await query.find<TEntries>(true);
@@ -103,7 +107,7 @@ describe("Query Encoding API tests", () => {
   });
 
   it("should maintain backward compatibility - encoding disabled by default", async () => {
-    const query = stack.contentType("blog_post").entry().query();
+    const query = stack.contentType(MEDIUM_CT).entry().query();
     query.where("title", QueryOperation.EQUALS, "Test  Title");
     
     // Default behavior (no encoding)
@@ -116,7 +120,7 @@ describe("Query Encoding API tests", () => {
   });
 
   it("should handle complex query scenarios with encoding", async () => {
-    const query = stack.contentType("blog_post").entry().query();
+    const query = stack.contentType(MEDIUM_CT).entry().query();
     query._parameters = { 
       $and: [
         { title: { $regex: "test & pattern" } },
