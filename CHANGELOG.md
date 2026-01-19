@@ -1,3 +1,7 @@
+### Version: 4.11.0
+#### Date: Jan-19-2026
+Enhancement: Integrated getContentstackEndpoint method of Utils SDK for endpoint selection
+
 ### Version: 4.10.5
 #### Date: Jan-05-2026
 Fix: update esm export path to include .js extension (upgrade contentstack-js-core dependency)
