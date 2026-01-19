@@ -12,6 +12,16 @@ import {
 } from "../utils/constant";
 import { httpClient, AxiosInstance } from "@contentstack/core";
 import MockAdapter from "axios-mock-adapter";
+import * as Utils from "@contentstack/utils";
+
+// Mock getContentstackEndpoint from @contentstack/utils
+jest.mock("@contentstack/utils", () => ({
+  getContentstackEndpoint: jest.fn(),
+}));
+
+const mockGetContentstackEndpoint = Utils.getContentstackEndpoint as jest.MockedFunction<
+  typeof Utils.getContentstackEndpoint
+>;
 
 let client: AxiosInstance;
 let mockClient: MockAdapter;
@@ -23,35 +33,185 @@ beforeAll(() => {
 
 describe("Utils functions", () => {
   describe("getHostforRegion function", () => {
-    it("should return custom host when provided", () => {
-      const customHost = "custom.example.com";
-      const result = getHostforRegion(Region.EU, customHost);
-      expect(result).toBe(customHost);
+    beforeEach(() => {
+      // Reset mock before each test
+      mockGetContentstackEndpoint.mockReset();
     });
 
-    it("should return default host when no region is provided", () => {
-      const result = getHostforRegion();
+    it("should return custom host when provided and not call getContentstackEndpoint", () => {
+      const customHost = "custom.example.com";
+      const result = getHostforRegion(Region.EU, customHost);
+      
+      expect(result).toBe(customHost);
+      expect(mockGetContentstackEndpoint).not.toHaveBeenCalled();
+    });
+
+    it("should call getContentstackEndpoint with correct parameters when no host is provided", () => {
+      mockGetContentstackEndpoint.mockReturnValue(HOST_URL);
+      
+      const result = getHostforRegion(Region.US);
+      
+      expect(mockGetContentstackEndpoint).toHaveBeenCalledWith(
+        Region.US,
+        "contentDelivery",
+        true
+      );
       expect(result).toBe(HOST_URL);
     });
 
-    it("should return correct host for each region using Region enum", () => {
-      // Test using Region enum values
-      expect(getHostforRegion(Region.EU)).toBe(HOST_EU_REGION);
-      expect(getHostforRegion(Region.AU)).toBe(HOST_AU_REGION);
-      expect(getHostforRegion(Region.AZURE_NA)).toBe(HOST_AZURE_NA_REGION);
-      expect(getHostforRegion(Region.AZURE_EU)).toBe("azure-eu-cdn.contentstack.com");
-      expect(getHostforRegion(Region.GCP_NA)).toBe(HOST_GCP_NA_REGION);
-      expect(getHostforRegion(Region.GCP_EU)).toBe(HOST_GCP_EU_REGION);
+
+    it("should return correct host for EU region using getContentstackEndpoint", () => {
+      mockGetContentstackEndpoint.mockReturnValue(HOST_EU_REGION);
+      
+      const result = getHostforRegion(Region.EU);
+      
+      expect(mockGetContentstackEndpoint).toHaveBeenCalledWith(
+        Region.EU,
+        "contentDelivery",
+        true
+      );
+      expect(result).toBe(HOST_EU_REGION);
     });
 
-    it("should return default host for US region", () => {
-      expect(getHostforRegion(Region.US)).toBe(HOST_URL);
+    it("should return correct host for AU region using getContentstackEndpoint", () => {
+      mockGetContentstackEndpoint.mockReturnValue(HOST_AU_REGION);
+      
+      const result = getHostforRegion(Region.AU);
+      
+      expect(mockGetContentstackEndpoint).toHaveBeenCalledWith(
+        Region.AU,
+        "contentDelivery",
+        true
+      );
+      expect(result).toBe(HOST_AU_REGION);
     });
 
-    it("should prioritize custom host over region", () => {
+    it("should return correct host for AZURE_NA region using getContentstackEndpoint", () => {
+      mockGetContentstackEndpoint.mockReturnValue(HOST_AZURE_NA_REGION);
+      
+      const result = getHostforRegion(Region.AZURE_NA);
+      
+      expect(mockGetContentstackEndpoint).toHaveBeenCalledWith(
+        Region.AZURE_NA,
+        "contentDelivery",
+        true
+      );
+      expect(result).toBe(HOST_AZURE_NA_REGION);
+    });
+
+    it("should return correct host for AZURE_EU region using getContentstackEndpoint", () => {
+      const azureEuHost = "azure-eu-cdn.contentstack.com";
+      mockGetContentstackEndpoint.mockReturnValue(azureEuHost);
+      
+      const result = getHostforRegion(Region.AZURE_EU);
+      
+      expect(mockGetContentstackEndpoint).toHaveBeenCalledWith(
+        Region.AZURE_EU,
+        "contentDelivery",
+        true
+      );
+      expect(result).toBe(azureEuHost);
+    });
+
+    it("should return correct host for GCP_NA region using getContentstackEndpoint", () => {
+      mockGetContentstackEndpoint.mockReturnValue(HOST_GCP_NA_REGION);
+      
+      const result = getHostforRegion(Region.GCP_NA);
+      
+      expect(mockGetContentstackEndpoint).toHaveBeenCalledWith(
+        Region.GCP_NA,
+        "contentDelivery",
+        true
+      );
+      expect(result).toBe(HOST_GCP_NA_REGION);
+    });
+
+    it("should return correct host for GCP_EU region using getContentstackEndpoint", () => {
+      mockGetContentstackEndpoint.mockReturnValue(HOST_GCP_EU_REGION);
+      
+      const result = getHostforRegion(Region.GCP_EU);
+      
+      expect(mockGetContentstackEndpoint).toHaveBeenCalledWith(
+        Region.GCP_EU,
+        "contentDelivery",
+        true
+      );
+      expect(result).toBe(HOST_GCP_EU_REGION);
+    });
+
+    it("should return correct host for US region using getContentstackEndpoint", () => {
+      mockGetContentstackEndpoint.mockReturnValue(HOST_URL);
+      
+      const result = getHostforRegion(Region.US);
+      
+      expect(mockGetContentstackEndpoint).toHaveBeenCalledWith(
+        Region.US,
+        "contentDelivery",
+        true
+      );
+      expect(result).toBe(HOST_URL);
+    });
+
+    it("should prioritize custom host over region and not call getContentstackEndpoint", () => {
       const customHost = "priority.example.com";
+      
       const result = getHostforRegion(Region.EU, customHost);
+      
       expect(result).toBe(customHost);
+      expect(mockGetContentstackEndpoint).not.toHaveBeenCalled();
+    });
+
+    it("should handle string region values and call getContentstackEndpoint", () => {
+      const stringRegion = "eu";
+      mockGetContentstackEndpoint.mockReturnValue(HOST_EU_REGION);
+      
+      const result = getHostforRegion(stringRegion);
+      
+      expect(mockGetContentstackEndpoint).toHaveBeenCalledWith(
+        stringRegion,
+        "contentDelivery",
+        true
+      );
+      expect(result).toBe(HOST_EU_REGION);
+    });
+
+    it("should handle empty string host and call getContentstackEndpoint", () => {
+      mockGetContentstackEndpoint.mockReturnValue(HOST_URL);
+      
+      const result = getHostforRegion(Region.US, "");
+      
+      // Empty string is falsy, so it should call getContentstackEndpoint
+      expect(mockGetContentstackEndpoint).toHaveBeenCalledWith(
+        Region.US,
+        "contentDelivery",
+        true
+      );
+      expect(result).toBe(HOST_URL);
+    });
+
+    it("should always pass 'contentDelivery' as service parameter", () => {
+      mockGetContentstackEndpoint.mockReturnValue(HOST_URL);
+      
+      getHostforRegion(Region.US);
+      getHostforRegion(Region.EU);
+      getHostforRegion(Region.AU);
+      
+      expect(mockGetContentstackEndpoint).toHaveBeenCalledTimes(3);
+      mockGetContentstackEndpoint.mock.calls.forEach((call) => {
+        expect(call[1]).toBe("contentDelivery");
+      });
+    });
+
+    it("should always pass true as omitHttps parameter", () => {
+      mockGetContentstackEndpoint.mockReturnValue(HOST_URL);
+      
+      getHostforRegion(Region.US);
+      getHostforRegion(Region.EU);
+      
+      expect(mockGetContentstackEndpoint).toHaveBeenCalledTimes(2);
+      mockGetContentstackEndpoint.mock.calls.forEach((call) => {
+        expect(call[2]).toBe(true);
+      });
     });
   });
 
