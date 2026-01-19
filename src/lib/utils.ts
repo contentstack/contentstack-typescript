@@ -1,14 +1,10 @@
 import { Region, params } from './types';
+import { getContentstackEndpoint } from '@contentstack/utils';
 
-export function getHostforRegion(region: Region = Region.US, host?: string): string {
+export function getHostforRegion(region: Region | string, host?: string): string {
   if (host) return host;
 
-  let url = 'cdn.contentstack.io';
-  if (region !== Region.US) {
-    url = region.toString().toLowerCase() + '-cdn.contentstack.com';
-  }
-
-  return url;
+  return getContentstackEndpoint(region, 'contentDelivery', true) as string;
 }
 
 /**
