@@ -1,8 +1,10 @@
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
 import { TGlobalField } from './types';
 
 const stack = stackInstance();
-const globalFieldUid = process.env.GLOBAL_FIELD_UID || 'seo_fields';
+// Use GLOBAL_FIELD_UID from env, fallback to 'seo' which exists in the test stack
+const globalFieldUid = process.env.SIMPLE_GLOBAL_FIELD_UID || process.env.GLOBAL_FIELD_UID || 'seo';
 
 describe('Global Fields API Tests', () => {
   describe('Global Field Basic Operations', () => {
