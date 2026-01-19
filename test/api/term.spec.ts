@@ -15,10 +15,10 @@ describe("Terms API test cases", () => {
   });
 
   it("should get locales for a term", async () => {
-    // const result = await makeTerms("vehicles").locales().fetch();
-    // API under building phase, so it should throw error
-    expect(async () => await makeTerms("vehicles").locales()).rejects.toThrow();
-    // TODO: add assertions
+    const result = await makeTerms("vehicles").locales<TTerms>();
+    expect(result).toBeDefined();
+    expect(result.terms).toBeDefined();
+    expect(result.terms[0].name).toBeDefined();
   });
 
   it("should get ancestors for a term", async () => {
