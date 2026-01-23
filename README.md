@@ -119,7 +119,7 @@ const stack = contentstack.stack({
   deliveryToken: "deliveryToken",
   environment: "environment",
   region: Region.EU,
-  host: "custom-cdn.example.com" // This will be used instead of eu-cdn.contentstack.com
+  host: "custom-cdn.example.com"
 });
 ```
 
