@@ -66,6 +66,63 @@ You will need to specify the API key, Delivery Token, and Environment Name of yo
 
 Once you have initialized the SDK, you can start getting content in your app.
 
+#### Region and Host Configuration
+
+The SDK supports region and custom host configuration to connect to different Contentstack data centers or custom endpoints.
+
+**Region Support**
+
+You can specify a region to connect to the appropriate Contentstack data center. Available regions are:
+- `US` (default) - Uses `cdn.contentstack.io`
+- `EU` - Uses `eu-cdn.contentstack.com`
+- `AU` - Uses `au-cdn.contentstack.com`
+- `AZURE_NA` - Uses `azure-na-cdn.contentstack.com`
+- `AZURE_EU` - Uses `azure-eu-cdn.contentstack.com`
+- `GCP_NA` - Uses `gcp-na-cdn.contentstack.com`
+- `GCP_EU` - Uses `gcp-eu-cdn.contentstack.com`
+
+```typescript
+import contentstack, { Region } from '@contentstack/delivery-sdk'
+
+// Using region enum
+const stack = contentstack.stack({
+  apiKey: "apiKey",
+  deliveryToken: "deliveryToken",
+  environment: "environment",
+  region: Region.EU
+});
+
+// Using region string
+const stack = contentstack.stack({
+  apiKey: "apiKey",
+  deliveryToken: "deliveryToken",
+  environment: "environment",
+  region: "eu"
+});
+```
+
+**Custom Host Support**
+
+You can specify a custom host to connect to a custom endpoint. If a custom host is provided, it takes priority over the region-based host.
+
+```typescript
+const stack = contentstack.stack({
+  apiKey: "apiKey",
+  deliveryToken: "deliveryToken",
+  environment: "environment",
+  host: "custom-cdn.example.com"
+});
+
+// Custom host with region (host takes priority)
+const stack = contentstack.stack({
+  apiKey: "apiKey",
+  deliveryToken: "deliveryToken",
+  environment: "environment",
+  region: Region.EU,
+  host: "custom-cdn.example.com"
+});
+```
+
 #### Querying content from your stack
 
 To get a single entry, you need to specify the content type as well as the ID of the entry.
