@@ -1,0 +1,21 @@
+{
+  "name": "rollup-bundler-test",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Rollup bundler validation for @contentstack/delivery-sdk",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "node dist/bundle.cjs"
+  },
+  "dependencies": {
+    "@contentstack/delivery-sdk": "file:../../.."
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "rollup": "^4.0.0"
+  }
+}
+

@@ -19,6 +19,13 @@ export default {
     //   branches: 95,
     // }
   },
+  // Use single worker to avoid circular JSON serialization issues with error objects
+  // This prevents "Jest worker encountered 4 child process exceptions" errors
+  maxWorkers: 1,
+  // Increase timeout for integration tests that may take longer
+  testTimeout: 30000,
+  // Global setup file to suppress expected SDK validation errors
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   reporters: [
     "default",
     [
@@ -36,6 +43,9 @@ export default {
         publicPath: "./reports/contentstack-delivery/html",
         filename: "index.html",
         expand: true,
+        // Enable console log capture in reports
+        enableMergeData: true,
+        dataMergeLevel: 2,
       },
     ],
     [
@@ -48,6 +58,13 @@ export default {
         suiteNameTemplate: "{filepath}",
         classNameTemplate: "{classname}",
         titleTemplate: "{title}",
+      },
+    ],
+    // JSON reporter to capture console logs for unified report
+    [
+      "./test/reporting/jest-json-reporter.cjs",
+      {
+        outputPath: "test-results/jest-results.json",
       },
     ],
   ],

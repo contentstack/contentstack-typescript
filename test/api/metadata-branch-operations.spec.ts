@@ -1,10 +1,12 @@
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
 import { TEntry } from './types';
 
 const stack = stackInstance();
-const contentTypeUid = process.env.CONTENT_TYPE_UID || 'sample_content_type';
-const entryUid = process.env.ENTRY_UID || 'sample_entry';
-const branchUid = process.env.BRANCH_UID || 'development';
+// Using new standardized env variable names
+const contentTypeUid = process.env.COMPLEX_CONTENT_TYPE_UID || 'cybersecurity';
+const entryUid = process.env.COMPLEX_ENTRY_UID || process.env.MEDIUM_ENTRY_UID || '';
+const branchUid = process.env.BRANCH_UID || 'main';
 
 describe('Metadata and Branch Operations API Tests', () => {
   describe('Entry Metadata Operations', () => {
@@ -49,7 +51,7 @@ describe('Metadata and Branch Operations API Tests', () => {
     });
 
     it('should include metadata in single asset fetch', async () => {
-      const assetUid = process.env.ASSET_UID || 'sample_asset';
+      const assetUid = process.env.IMAGE_ASSET_UID || 'sample_asset';
       const result = await stack.asset()
         .includeMetadata()
         .find();
@@ -90,7 +92,8 @@ describe('Metadata and Branch Operations API Tests', () => {
 
   describe('Global Field Operations', () => {
     it('should fetch global field successfully', async () => {
-      const globalFieldUid = process.env.GLOBAL_FIELD_UID || 'sample_global_field';
+      // Use GLOBAL_FIELD_UID from env, fallback to 'seo' which exists in the test stack
+      const globalFieldUid = process.env.SIMPLE_GLOBAL_FIELD_UID || process.env.GLOBAL_FIELD_UID || 'seo';
       
       try {
         const result = await stack.globalField(globalFieldUid).fetch();
