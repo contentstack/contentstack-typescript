@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable promise/always-return */
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { ContentType } from '../../src/lib/content-type';
 import { stackInstance } from '../utils/stack-instance';
 import { TContentType, TEntry } from './types';
@@ -8,13 +9,18 @@ import dotenv from 'dotenv';
 dotenv.config()
 
 const stack = stackInstance();
+
+// Using new standardized env variable names
+const MEDIUM_CT = process.env.MEDIUM_CONTENT_TYPE_UID || 'article';
+const MEDIUM_ENTRY_UID = process.env.MEDIUM_ENTRY_UID || process.env.COMPLEX_ENTRY_UID || '';
+
 describe('ContentType API test cases', () => {
   it('should give Entry instance when entry method is called with entryUid', async () => {
-    const result = await makeContentType('blog_post').entry(process.env.ENTRY_UID as string).fetch<TEntry>();
+    const result = await makeContentType(MEDIUM_CT).entry(MEDIUM_ENTRY_UID).fetch<TEntry>();
     expect(result).toBeDefined();
   });
   it('should check for content_types of the given contentTypeUid', async () => {
-    const result = await makeContentType('blog_post').fetch<TContentType>();
+    const result = await makeContentType(MEDIUM_CT).fetch<TContentType>();
     expect(result).toBeDefined();
     expect(result._version).toBeDefined();
     expect(result.title).toBeDefined();

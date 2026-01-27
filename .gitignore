@@ -12,6 +12,34 @@ tap-html.html
 coverage
 .env
 .dccache
-dist/*
+dist/
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.cache
+test-results/
+
+# Build artifacts (should only be in dist/)
+src/**/*.js
+src/**/*.js.map
+
+# Browser test bundle (generated)
+test/e2e/sdk-browser-bundle.js
+test/e2e/sdk-browser-bundle.js.map
+docs
+reports
+
+# Bundler test artifacts (regenerated on test run)
+test/bundlers/**/.next/
+test/bundlers/**/dist/
+test/bundlers/**/node_modules/
+test/bundlers/**/package-lock.json
+
+# Temporary internal scripts
+test/docs/*.js
+test/docs/*.mjs
+test/docs/sanity-report*
 *.log
 .nx/

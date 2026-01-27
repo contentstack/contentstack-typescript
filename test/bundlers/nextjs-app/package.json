@@ -1,0 +1,17 @@
+{
+  "name": "nextjs-bundler-test",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Next.js bundler validation for @contentstack/delivery-sdk - Real customer scenario!",
+  "scripts": {
+    "build": "next build",
+    "test": "node test-runner.js"
+  },
+  "dependencies": {
+    "@contentstack/delivery-sdk": "file:../../..",
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
+
