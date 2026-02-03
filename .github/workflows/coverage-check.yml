@@ -18,21 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22.14.0'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm install --ignore-scripts
-
       - name: Run unit tests with coverage
         uses: ArtiomTr/jest-coverage-report-action@v2
         id: coverage
         with:
           test-script: npm run test:unit
           threshold: 95
-          coverage-file: ./reports/contentstack-delivery/coverage/coverage-final.json
-          base-coverage-file: ./reports/contentstack-delivery/coverage/coverage-final.json
-          skip-step: install
