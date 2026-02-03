@@ -60,6 +60,17 @@ describe('Asset class', () => {
     expect(asset._queryParams.version).toBe('1');
   });
 
+  it('should add "asset_fields[]" in _queryParams when assetFields method is called', () => {
+    const returnedValue = asset.assetFields('user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups');
+    expect(returnedValue).toBeInstanceOf(Asset);
+    expect(asset._queryParams['asset_fields[]']).toEqual(['user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups']);
+  });
+
+  it('should not set asset_fields[] when assetFields is called with no arguments', () => {
+    asset.assetFields();
+    expect(asset._queryParams['asset_fields[]']).toBeUndefined();
+  });
+
   it('should add "fetch" in _queryParams when fetch method is called', async () => {
     mockClient.onGet(`/assets/assetUid`).reply(200, assetFetchDataMock);
     const returnedValue = await asset.fetch();
@@ -73,5 +84,16 @@ describe('Asset class', () => {
     const result = await asset.fetch();
     
     expect(result).toEqual(responseWithoutAsset);
+  });
+
+  it('should call fetch with asset_fields[] query params when assetFields is set', async () => {
+    mockClient.onGet(`/assets/assetUid`).reply((config) => {
+      expect(config.params).toBeDefined();
+      expect(config.params['asset_fields[]']).toEqual(['user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups']);
+      return [200, assetFetchDataMock];
+    });
+    asset.assetFields('user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups');
+    const result = await asset.fetch();
+    expect(result).toEqual(assetFetchDataMock.asset);
   });
 });

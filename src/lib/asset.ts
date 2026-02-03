@@ -3,7 +3,7 @@ import { AxiosInstance, getData } from '@contentstack/core';
 export class Asset {
   private _client: AxiosInstance;
   private _urlPath: string;
-  _queryParams: { [key: string]: string | number } = {};
+  _queryParams: { [key: string]: string | number | string[] } = {};
 
   constructor(client: AxiosInstance, assetUid: string) {
     this._client = client;
@@ -126,6 +126,27 @@ export class Asset {
   locale(locale: string): Asset {
     this._queryParams.locale = locale;
 
+    return this;
+  }
+
+  /**
+   * @method assetFields
+   * @memberof Asset
+   * @description Include specific asset fields in the response (CDA getAssets - single asset).
+   * Use with asset_fields[]: user_defined_fields, embedded, ai_suggested, visual_markups.
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.asset("assetUid").assetFields("user_defined_fields", "embedded").fetch();
+   *
+   * @param {...string} fields - Asset field names to include (e.g. user_defined_fields, embedded, ai_suggested, visual_markups)
+   * @returns {Asset} - Returns the Asset instance for chaining.
+   */
+  assetFields(...fields: string[]): this {
+    if (fields.length > 0) {
+      this._queryParams['asset_fields[]'] = fields;
+    }
     return this;
   }
 
