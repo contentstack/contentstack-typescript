@@ -126,6 +126,28 @@ export class AssetQuery extends BaseQuery {
 
     return this;
   }
+
+  /**
+   * @method assetFields
+   * @memberof AssetQuery
+   * @description Include specific asset fields in the response (CDA getAssets).
+   * Use with asset_fields[]: user_defined_fields, embedded, ai_suggested, visual_markups.
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.asset().assetFields("user_defined_fields", "embedded").find();
+   *
+   * @param {...string} fields - Asset field names to include (e.g. user_defined_fields, embedded, ai_suggested, visual_markups)
+   * @returns {AssetQuery} - Returns the AssetQuery instance for chaining.
+   */
+  assetFields(...fields: string[]): this {
+    if (fields.length > 0) {
+      this._queryParams['asset_fields[]'] = fields;
+    }
+    return this;
+  }
+
   /**
    * @method query
    * @memberof AssetQuery

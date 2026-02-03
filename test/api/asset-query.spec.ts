@@ -130,6 +130,20 @@ describe("AssetQuery API tests", () => {
       console.log('No assets found in stack - test data dependent');
     }
   });
+  it("should query assets with asset_fields[] CDA param (user_defined_fields, embedded, ai_suggested, visual_markups)", async () => {
+    const result = await makeAssetQuery()
+      .assetFields("user_defined_fields", "embedded", "ai_suggested", "visual_markups")
+      .limit(2)
+      .find<TAsset>();
+    if (result.assets) {
+      expect(result.assets).toBeDefined();
+      if (result.assets.length > 0) {
+        expect(result.assets[0].uid).toBeDefined();
+        expect(result.assets[0]._version).toBeDefined();
+        expect(result.assets[0].content_type).toBeDefined();
+      }
+    }
+  });
 });
 function makeAssetQuery(): AssetQuery {
   const asset = stack.asset();

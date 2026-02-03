@@ -171,6 +171,19 @@ describe("Entries API test cases", () => {
     if (data.entries) expect(data.entries.length).toBeGreaterThan(0);
   });
 
+  it("should query entries with asset_fields[] CDA param (user_defined_fields, embedded, ai_suggested, visual_markups)", async () => {
+    const result = await makeEntries(BLOG_POST_CT)
+      .assetFields("user_defined_fields", "embedded", "ai_suggested", "visual_markups")
+      .find<TEntry>();
+    if (result.entries) {
+      expect(result.entries).toBeDefined();
+      if (result.entries.length > 0) {
+        expect(result.entries[0].uid).toBeDefined();
+        expect(result.entries[0]._version).toBeDefined();
+      }
+    }
+  });
+
   it("CT Taxonomies Query: Get Entries With Taxonomy Terms Parent and Excluding the term itself ($above, level)", async () => {
     // ABOVE operation finds entries tagged with PARENT terms of the given term
     // Requires a child term (e.g., term_one_child) to find its parents
