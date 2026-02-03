@@ -24,5 +24,3 @@ jobs:
         with:
           test-script: npm run test:unit
           threshold: 95
-          coverage-file: ./reports/contentstack-delivery/coverage/coverage-final.json
-          base-coverage-file: ./reports/contentstack-delivery/coverage/coverage-final.json
