@@ -1,3 +1,7 @@
+/**
+ * Legacy sanity report script (TS SDK Slack notification).
+ * Run from repo root: node scripts/sanity-report-ts-sdk.js
+ */
 const fs = require("fs");
 const { App } = require("@slack/bolt");
 const { JSDOM } = require("jsdom");
@@ -11,7 +15,7 @@ const user2 = process.env.USER2;
 const user3 = process.env.USER3;
 const user4 = process.env.USER4;
 
-const reportPath = path.join(__dirname, "reports/sanity.html");
+const reportPath = path.join(__dirname, "..", "reports", "sanity.html");
 const data = fs.readFileSync(reportPath, "utf8");
 const dom = new JSDOM(data);
 
@@ -85,7 +89,7 @@ const sendFailureDetails = async (threadTs) => {
     for (const suite of failedTestSuites) {
       let modulePath = suite.testFilePath;
       let formattedModuleName = path
-        .relative(__dirname, modulePath)
+        .relative(path.join(__dirname, ".."), modulePath)
         .replace(/^test\//, "")
         .replace(/\.ts$/, "")
         .replace(/\//g, " ");

@@ -9,7 +9,7 @@ The Typescript SDK can also be used to create Node.js and React native applicati
 
 ### Prerequisite
 
-You need Node.js version 4.4.7 or later installed to use the Contentstack JavaScript SDK.
+You need Node.js version 18 or later installed to use the Contentstack TypeScript SDK.
 
 ### Setup and Installation
 
@@ -213,6 +213,10 @@ const stack = contentstack.stack({
 ```
 
 See [@contentstack/delivery-sdk-persistence](https://www.npmjs.com/package/@contentstack/delivery-sdk-persistence) for options (`storeType`, `maxAge`, custom storage).
+
+### Development
+
+When contributing or running tests from the repository, run `npm run build` before running tests. The published package includes a pre-built `dist/` directory.
 
 ### Helpful Links
 

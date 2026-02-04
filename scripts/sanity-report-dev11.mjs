@@ -1,3 +1,7 @@
+/**
+ * Legacy sanity report script (Dev11 / GOCD pipeline).
+ * Run from repo root: node scripts/sanity-report-dev11.mjs
+ */
 import pkg from '@slack/bolt';
 import dotenv from 'dotenv';
 import fs from 'fs';
