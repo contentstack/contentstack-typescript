@@ -3,9 +3,12 @@
   "version": "5.0.0",
   "type": "module",
   "license": "MIT",
-  "main": "./dist/legacy/index.cjs",
-  "module": "./dist/legacy/index.js",
-  "types": "./dist/legacy/index.d.ts",
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "./dist/modern/index.cjs",
+  "module": "./dist/modern/index.js",
+  "types": "./dist/modern/index.d.ts",
   "exports": {
     ".": {
       "import": {
@@ -36,14 +39,10 @@
     "validate:browser": "node scripts/validate-browser-safe.js",
     "validate:bundlers": "cd test/bundlers && ./validate-all.sh",
     "validate:all": "npm run validate:browser && npm run validate:bundlers",
-    "lint": "eslint . -c .eslintrc.json",
-    "clean": "node tools/cleanup",
     "package": "npm run build && npm pack",
     "build": "npm run build:rollup && npm run build:types",
     "build:rollup": "NODE_OPTIONS='--max-old-space-size=16384' rollup -c",
     "build:types": "tsc -p config/tsconfig.decl-esm.json",
-    "build:cjs": "node tools/cleanup cjs && tsc -p config/tsconfig.cjs.json && node tools/rename-cjs.cjs",
-    "build:esm": "node tools/cleanup esm && tsc -p config/tsconfig.esm.json",
     "husky-check": "npm run build && husky && chmod +x .husky/pre-commit",
     "prerelease": "npm run test:all && npm run validate:all"
   },
@@ -56,11 +55,9 @@
   "files": [
     "dist",
     "package.json",
-    "README.md",
-    "src/assets/regions.json"
+    "README.md"
   ],
   "devDependencies": {
-    "@nrwl/jest": "^19.8.14",
     "@playwright/test": "^1.57.0",
     "@slack/bolt": "^4.4.0",
     "@types/humps": "^2.0.6",
@@ -76,18 +73,14 @@
     "rollup-plugin-esbuild": "^5.0.0",
     "http-server": "^14.1.1",
     "husky": "^9.1.7",
-    "ignore-loader": "^0.1.2",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-html-reporter": "^3.10.2",
     "jest-html-reporters": "^3.1.7",
     "jest-junit": "^16.0.0",
-    "path-browserify": "^1.0.1",
     "ts-jest": "^29.2.6",
-    "ts-loader": "^9.5.2",
     "typescript": "~5.7.2",
-    "ts-node": "^10.9.2",
-    "webpack-cli": "^5.1.4"
+    "ts-node": "^10.9.2"
   },
   "homepage": "https://github.com/contentstack/contentstack-typescript"
 }
