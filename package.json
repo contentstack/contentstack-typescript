@@ -13,7 +13,7 @@
         "default": "./dist/modern/index.js"
       },
       "require": {
-        "types": "./dist/modern/index.d.cts",
+        "types": "./dist/modern/index.d.ts",
         "default": "./dist/modern/index.cjs"
       }
     },
@@ -39,10 +39,11 @@
     "lint": "eslint . -c .eslintrc.json",
     "clean": "node tools/cleanup",
     "package": "npm run build && npm pack",
-    "build": "NODE_OPTIONS='--max-old-space-size=16384' tsup",
+    "build": "npm run build:rollup && npm run build:types",
+    "build:rollup": "NODE_OPTIONS='--max-old-space-size=16384' rollup -c",
+    "build:types": "tsc -p config/tsconfig.decl-esm.json",
     "build:cjs": "node tools/cleanup cjs && tsc -p config/tsconfig.cjs.json && node tools/rename-cjs.cjs",
     "build:esm": "node tools/cleanup esm && tsc -p config/tsconfig.esm.json",
-    "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json",
     "husky-check": "npm run build && husky && chmod +x .husky/pre-commit",
     "prerelease": "npm run test:all && npm run validate:all"
   },
@@ -68,7 +69,11 @@
     "axios-mock-adapter": "^1.22.0",
     "babel-jest": "^29.7.0",
     "dotenv": "^16.6.1",
-    "esbuild-plugin-file-path-extensions": "^2.1.4",
+    "@rollup/plugin-commonjs": "^27.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-replace": "^5.0.2",
+    "rollup": "^3.29.0",
+    "rollup-plugin-esbuild": "^5.0.0",
     "http-server": "^14.1.1",
     "husky": "^9.1.7",
     "ignore-loader": "^0.1.2",
@@ -80,8 +85,8 @@
     "path-browserify": "^1.0.1",
     "ts-jest": "^29.2.6",
     "ts-loader": "^9.5.2",
+    "typescript": "~5.7.2",
     "ts-node": "^10.9.2",
-    "tsup": "^8.5.0",
     "webpack-cli": "^5.1.4"
   },
   "homepage": "https://github.com/contentstack/contentstack-typescript"

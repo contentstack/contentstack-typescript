@@ -125,9 +125,9 @@ describe('Browser Environment - Dependency Safety Check', () => {
       console.log('📦 Modern build path:', modernExport);
     });
 
-    // Skip tsup config test in browser environment (requires Node.js modules)
-    it.skip('should verify tsup config targets browsers', () => {
-      // This test is skipped because tsup.config.js uses ESM which
+    // Skip rollup config test in browser environment (requires Node.js modules)
+    it.skip('should verify rollup config targets browsers', () => {
+      // This test is skipped because rollup.config.js uses ESM which
       // can't be easily imported in jest browser environment
       // It would be tested in Node.js environment or during build
     });
