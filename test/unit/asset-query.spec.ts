@@ -60,6 +60,17 @@ describe('AssetQuery class', () => {
     expect(assetQuery._queryParams.locale).toBe('en-us');
   });
 
+  it('should add "asset_fields[]" in _queryParams when assetFields method is called', () => {
+    const returnedValue = assetQuery.assetFields('user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups');
+    expect(returnedValue).toBeInstanceOf(AssetQuery);
+    expect(assetQuery._queryParams['asset_fields[]']).toEqual(['user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups']);
+  });
+
+  it('should not set asset_fields[] when assetFields is called with no arguments', () => {
+    assetQuery.assetFields();
+    expect(assetQuery._queryParams['asset_fields[]']).toBeUndefined();
+  });
+
   it('should return response data when successful', async () => {
     mockClient.onGet('/assets').reply(200, assetQueryFindResponseDataMock);
     const response = await assetQuery.find();
@@ -71,5 +82,16 @@ describe('AssetQuery class', () => {
     if (returnedValue) {  
       expect(returnedValue._parameters).toEqual({ fieldUid: 'value' });
     }
+  });
+
+  it('should call find with asset_fields[] query params when assetFields is set', async () => {
+    mockClient.onGet('/assets').reply((config) => {
+      expect(config.params).toBeDefined();
+      expect(config.params['asset_fields[]']).toEqual(['user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups']);
+      return [200, assetQueryFindResponseDataMock];
+    });
+    assetQuery.assetFields('user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups');
+    const result = await assetQuery.find();
+    expect(result).toEqual(assetQueryFindResponseDataMock);
   });
 });
