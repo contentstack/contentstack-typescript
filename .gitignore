@@ -43,3 +43,4 @@ test/docs/*.mjs
 test/docs/sanity-report*
 *.log
 .nx/
+delivery-sdk-persistence/

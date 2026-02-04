@@ -2,35 +2,20 @@ import MockAdapter from "axios-mock-adapter";
 import { httpClient, AxiosInstance } from "@contentstack/core";
 import { handleRequest } from "../../src/lib/cache";
 import { HOST_URL } from "../utils/constant";
-import { Policy } from "../../src/lib/types";
-import { PersistanceStore } from "../../src/persistance";
-import { iGlobal } from "../../src/persistance/helper/utils";
+import { Policy, PersistanceStore } from "../../src/lib/types";
 
-// Mock localStorage for Node.js environment
-const mockLocalStorage = (() => {
-  let store: { [key: string]: string } = {};
+/** In-memory mock store matching PersistanceStore interface for tests. */
+function createMockPersistanceStore(): PersistanceStore {
+  const store = new Map<string, any>();
   return {
-    getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => {
-      store[key] = value;
+    setItem(key: string, value: any, _contentTypeUid?: string, _maxAge?: number) {
+      store.set(key, value);
     },
-    removeItem: (key: string) => {
-      delete store[key];
+    getItem(key: string, _contentTypeUid?: string): any {
+      return store.get(key);
     },
-    clear: () => {
-      store = {};
-    },
-    get length() {
-      return Object.keys(store).length;
-    },
-    key: (index: number) => Object.keys(store)[index] || null,
   };
-})();
-
-// Setup mock before tests
-beforeAll(() => {
-  (iGlobal as any).localStorage = mockLocalStorage;
-});
+}
 
 describe("Cache handleRequest function", () => {
   let client: AxiosInstance;
@@ -52,13 +37,30 @@ describe("Cache handleRequest function", () => {
     config = { contentTypeUid: "testContentType", headers: {} };
   });
 
+  it("should throw when persistanceStore is missing", async () => {
+    const cacheOptions = {
+      policy: Policy.CACHE_THEN_NETWORK,
+      maxAge: 3600,
+    } as any;
+    const defaultAdapter = jest.fn();
+
+    await expect(
+      handleRequest(cacheOptions, apiKey, defaultAdapter, resolve, reject, config)
+    ).rejects.toThrow(/persistanceStore/);
+    expect(defaultAdapter).not.toHaveBeenCalled();
+  });
+
   describe("NETWORK_ELSE_CACHE policy", () => {
     it("should return network response when proper response is received", async () => {
-      const cacheOptions = { policy: Policy.NETWORK_ELSE_CACHE, maxAge: 3600 };
+      const persistanceStore = createMockPersistanceStore();
+      const cacheOptions = {
+        policy: Policy.NETWORK_ELSE_CACHE,
+        maxAge: 3600,
+        persistanceStore,
+      };
       const defaultAdapter = jest.fn((_config) => ({
         data: JSON.stringify("foo"),
       }));
-      const cacheStore = new PersistanceStore(cacheOptions);
 
       await handleRequest(
         cacheOptions,
@@ -72,23 +74,22 @@ describe("Cache handleRequest function", () => {
       expect(defaultAdapter).toHaveBeenCalledWith(config);
       expect(resolve).toBeCalledWith({ data: "foo" });
       expect(reject).not.toBeCalled();
-
-      // Use enhanced cache key format: contentTypeUid + apiKey
-      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
-      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
 
     it("should return cache data when proper network response is not received", async () => {
-      const cacheOptions = { policy: Policy.NETWORK_ELSE_CACHE, maxAge: 3600 };
+      const persistanceStore = createMockPersistanceStore();
+      const cacheOptions = {
+        policy: Policy.NETWORK_ELSE_CACHE,
+        maxAge: 3600,
+        persistanceStore,
+      };
       const defaultAdapter = jest.fn().mockReturnValue({
         foo: "bar",
         baz: "quux",
       });
-      const cacheStore = new PersistanceStore(cacheOptions);
 
-      // Use enhanced cache key format: contentTypeUid + apiKey
       const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
-      cacheStore.setItem(
+      persistanceStore.setItem(
         enhancedCacheKey,
         "cacheData",
         config.contentTypeUid,
@@ -112,17 +113,19 @@ describe("Cache handleRequest function", () => {
         statusText: "OK",
       });
       expect(reject).not.toBeCalled();
-
-      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
 
     it("should return error data when network response has error", async () => {
-      const cacheOptions = { policy: Policy.NETWORK_ELSE_CACHE, maxAge: 3600 };
+      const persistanceStore = createMockPersistanceStore();
+      const cacheOptions = {
+        policy: Policy.NETWORK_ELSE_CACHE,
+        maxAge: 3600,
+        persistanceStore,
+      };
       const defaultAdapter = jest.fn().mockReturnValue({
         foo: "bar",
         baz: "quux",
       });
-      const cacheStore = new PersistanceStore(cacheOptions);
 
       await handleRequest(
         cacheOptions,
@@ -139,22 +142,21 @@ describe("Cache handleRequest function", () => {
         foo: "bar",
         baz: "quux",
       });
-
-      // Use enhanced cache key format: contentTypeUid + apiKey
-      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
-      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
   });
 
   describe("CACHE_THEN_NETWORK policy", () => {
     it("should return cache response when proper cache is available then return network response", async () => {
-      const cacheOptions = { policy: Policy.CACHE_THEN_NETWORK, maxAge: 3600 };
+      const persistanceStore = createMockPersistanceStore();
+      const cacheOptions = {
+        policy: Policy.CACHE_THEN_NETWORK,
+        maxAge: 3600,
+        persistanceStore,
+      };
       const defaultAdapter = jest.fn((_config) => ({ data: "foo" }));
 
-      const cacheStore = new PersistanceStore(cacheOptions);
-      // Use enhanced cache key format: contentTypeUid + apiKey
       const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
-      cacheStore.setItem(
+      persistanceStore.setItem(
         enhancedCacheKey,
         "cacheData",
         config.contentTypeUid,
@@ -179,16 +181,17 @@ describe("Cache handleRequest function", () => {
         statusText: "OK",
       });
       expect(reject).not.toBeCalled();
-
-      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
     it("should return api response when proper cache is not available", async () => {
-      const cacheOptions = { policy: Policy.CACHE_THEN_NETWORK, maxAge: 3600 };
+      const persistanceStore = createMockPersistanceStore();
+      const cacheOptions = {
+        policy: Policy.CACHE_THEN_NETWORK,
+        maxAge: 3600,
+        persistanceStore,
+      };
       const defaultAdapter = jest.fn((_config) => ({
         data: JSON.stringify("foo"),
       }));
-
-      const cacheStore = new PersistanceStore(cacheOptions);
 
       await handleRequest(
         cacheOptions,
@@ -202,19 +205,18 @@ describe("Cache handleRequest function", () => {
       expect(defaultAdapter).toHaveBeenCalled();
       expect(resolve).toBeCalledWith({ data: "foo" });
       expect(reject).not.toBeCalled();
-
-      // Use enhanced cache key format: contentTypeUid + apiKey
-      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
-      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
     it("should return error api response when data is not available in network or cache", async () => {
-      const cacheOptions = { policy: Policy.CACHE_THEN_NETWORK, maxAge: 3600 };
+      const persistanceStore = createMockPersistanceStore();
+      const cacheOptions = {
+        policy: Policy.CACHE_THEN_NETWORK,
+        maxAge: 3600,
+        persistanceStore,
+      };
       const defaultAdapter = jest.fn().mockReturnValue({
         foo: "bar",
         baz: "quux",
       });
-
-      const cacheStore = new PersistanceStore(cacheOptions);
 
       await handleRequest(
         cacheOptions,
@@ -231,22 +233,21 @@ describe("Cache handleRequest function", () => {
         foo: "bar",
         baz: "quux",
       });
-
-      // Use enhanced cache key format: contentTypeUid + apiKey
-      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
-      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
   });
 
   describe("CACHE_ELSE_NETWORK policy", () => {
     it("should return cache response when proper cache is available", async () => {
-      const cacheOptions = { policy: Policy.CACHE_ELSE_NETWORK, maxAge: 3600 };
+      const persistanceStore = createMockPersistanceStore();
+      const cacheOptions = {
+        policy: Policy.CACHE_ELSE_NETWORK,
+        maxAge: 3600,
+        persistanceStore,
+      };
       const defaultAdapter = jest.fn((_config) => ({ data: "foo" }));
 
-      const cacheStore = new PersistanceStore(cacheOptions);
-      // Use enhanced cache key format: contentTypeUid + apiKey
       const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
-      cacheStore.setItem(
+      persistanceStore.setItem(
         enhancedCacheKey,
         "cacheData",
         config.contentTypeUid,
@@ -271,16 +272,18 @@ describe("Cache handleRequest function", () => {
         statusText: "OK",
       });
       expect(reject).not.toBeCalled();
-
-      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
 
     it("should return network response data when cache is not available", async () => {
-      const cacheOptions = { policy: Policy.CACHE_ELSE_NETWORK, maxAge: 3600 };
+      const persistanceStore = createMockPersistanceStore();
+      const cacheOptions = {
+        policy: Policy.CACHE_ELSE_NETWORK,
+        maxAge: 3600,
+        persistanceStore,
+      };
       const defaultAdapter = jest.fn((_config) => ({
         data: JSON.stringify("foo"),
       }));
-      const cacheStore = new PersistanceStore(cacheOptions);
 
       await handleRequest(
         cacheOptions,
@@ -294,19 +297,19 @@ describe("Cache handleRequest function", () => {
       expect(defaultAdapter).toHaveBeenCalledWith(config);
       expect(resolve).toBeCalledWith({ data: "foo" });
       expect(reject).not.toBeCalled();
-
-      // Use enhanced cache key format: contentTypeUid + apiKey
-      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
-      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
 
     it("should return error data when network response has error", async () => {
-      const cacheOptions = { policy: Policy.CACHE_ELSE_NETWORK, maxAge: 3600 };
+      const persistanceStore = createMockPersistanceStore();
+      const cacheOptions = {
+        policy: Policy.CACHE_ELSE_NETWORK,
+        maxAge: 3600,
+        persistanceStore,
+      };
       const defaultAdapter = jest.fn().mockReturnValue({
         foo: "bar",
         baz: "quux",
       });
-      const cacheStore = new PersistanceStore(cacheOptions);
 
       await handleRequest(
         cacheOptions,
@@ -323,16 +326,17 @@ describe("Cache handleRequest function", () => {
         foo: "bar",
         baz: "quux",
       });
-
-      // Use enhanced cache key format: contentTypeUid + apiKey
-      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
-      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
   });
 
   describe("Enhanced cache key with entryUid", () => {
     it("should extract entryUid from URL pattern", async () => {
-      const cacheOptions = { policy: Policy.CACHE_THEN_NETWORK, maxAge: 3600 };
+      const persistanceStore = createMockPersistanceStore();
+      const cacheOptions = {
+        policy: Policy.CACHE_THEN_NETWORK,
+        maxAge: 3600,
+        persistanceStore,
+      };
       const defaultAdapter = jest.fn((_config) => ({
         data: JSON.stringify("foo"),
       }));
@@ -340,8 +344,6 @@ describe("Cache handleRequest function", () => {
         ...config,
         url: '/content_types/test_ct/entries/entry123',
       };
-
-      const cacheStore = new PersistanceStore(cacheOptions);
 
       await handleRequest(
         cacheOptions,
@@ -354,14 +356,15 @@ describe("Cache handleRequest function", () => {
 
       expect(defaultAdapter).toHaveBeenCalled();
       expect(resolve).toBeCalledWith({ data: "foo" });
-
-      // Clean up with enhanced key that includes entry UID
-      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}_entry_entry123`;
-      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
 
     it("should use entryUid from config when available", async () => {
-      const cacheOptions = { policy: Policy.CACHE_THEN_NETWORK, maxAge: 3600 };
+      const persistanceStore = createMockPersistanceStore();
+      const cacheOptions = {
+        policy: Policy.CACHE_THEN_NETWORK,
+        maxAge: 3600,
+        persistanceStore,
+      };
       const defaultAdapter = jest.fn((_config) => ({
         data: JSON.stringify("foo"),
       }));
@@ -369,8 +372,6 @@ describe("Cache handleRequest function", () => {
         ...config,
         entryUid: 'entry456',
       };
-
-      const cacheStore = new PersistanceStore(cacheOptions);
 
       await handleRequest(
         cacheOptions,
@@ -383,14 +384,15 @@ describe("Cache handleRequest function", () => {
 
       expect(defaultAdapter).toHaveBeenCalled();
       expect(resolve).toBeCalledWith({ data: "foo" });
-
-      // Clean up with enhanced key that includes entry UID
-      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}_entry_entry456`;
-      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
 
     it("should return null when URL does not match entry pattern", async () => {
-      const cacheOptions = { policy: Policy.CACHE_THEN_NETWORK, maxAge: 3600 };
+      const persistanceStore = createMockPersistanceStore();
+      const cacheOptions = {
+        policy: Policy.CACHE_THEN_NETWORK,
+        maxAge: 3600,
+        persistanceStore,
+      };
       const defaultAdapter = jest.fn((_config) => ({
         data: JSON.stringify("foo"),
       }));
@@ -398,8 +400,6 @@ describe("Cache handleRequest function", () => {
         ...config,
         url: '/assets',
       };
-
-      const cacheStore = new PersistanceStore(cacheOptions);
 
       await handleRequest(
         cacheOptions,
@@ -412,10 +412,6 @@ describe("Cache handleRequest function", () => {
 
       expect(defaultAdapter).toHaveBeenCalled();
       expect(resolve).toBeCalledWith({ data: "foo" });
-
-      // Clean up with standard enhanced key (no entry UID)
-      const enhancedCacheKey = `${config.contentTypeUid}_${apiKey}`;
-      cacheStore.removeItem(enhancedCacheKey, config.contentTypeUid);
     });
   });
 });

@@ -14,8 +14,9 @@ export const ErrorMessages = {
   INVALID_VALUE_ARRAY: 'Invalid value. Provide an array of strings, numbers, or booleans and try again.',
   INVALID_ARGUMENT_STRING_OR_ARRAY: 'Invalid argument. Provide a string or an array and try again.',
   
-  // Storage errors
-  MISSING_CUSTOM_STORAGE: 'Missing storage for customStorage. Provide a storage object with get, set, and remove methods and try again.',
+  // Cache persistence errors
+  MISSING_PERSISTANCE_STORE:
+    'Cache policy requires cacheOptions.persistanceStore (storage). Install @contentstack/delivery-sdk-persistence and pass a PersistanceStore instance and try again.',
   
   // Regex validation errors
   INVALID_REGEX_PATTERN: 'Invalid regexPattern: Must be a valid regular expression',

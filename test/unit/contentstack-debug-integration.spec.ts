@@ -165,6 +165,8 @@ describe('Contentstack Debug Logging Integration', () => {
     mockClient.restore();
   });
 
+  const mockPersistanceStore = { setItem: jest.fn(), getItem: jest.fn() };
+
   it('should set cache adapter when cacheOptions is provided', () => {
     const config: StackConfig = {
       apiKey: "apiKey",
@@ -173,6 +175,7 @@ describe('Contentstack Debug Logging Integration', () => {
       cacheOptions: {
         policy: Policy.CACHE_THEN_NETWORK,
         maxAge: 3600,
+        persistanceStore: mockPersistanceStore,
       },
     };
 
@@ -193,6 +196,7 @@ describe('Contentstack Debug Logging Integration', () => {
       cacheOptions: {
         policy: Policy.NETWORK_ELSE_CACHE,
         maxAge: 3600,
+        persistanceStore: mockPersistanceStore,
       },
     };
 
@@ -212,6 +216,7 @@ describe('Contentstack Debug Logging Integration', () => {
       cacheOptions: {
         policy: Policy.CACHE_ELSE_NETWORK,
         maxAge: 3600,
+        persistanceStore: mockPersistanceStore,
       },
     };
 

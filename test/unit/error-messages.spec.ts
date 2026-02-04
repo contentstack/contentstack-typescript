@@ -90,16 +90,13 @@ describe('Error Messages Module - Production Error Scenarios', () => {
     });
 
     /**
-     * PRODUCTION SCENARIO: Customer forgets to provide storage implementation for custom storage
-     * Common mistake: stack.config.cache.customStorage = true without providing storage object
+     * PRODUCTION SCENARIO: Customer enables cache policy without providing persistanceStore
+     * Common mistake: cacheOptions: { policy: Policy.CACHE_THEN_NETWORK } without persistanceStore
      */
-    it('should have clear MISSING_CUSTOM_STORAGE message with implementation guidance', () => {
-      expect(ErrorMessages.MISSING_CUSTOM_STORAGE).toBeDefined();
-      expect(ErrorMessages.MISSING_CUSTOM_STORAGE).toContain('storage');
-      expect(ErrorMessages.MISSING_CUSTOM_STORAGE).toContain('customStorage');
-      expect(ErrorMessages.MISSING_CUSTOM_STORAGE).toContain('get');
-      expect(ErrorMessages.MISSING_CUSTOM_STORAGE).toContain('set');
-      expect(ErrorMessages.MISSING_CUSTOM_STORAGE).toContain('remove');
+    it('should have clear MISSING_PERSISTANCE_STORE message with implementation guidance', () => {
+      expect(ErrorMessages.MISSING_PERSISTANCE_STORE).toBeDefined();
+      expect(ErrorMessages.MISSING_PERSISTANCE_STORE).toContain('persistanceStore');
+      expect(ErrorMessages.MISSING_PERSISTANCE_STORE).toContain('delivery-sdk-persistence');
     });
 
     /**
@@ -361,7 +358,7 @@ describe('Error Messages Module - Production Error Scenarios', () => {
         INVALID_VALUE_STRING_OR_NUMBER: { message: ErrorMessages.INVALID_VALUE_STRING_OR_NUMBER, keywords: ['string', 'number'] },
         INVALID_VALUE_ARRAY: { message: ErrorMessages.INVALID_VALUE_ARRAY, keywords: ['array'] },
         INVALID_ARGUMENT_STRING_OR_ARRAY: { message: ErrorMessages.INVALID_ARGUMENT_STRING_OR_ARRAY, keywords: ['string', 'array'] },
-        MISSING_CUSTOM_STORAGE: { message: ErrorMessages.MISSING_CUSTOM_STORAGE, keywords: ['storage', 'get', 'set', 'remove'] },
+        MISSING_PERSISTANCE_STORE: { message: ErrorMessages.MISSING_PERSISTANCE_STORE, keywords: ['persistanceStore', 'delivery-sdk-persistence'] },
         INVALID_REGEX_PATTERN: { message: ErrorMessages.INVALID_REGEX_PATTERN, keywords: ['regular expression'] }
       };
 
