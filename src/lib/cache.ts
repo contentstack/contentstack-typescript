@@ -1,7 +1,5 @@
-// import { PersistanceStore } from '../persistance';
-
-import { PersistanceStore } from '../persistance';
 import { CacheOptions, Policy } from './types';
+import { ErrorMessages } from './error-messages';
 
 /**
  * Extracts entry UID from request URL if available
@@ -57,7 +55,10 @@ export async function handleRequest(
   reject: any,
   config: any
 ) {
-  const cacheStore = new PersistanceStore(cacheOptions);
+  if (!cacheOptions.persistanceStore) {
+    throw new Error(ErrorMessages.MISSING_PERSISTANCE_STORE);
+  }
+  const cacheStore = cacheOptions.persistanceStore;
   
   // Extract entry UID from URL or config
   const entryUid = config.entryUid || extractEntryUidFromUrl(config);

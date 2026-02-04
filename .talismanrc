@@ -1,4 +1,14 @@
 fileignoreconfig:
+- filename: README.md
+  checksum: b40240271f930e1c0db9bbcf78a55bf0d52d6caf0eb265eae94d1a2aecf442c5
+- filename: src/lib/types.ts
+  checksum: 0466775043773ec966f10bac2eeed812274748fc275a1017ad51295dff5c58ca
+- filename: test/unit/error-messages.spec.ts
+  checksum: abe5acafad0aa0464e36b2cc3576a3200e96d7292984a93cce5f24e14a2a6366
+- filename: test/unit/contentstack.spec.ts
+  checksum: 8f560efd9fba6e04682899eff3cc448d22c38019eac0a5ffcab35ba59f81da2c
+- filename: test/unit/cache.spec.ts
+  checksum: a9bf179485c09e3821d78588a6bd2a57a70b68dd05948f7187c73d05b846b651
 - filename: test/browser/import.spec.ts
   checksum: 2e9a157e28b0ce71c4b6422c6b457996a2e6785a1ef591c8bb35276b3471a5d0
 - filename: scripts/test-bundlers.js
@@ -13,20 +23,14 @@ fileignoreconfig:
   checksum: 6646595d48bfaec3d9de111b22b36cf0925b33e18df55b068181c0bb81c1862b
 - filename: test/browser/real-api-calls.spec.ts
   checksum: 514930cdde28cdc8b37ab054031260d5703dc8bdf777906dd5f9baa270ab7c3a
-- filename: package-lock.json
-  checksum: e0a6679bfc6556fb7a8424c3f8eb0cec62f2cc871ad544f691fa064ddec30db7
 - filename: test/unit/utils.spec.ts
   checksum: a491df0a19c336ff5b18450fb23e26676a1798222100c946150e7a1b6504d953
-- filename: test/unit/contentstack.spec.ts
-  checksum: d5b99c01459ab8bc597baaa9e6cc4aa91ac6d9bf78af08e1d0220d0c5db3d0b3
 - filename: test/unit/query-optimization-comprehensive.spec.ts
   checksum: f5aaf6c784d7c101a05ca513c584bbd6e95f963d1e42779f2596050d9bcbac96
 - filename: src/lib/entries.ts
   checksum: f6a19da15baed75062ad0cc599573ed08926e28fffe3f6e4890a0efb4d58c910
 - filename: src/lib/cache.ts
   checksum: d8d32089b8a4b247e4ba71c22b56cbb0a54440ebf35b102af222eb8032919f02
-- filename: test/unit/cache.spec.ts
-  checksum: e96f913a466a1f4d55a422e7032fc2c06eeed5fea86cdcc86a05fbe3eba29b7a
 - filename: src/lib/query.ts
   checksum: 073c47e46755eb79d1d7e9fcaf2864296a218bf650888dd37c42480cce7df379
 - filename: test/api/retry-integration.spec.ts
@@ -52,16 +56,10 @@ fileignoreconfig:
   checksum: 8d67435121581d43ba9c5f544daf30a0579b7faa7c8661000d8d37ddfc172112
 - filename: test/unit/base-query.spec.ts
   checksum: ceaceb1d65965b151edc9fc11d5a226460328b1913319994df51ca1b453cd6af
-- filename: src/lib/entries.ts
-  checksum: 3ffe426234ef710d0fcfd8e41ca57f61ce6bc44298ee7dde6f4530fa3c16d2ee
-- filename: test/unit/error-messages.spec.ts
-  checksum: b64be136b19890aa9e9000bac7df6eb1188828ee4b740d5c756396699716c428
 - filename: test/api/modular-blocks.spec.ts
   checksum: 1e536b0409f05f2d5c1d6e87b0ec4bda2c3fde9bc4ff331406f33464a26cff55
 - filename: test/unit/centralized-error-handling.spec.ts
   checksum: 66a5eb520414bd71da331338bfb4faa2fc9f233eadf0eb18ddd7915db6849238
-- filename: src/lib/query.ts
-  checksum: f7200cb6e3b9ff681439482faaf882781dfb5f6ab6fefd4c98203ba8bf30d5e6
 - filename: test/api/base-query-casting.specs.ts
   checksum: 9185df498914e2966d78d9d216acaaa910d43cd7ac9a5e9a26e7241ac9edc9b5
 - filename: test/reporting/generate-unified-report.js

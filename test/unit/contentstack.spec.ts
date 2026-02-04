@@ -3,7 +3,6 @@ import * as core from "@contentstack/core";
 import * as Contentstack from "../../src/lib/contentstack";
 import { Stack } from "../../src/lib/stack";
 import { Policy, Region, StackConfig } from "../../src/lib/types";
-import { StorageType } from "../../src/persistance/types/storage-type";
 import {
   CUSTOM_HOST,
   DUMMY_URL,
@@ -380,7 +379,7 @@ describe("Contentstack", () => {
   });
 
   describe('cache adapter configuration', () => {
-    it('should set cache adapter when cacheOptions with policy is provided', () => {
+    it('should set cache adapter when cacheOptions with persistanceStore is provided', () => {
       const mockAdapter = jest.fn();
       const mockClient = {
         defaults: {
@@ -399,13 +398,17 @@ describe("Contentstack", () => {
 
       createHttpClientMock.mockReturnValue(mockClient as any);
 
+      const mockPersistanceStore = {
+        setItem: jest.fn(),
+        getItem: jest.fn(),
+      };
       const config = {
         apiKey: "apiKey",
         deliveryToken: "delivery",
         environment: "env",
         cacheOptions: {
           policy: Policy.CACHE_THEN_NETWORK,
-          storeType: 'localStorage' as StorageType
+          persistanceStore: mockPersistanceStore,
         },
       };
       
@@ -413,6 +416,19 @@ describe("Contentstack", () => {
       
       expect(stackInstance).toBeInstanceOf(Stack);
       expect(mockClient.defaults.adapter).toBeDefined();
+    });
+
+    it('should throw when cache policy is set but persistanceStore is missing', () => {
+      const config = {
+        apiKey: "apiKey",
+        deliveryToken: "delivery",
+        environment: "env",
+        cacheOptions: {
+          policy: Policy.CACHE_THEN_NETWORK,
+        },
+      };
+      
+      expect(() => createStackInstance(config)).toThrow(/persistanceStore/);
     });
   });
 

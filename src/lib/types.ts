@@ -1,7 +1,14 @@
 /* eslint-disable @cspell/spellchecker */
 import { HttpClientParams } from "@contentstack/core";
-import { PersistanceStoreOptions, StorageType } from "../persistance";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
+
+/**
+ * Contract for cache persistence. Use @contentstack/delivery-sdk-persistence or a custom implementation.
+ */
+export interface PersistanceStore {
+  setItem(key: string, value: any, contentTypeUid?: string, maxAge?: number): void;
+  getItem(key: string, contentTypeUid?: string): any;
+}
 
 // Internal Types
 export type params = {
@@ -85,9 +92,12 @@ export interface StackConfig extends HttpClientParams {
   port?: number;
   debug?: boolean;
 }
-export interface CacheOptions extends PersistanceStoreOptions {
+export interface CacheOptions {
   policy: Policy;
-  storeType?: StorageType;
+  /** Required when policy is not IGNORE_CACHE. Use @contentstack/delivery-sdk-persistence or a custom implementation. */
+  persistanceStore?: PersistanceStore;
+  /** Maximum age for cached items in milliseconds; passed to the store when writing. */
+  maxAge?: number;
 }
 
 export enum Policy {

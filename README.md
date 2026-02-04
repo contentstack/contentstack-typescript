@@ -189,6 +189,31 @@ const pagedResult = await query
 
 ```
 
+### Caching
+
+To use cache policies (`CACHE_THEN_NETWORK`, `CACHE_ELSE_NETWORK`, `NETWORK_ELSE_CACHE`), you must provide a persistence store via `cacheOptions.persistanceStore`. Install the optional persistence plugin and pass a `PersistanceStore` instance:
+
+```bash
+npm install @contentstack/delivery-sdk-persistence
+```
+
+```typescript
+import contentstack, { Policy } from '@contentstack/delivery-sdk';
+import { PersistanceStore } from '@contentstack/delivery-sdk-persistence';
+
+const stack = contentstack.stack({
+  apiKey: 'your-api-key',
+  deliveryToken: 'your-delivery-token',
+  environment: 'your-environment',
+  cacheOptions: {
+    policy: Policy.CACHE_THEN_NETWORK,
+    persistanceStore: new PersistanceStore({ storeType: 'localStorage', maxAge: 86400000 }),
+  },
+});
+```
+
+See [@contentstack/delivery-sdk-persistence](https://www.npmjs.com/package/@contentstack/delivery-sdk-persistence) for options (`storeType`, `maxAge`, custom storage).
+
 ### Helpful Links
 
 - [Contentstack Website](https://www.contentstack.com)
