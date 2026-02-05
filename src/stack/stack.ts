@@ -1,13 +1,13 @@
-import { StackConfig, SyncStack, SyncType, LivePreviewQuery } from './types';
+import { StackConfig, SyncStack, SyncType, LivePreviewQuery } from '../common/types';
 import { AxiosInstance, getData } from '@contentstack/core';
-import { Asset } from './asset';
-import { AssetQuery } from './asset-query';
-import { ContentType } from './content-type';
-import { ContentTypeQuery } from './contenttype-query';
-import { synchronization } from './synchronization';
-import {TaxonomyQuery} from './taxonomy-query';
-import { GlobalFieldQuery } from './global-field-query';
-import { GlobalField } from './global-field';
+import { Asset } from '../assets';
+import { AssetQuery } from '../query';
+import { ContentType } from '../content-type';
+import { ContentTypeQuery } from '../query';
+import { synchronization } from '../sync';
+import { TaxonomyQuery } from '../query';
+import { GlobalFieldQuery } from '../query';
+import { GlobalField } from '../global-field';
 
 export class Stack {
   readonly config: StackConfig;

@@ -1,5 +1,5 @@
 import { AxiosInstance, HttpClientParams, httpClient } from '@contentstack/core';
-import { Asset } from '../../src/lib/asset';
+import { Asset } from '../../src/assets';
 import MockAdapter from 'axios-mock-adapter';
 import { assetFetchDataMock } from '../utils/mocks';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';

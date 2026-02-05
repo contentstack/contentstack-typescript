@@ -2,7 +2,7 @@
 /* eslint-disable promise/always-return */
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { BaseAsset } from 'src';
-import { Asset } from '../../src/lib/asset';
+import { Asset } from '../../src/assets';
 import { stackInstance } from '../utils/stack-instance';
 import { TAsset } from './types';
 import dotenv from 'dotenv';

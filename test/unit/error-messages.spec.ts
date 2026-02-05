@@ -12,7 +12,7 @@
  */
 
 import { describe, it, expect } from '@jest/globals';
-import { ErrorMessages, ErrorCode } from '../../src/lib/error-messages';
+import { ErrorMessages, ErrorCode } from '../../src/common/error-messages';
 
 describe('Error Messages Module - Production Error Scenarios', () => {
   
@@ -90,13 +90,13 @@ describe('Error Messages Module - Production Error Scenarios', () => {
     });
 
     /**
-     * PRODUCTION SCENARIO: Customer enables cache policy without providing persistanceStore
-     * Common mistake: cacheOptions: { policy: Policy.CACHE_THEN_NETWORK } without persistanceStore
+     * PRODUCTION SCENARIO: Customer enables cache policy without providing persistenceStore
+     * Common mistake: cacheOptions: { policy: Policy.CACHE_THEN_NETWORK } without persistenceStore
      */
-    it('should have clear MISSING_PERSISTANCE_STORE message with implementation guidance', () => {
-      expect(ErrorMessages.MISSING_PERSISTANCE_STORE).toBeDefined();
-      expect(ErrorMessages.MISSING_PERSISTANCE_STORE).toContain('persistanceStore');
-      expect(ErrorMessages.MISSING_PERSISTANCE_STORE).toContain('delivery-sdk-persistence');
+    it('should have clear MISSING_PERSISTENCE_STORE message with implementation guidance', () => {
+      expect(ErrorMessages.MISSING_PERSISTENCE_STORE).toBeDefined();
+      expect(ErrorMessages.MISSING_PERSISTENCE_STORE).toContain('persistenceStore');
+      expect(ErrorMessages.MISSING_PERSISTENCE_STORE).toContain('persistence-plugin');
     });
 
     /**
@@ -358,7 +358,7 @@ describe('Error Messages Module - Production Error Scenarios', () => {
         INVALID_VALUE_STRING_OR_NUMBER: { message: ErrorMessages.INVALID_VALUE_STRING_OR_NUMBER, keywords: ['string', 'number'] },
         INVALID_VALUE_ARRAY: { message: ErrorMessages.INVALID_VALUE_ARRAY, keywords: ['array'] },
         INVALID_ARGUMENT_STRING_OR_ARRAY: { message: ErrorMessages.INVALID_ARGUMENT_STRING_OR_ARRAY, keywords: ['string', 'array'] },
-        MISSING_PERSISTANCE_STORE: { message: ErrorMessages.MISSING_PERSISTANCE_STORE, keywords: ['persistanceStore', 'delivery-sdk-persistence'] },
+        MISSING_PERSISTENCE_STORE: { message: ErrorMessages.MISSING_PERSISTENCE_STORE, keywords: ['persistenceStore', 'persistence-plugin'] },
         INVALID_REGEX_PATTERN: { message: ErrorMessages.INVALID_REGEX_PATTERN, keywords: ['regular expression'] }
       };
 

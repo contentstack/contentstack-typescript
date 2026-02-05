@@ -1,5 +1,4 @@
 /* eslint-disable @cspell/spellchecker */
-import './string-extensions';
 import {
   CanvasBy,
   CropBy,
@@ -10,7 +9,7 @@ import {
   OverlayRepeat,
   ResizeFilter,
   TransformData,
-} from './types';
+} from '../common/types';
 
 export class ImageTransform {
   obj: TransformData = {};

@@ -1,7 +1,7 @@
 import { AxiosInstance, getData } from '@contentstack/core';
-import { Pagination } from './pagination';
-import { FindResponse, params } from './types';
-import { encodeQueryParams } from './utils';
+import { Pagination } from '../common/pagination';
+import { FindResponse, params } from '../common/types';
+import { encodeQueryParams } from '../common/utils';
 import type { Query } from './query';
 
 export class BaseQuery extends Pagination {

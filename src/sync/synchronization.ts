@@ -1,5 +1,5 @@
 import { AxiosInstance, getData } from '@contentstack/core';
-import { SyncStack, SyncType, PublishType } from './types';
+import { SyncStack, SyncType, PublishType } from '../common/types';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import humps from 'humps';
 

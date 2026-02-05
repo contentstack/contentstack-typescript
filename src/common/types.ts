@@ -3,9 +3,9 @@ import { HttpClientParams } from "@contentstack/core";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
 
 /**
- * Contract for cache persistence. Use @contentstack/delivery-sdk-persistence or a custom implementation.
+ * Contract for cache persistence. Use @contentstack/persistence-plugin or a custom implementation.
  */
-export interface PersistanceStore {
+export interface PersistenceStore {
   setItem(key: string, value: any, contentTypeUid?: string, maxAge?: number): void;
   getItem(key: string, contentTypeUid?: string): any;
 }
@@ -94,8 +94,8 @@ export interface StackConfig extends HttpClientParams {
 }
 export interface CacheOptions {
   policy: Policy;
-  /** Required when policy is not IGNORE_CACHE. Use @contentstack/delivery-sdk-persistence or a custom implementation. */
-  persistanceStore?: PersistanceStore;
+  /** Required when policy is not IGNORE_CACHE. Use @contentstack/persistence-plugin or a custom implementation. */
+  persistenceStore?: PersistenceStore;
   /** Maximum age for cached items in milliseconds; passed to the store when writing. */
   maxAge?: number;
 }

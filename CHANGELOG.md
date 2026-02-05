@@ -1,7 +1,7 @@
 ### Version: 5.0.0
-#### Date: Jan-30-2026
-Breaking: Cache persistence is now a separate plugin. When using a cache policy other than `IGNORE_CACHE`, you must pass `cacheOptions.persistanceStore`. Install `@contentstack/delivery-sdk-persistence` and use `new PersistanceStore({ ... })` as the store. The SDK no longer bundles persistence code or accepts `storeType` in `cacheOptions`.
-Enhancement: SDK defines only the `PersistanceStore` interface (getItem/setItem); full implementation lives in the plugin for a lighter core package.
+#### Date: Feb-16-2026
+Breaking: Cache persistence is now a separate plugin. When using a cache policy other than `IGNORE_CACHE`, you must pass `cacheOptions.persistenceStore`. Install `@contentstack/persistence-plugin` and use `new PersistenceStore({ ... })` as the store. The SDK no longer bundles persistence code or accepts `storeType` in `cacheOptions`.
+Enhancement: SDK defines only the `PersistenceStore` interface (getItem/setItem); full implementation lives in the plugin for a lighter core package.
 
 ### Version: 4.11.0
 #### Date: Jan-19-2026

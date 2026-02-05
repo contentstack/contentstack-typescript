@@ -15,8 +15,8 @@ export const ErrorMessages = {
   INVALID_ARGUMENT_STRING_OR_ARRAY: 'Invalid argument. Provide a string or an array and try again.',
   
   // Cache persistence errors
-  MISSING_PERSISTANCE_STORE:
-    'Cache policy requires cacheOptions.persistanceStore (storage). Install @contentstack/delivery-sdk-persistence and pass a PersistanceStore instance and try again.',
+  MISSING_PERSISTENCE_STORE:
+    'Cache policy requires cacheOptions.persistenceStore (storage). Install @contentstack/persistence-plugin and pass a PersistenceStore instance and try again.',
   
   // Regex validation errors
   INVALID_REGEX_PATTERN: 'Invalid regexPattern: Must be a valid regular expression',
@@ -41,4 +41,3 @@ export enum ErrorCode {
   INVALID_REGEX = 'INVALID_REGEX',
   SLACK_ERROR = 'SLACK_ERROR',
 }
-

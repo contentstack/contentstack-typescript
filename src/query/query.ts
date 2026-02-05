@@ -1,8 +1,8 @@
 import { AxiosInstance, getData } from '@contentstack/core';
 import { BaseQuery } from './base-query';
-import { BaseQueryParameters, QueryOperation, QueryOperator, TaxonomyQueryOperation, params, queryParams, FindResponse } from './types';
-import { encodeQueryParams } from './utils';
-import { ErrorMessages } from './error-messages';
+import { BaseQueryParameters, QueryOperation, QueryOperator, TaxonomyQueryOperation, params, queryParams, FindResponse } from '../common/types';
+import { encodeQueryParams } from '../common/utils';
+import { ErrorMessages } from '../common/error-messages';
 
 export class Query extends BaseQuery {
   private _contentTypeUid?: string;
