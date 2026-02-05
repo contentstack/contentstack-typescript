@@ -1,5 +1,5 @@
 import { AxiosInstance, getData } from '@contentstack/core';
-import { ErrorMessages } from './error-messages';
+import { ErrorMessages } from '../common/error-messages';
 
 interface EntryResponse<T> {
   entry: T;

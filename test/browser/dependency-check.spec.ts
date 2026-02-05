@@ -11,7 +11,7 @@ describe('Browser Environment - Dependency Safety Check', () => {
       // In a real browser environment (or jsdom), fs/path/crypto won't be available
       try {
         // Try to import the entire SDK
-        const contentstack = await import('../../src/lib/contentstack');
+        const contentstack = await import('../../src/stack');
         
         // If we reach here, SDK imported successfully
         expect(contentstack).toBeDefined();
@@ -38,7 +38,7 @@ describe('Browser Environment - Dependency Safety Check', () => {
     it('SDK should initialize without errors in browser', () => {
       // If dependencies use Node.js APIs improperly, this will throw
       expect(() => {
-        const contentstack = require('../../src/lib/contentstack');
+        const contentstack = require('../../src/stack');
         const stack = contentstack.stack({
           apiKey: process.env.API_KEY || 'test_api_key',
           deliveryToken: process.env.DELIVERY_TOKEN || 'test_delivery_token',

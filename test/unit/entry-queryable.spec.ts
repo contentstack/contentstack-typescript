@@ -1,10 +1,10 @@
 // file deepcode ignore AttrAccessOnNull/test: <ignored in this unit test file due to the way method chaining is used with the contentType.entry().query() pattern.>
 import { AxiosInstance, httpClient } from '@contentstack/core';
-import { ContentType } from '../../src/lib/content-type';
+import { ContentType } from '../../src/content-type';
 import MockAdapter from 'axios-mock-adapter';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
-import { Query } from '../../src/lib/query';
-import { QueryOperation } from '../../src/lib/types';
+import { Query } from '../../src/query';
+import { QueryOperation } from '../../src/common/types';
 
 
 describe('Query Operators API test cases', () => {

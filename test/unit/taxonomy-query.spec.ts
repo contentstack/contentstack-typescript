@@ -1,7 +1,7 @@
-import { TaxonomyQuery } from "../../src/lib/taxonomy-query";
+import { TaxonomyQuery } from "../../src/query";
 import { AxiosInstance, HttpClientParams, httpClient } from "@contentstack/core";
 import MockAdapter from 'axios-mock-adapter';
-import { QueryOperation, QueryOperator, TaxonomyQueryOperation } from "../../src/lib/types";
+import { QueryOperation, QueryOperator, TaxonomyQueryOperation } from "../../src/common/types";
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
 
 describe("Taxonomy-query class", () => {

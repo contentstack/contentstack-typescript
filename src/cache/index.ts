@@ -1,5 +1,5 @@
-import { CacheOptions, Policy } from './types';
-import { ErrorMessages } from './error-messages';
+import { CacheOptions, Policy } from '../common/types';
+import { ErrorMessages } from '../common/error-messages';
 
 /**
  * Extracts entry UID from request URL if available
@@ -55,10 +55,10 @@ export async function handleRequest(
   reject: any,
   config: any
 ) {
-  if (!cacheOptions.persistanceStore) {
-    throw new Error(ErrorMessages.MISSING_PERSISTANCE_STORE);
+  if (!cacheOptions.persistenceStore) {
+    throw new Error(ErrorMessages.MISSING_PERSISTENCE_STORE);
   }
-  const cacheStore = cacheOptions.persistanceStore;
+  const cacheStore = cacheOptions.persistenceStore;
   
   // Extract entry UID from URL or config
   const entryUid = config.entryUid || extractEntryUidFromUrl(config);

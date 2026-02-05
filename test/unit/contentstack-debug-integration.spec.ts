@@ -1,7 +1,7 @@
 import { httpClient, AxiosInstance } from '@contentstack/core';
-import * as Contentstack from '../../src/lib/contentstack';
-import { Stack } from '../../src/lib/stack';
-import { Policy, StackConfig } from '../../src/lib/types';
+import * as Contentstack from '../../src/stack';
+import { Stack } from '../../src/stack';
+import { Policy, StackConfig } from '../../src/common/types';
 import MockAdapter from 'axios-mock-adapter';
 
 describe('Contentstack Debug Logging Integration', () => {
@@ -165,7 +165,7 @@ describe('Contentstack Debug Logging Integration', () => {
     mockClient.restore();
   });
 
-  const mockPersistanceStore = { setItem: jest.fn(), getItem: jest.fn() };
+  const mockPersistenceStore = { setItem: jest.fn(), getItem: jest.fn() };
 
   it('should set cache adapter when cacheOptions is provided', () => {
     const config: StackConfig = {
@@ -175,7 +175,7 @@ describe('Contentstack Debug Logging Integration', () => {
       cacheOptions: {
         policy: Policy.CACHE_THEN_NETWORK,
         maxAge: 3600,
-        persistanceStore: mockPersistanceStore,
+        persistenceStore: mockPersistenceStore,
       },
     };
 
@@ -196,7 +196,7 @@ describe('Contentstack Debug Logging Integration', () => {
       cacheOptions: {
         policy: Policy.NETWORK_ELSE_CACHE,
         maxAge: 3600,
-        persistanceStore: mockPersistanceStore,
+        persistenceStore: mockPersistenceStore,
       },
     };
 
@@ -216,7 +216,7 @@ describe('Contentstack Debug Logging Integration', () => {
       cacheOptions: {
         policy: Policy.CACHE_ELSE_NETWORK,
         maxAge: 3600,
-        persistanceStore: mockPersistanceStore,
+        persistenceStore: mockPersistenceStore,
       },
     };
 

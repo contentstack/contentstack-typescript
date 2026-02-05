@@ -1,10 +1,10 @@
 import { httpClient, retryRequestHandler, retryResponseErrorHandler, retryResponseHandler } from '@contentstack/core';
 import { AxiosRequestHeaders } from 'axios';
-import { handleRequest } from './cache';
+import { handleRequest } from '../cache';
 import { Stack as StackClass } from './stack';
-import { Policy, StackConfig, ContentstackPlugin, Region } from './types';
-import { ErrorMessages } from './error-messages';
-import * as Utility from './utils';
+import { Policy, StackConfig, ContentstackPlugin, Region } from '../common/types';
+import { ErrorMessages } from '../common/error-messages';
+import * as Utility from '../common/utils';
 import * as Utils from '@contentstack/utils';
 export { Utils };
 
@@ -29,10 +29,10 @@ let version = '{{VERSION}}';
  *   locale:"locale",
  *   cacheOptions: {
  *    policy: Policy.CACHE_THEN_NETWORK,
- *    persistanceStore: new PersistanceStore({ storeType: 'localStorage', maxAge: 86400000 })
+ *    persistenceStore: new PersistenceStore({ storeType: 'localStorage', maxAge: 86400000 })
  *   }
  * });
- * // Install @contentstack/delivery-sdk-persistence for PersistanceStore.
+ * // Install @contentstack/persistence-plugin for PersistenceStore.
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function stack(config: StackConfig): StackClass {
@@ -100,8 +100,8 @@ export function stack(config: StackConfig): StackClass {
   if (config.logHandler) client.defaults.logHandler = config.logHandler;
 
   if (config.cacheOptions && config.cacheOptions.policy !== Policy.IGNORE_CACHE) {
-    if (!config.cacheOptions.persistanceStore) {
-      throw new Error(ErrorMessages.MISSING_PERSISTANCE_STORE);
+    if (!config.cacheOptions.persistenceStore) {
+      throw new Error(ErrorMessages.MISSING_PERSISTENCE_STORE);
     }
     const defaultAdapter = client.defaults.adapter;
     client.defaults.adapter = (adapterConfig: any) => {
