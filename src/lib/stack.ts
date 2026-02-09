@@ -8,6 +8,7 @@ import { synchronization } from './synchronization';
 import {TaxonomyQuery} from './taxonomy-query';
 import { GlobalFieldQuery } from './global-field-query';
 import { GlobalField } from './global-field';
+import { Taxonomy } from './taxonomy';
 
 export class Stack {
   readonly config: StackConfig;
@@ -27,6 +28,7 @@ export class Stack {
    * @returns {Asset}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
+import { Taxonomy } from './taxonomy';
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const asset = stack.asset() // For collection of asset
@@ -78,7 +80,11 @@ export class Stack {
 
    * const taxonomy = stack.taxonomy() // For taxonomy query object
    */
-  taxonomy(): TaxonomyQuery {
+  taxonomy(): TaxonomyQuery;
+  taxonomy(uid: string): Taxonomy;
+  taxonomy(uid?: string): Taxonomy | TaxonomyQuery {
+    if (uid) return new Taxonomy(this._client, uid);
+
     return new TaxonomyQuery(this._client);
   }
 

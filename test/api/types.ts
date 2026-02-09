@@ -86,3 +86,38 @@ export interface TContentType {
 export interface TContentTypes {
   content_types: TContentType[];
 }
+
+export interface TTaxonomies {
+  taxonomies: TTaxonomy[];
+}
+
+export interface TTaxonomy {
+  uid: string;
+  name: string;
+  description?: string;
+  terms_count?: number;
+  created_at: string;
+  updated_at: string;
+  created_by: string;
+  updated_by: string;
+  type: string;
+  publish_details?: PublishDetails;
+}
+
+export interface TTerms {
+  terms: TTerm[];
+}
+
+export interface TTerm {
+  taxonomy_uid: string;
+  uid: string;
+  ancestors: TTerm[];
+  name: string;
+  created_by: string;
+  created_at: string;
+  updated_by: string;
+  updated_at: string;
+  children_count?: number;
+  depth?: number;
+  publish_details?: PublishDetails;
+}
