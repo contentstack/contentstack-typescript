@@ -1,3 +1,7 @@
+### Version: 4.11.1
+#### Date: feb-09-2026
+Fix: Fix security issues
+
 ### Version: 4.11.0
 #### Date: Jan-19-2026
 Enhancement: Integrated getContentstackEndpoint method of Utils SDK for endpoint selection
