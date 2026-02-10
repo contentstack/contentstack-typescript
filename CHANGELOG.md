@@ -3,6 +3,10 @@
 Breaking: Cache persistence is now a separate plugin. When using a cache policy other than `IGNORE_CACHE`, you must pass `cacheOptions.persistenceStore`. Install `@contentstack/persistence-plugin` and use `new PersistenceStore({ ... })` as the store. The SDK no longer bundles persistence code or accepts `storeType` in `cacheOptions`.
 Enhancement: SDK defines only the `PersistenceStore` interface (getItem/setItem); full implementation lives in the plugin for a lighter core package.
 
+### Version: 4.11.1
+#### Date: Feb-09-2026
+Fix: Fix security issues
+
 ### Version: 4.11.0
 #### Date: Jan-19-2026
 Enhancement: Integrated getContentstackEndpoint method of Utils SDK for endpoint selection
