@@ -47,8 +47,8 @@
     "prerelease": "npm run test:all && npm run validate:all"
   },
   "dependencies": {
-    "@contentstack/core": "^1.3.6",
-    "@contentstack/utils": "^1.6.3",
+    "@contentstack/core": "^1.3.9",
+    "@contentstack/utils": "^1.7.0",
     "axios": "^1.13.1",
     "humps": "^2.0.1"
   },
