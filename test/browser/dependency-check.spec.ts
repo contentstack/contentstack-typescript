@@ -11,7 +11,7 @@ describe('Browser Environment - Dependency Safety Check', () => {
       // In a real browser environment (or jsdom), fs/path/crypto won't be available
       try {
         // Try to import the entire SDK
-        const contentstack = await import('../../src/lib/contentstack');
+        const contentstack = await import('../../src/stack');
         
         // If we reach here, SDK imported successfully
         expect(contentstack).toBeDefined();
@@ -38,7 +38,7 @@ describe('Browser Environment - Dependency Safety Check', () => {
     it('SDK should initialize without errors in browser', () => {
       // If dependencies use Node.js APIs improperly, this will throw
       expect(() => {
-        const contentstack = require('../../src/lib/contentstack');
+        const contentstack = require('../../src/stack');
         const stack = contentstack.stack({
           apiKey: process.env.API_KEY || 'test_api_key',
           deliveryToken: process.env.DELIVERY_TOKEN || 'test_delivery_token',
@@ -125,9 +125,9 @@ describe('Browser Environment - Dependency Safety Check', () => {
       console.log('📦 Modern build path:', modernExport);
     });
 
-    // Skip tsup config test in browser environment (requires Node.js modules)
-    it.skip('should verify tsup config targets browsers', () => {
-      // This test is skipped because tsup.config.js uses ESM which
+    // Skip rollup config test in browser environment (requires Node.js modules)
+    it.skip('should verify rollup config targets browsers', () => {
+      // This test is skipped because rollup.config.js uses ESM which
       // can't be easily imported in jest browser environment
       // It would be tested in Node.js environment or during build
     });
