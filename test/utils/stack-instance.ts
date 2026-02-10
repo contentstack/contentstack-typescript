@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
-import * as contentstack from '../../src/lib/contentstack';
-import { StackConfig } from '../../src/lib/types';
+import * as contentstack from '../../src/stack';
+import { StackConfig } from '../../src/common/types';
 
 dotenv.config();
 

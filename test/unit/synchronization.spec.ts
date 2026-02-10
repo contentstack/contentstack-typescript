@@ -1,7 +1,7 @@
-import { synchronization } from '../../src/lib/synchronization';
+import { synchronization } from '../../src/sync';
 import { LOCALE } from '../utils/constant';
 import * as core from '@contentstack/core';
-import { SyncStack, SyncType, PublishType } from '../../src/lib/types';
+import { SyncStack, SyncType, PublishType } from '../../src/common/types';
 import { axiosGetMock } from '../utils/mocks';
 import { httpClient } from '@contentstack/core';
 

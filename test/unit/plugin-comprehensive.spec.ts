@@ -3,8 +3,8 @@
  * Comprehensive tests for ContentstackPlugin interface, export functionality,
  * and basic plugin implementation patterns
  */
-import * as Contentstack from "../../src/lib/contentstack";
-import { ContentstackPlugin, StackConfig } from "../../src/lib/types";
+import * as Contentstack from "../../src/stack";
+import { ContentstackPlugin, StackConfig } from "../../src/common/types";
 import { ContentstackPlugin as ExportedPlugin } from "../../src/index";
 
 // Mock the core module
