@@ -1,3 +1,7 @@
+### Version: 4.11.2
+#### Date: feb-11-2026
+Fix: JS core & axios version bump
+
 ### Version: 4.11.1
 #### Date: feb-09-2026
 Fix: Fix security issues
