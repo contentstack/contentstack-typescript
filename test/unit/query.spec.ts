@@ -1,11 +1,11 @@
 import { httpClient, AxiosInstance } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
 import { HOST_URL } from '../utils/constant';
-import { Query } from '../../src/lib/query';
-import { QueryOperation, QueryOperator } from '../../src/lib/types';
+import { Query } from '../../src/query';
+import { QueryOperation, QueryOperator } from '../../src/common/types';
 import { entryFindMock } from '../utils/mocks';
-import { Entries } from '../../src/lib/entries';
-import { ErrorMessages } from '../../src/lib/error-messages';
+import { Entries } from '../../src/entries';
+import { ErrorMessages } from '../../src/common/error-messages';
 
 describe('Query class', () => {
   let client: AxiosInstance;

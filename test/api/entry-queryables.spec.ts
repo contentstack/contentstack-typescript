@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
 import { TEntry } from './types';
-import { QueryOperation } from '../../src/lib/types';
+import { QueryOperation } from '../../src/common/types';
 
 const stack = stackInstance();
 const CT_UID = process.env.COMPLEX_CONTENT_TYPE_UID || 'cybersecurity';

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
-import { SyncStack } from '../../src/lib/types';
+import { SyncStack } from '../../src/common/types';
 
 const stack = stackInstance();
 
