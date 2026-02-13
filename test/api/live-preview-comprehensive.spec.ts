@@ -1,7 +1,7 @@
 import { describe, it, expect } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
 import { BaseEntry, QueryOperation } from '../../src';
-import * as contentstack from '../../src/lib/contentstack';
+import * as contentstack from '../../src/stack';
 
 const stack = stackInstance();
 

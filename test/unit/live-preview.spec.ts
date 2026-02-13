@@ -1,4 +1,4 @@
-import * as Contentstack from '../../src/lib/contentstack';
+import * as Contentstack from '../../src/stack';
 
 describe('Live preview tests', () => {
 

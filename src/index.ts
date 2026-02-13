@@ -1,16 +1,18 @@
-import * as contentstack from './lib/contentstack';
-export * from './lib/types';
-export type { Stack } from './lib/stack';
-export type { ContentType } from './lib/content-type';
-export type { Entry } from './lib/entry';
-export type { Asset } from './lib/asset';
-export type { Query } from './lib/query';
-export type { GlobalField } from './lib/global-field';
-export type { GlobalFieldQuery } from './lib/global-field-query';
-export type { ImageTransform } from './lib/image-transform';
-export type { AssetQuery } from './lib/asset-query';
-export type { TaxonomyQuery } from './lib/taxonomy-query';
-export type { ContentTypeQuery } from './lib/contenttype-query';
-export { ErrorMessages, ErrorCode } from './lib/error-messages';
+import contentstack from './stack';
+import './common/string-extensions';
+
+export * from './common/types';
+export type { Stack } from './stack';
+export type { ContentType } from './content-type';
+export type { Entry } from './entries';
+export type { Asset } from './assets';
+export type { Query } from './query';
+export type { GlobalField } from './global-field';
+export type { GlobalFieldQuery } from './query';
+export type { ImageTransform } from './assets';
+export type { AssetQuery } from './query';
+export type { TaxonomyQuery } from './query';
+export type { ContentTypeQuery } from './query';
+export { ErrorMessages, ErrorCode } from './common/error-messages';
 
 export default contentstack;

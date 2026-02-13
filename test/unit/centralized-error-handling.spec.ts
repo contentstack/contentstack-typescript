@@ -5,9 +5,9 @@
  * Focus: PRODUCTION ISSUE CATCHING - Real mistakes customers make
  * 
  * Based on ACTUAL SDK code review:
- * - src/lib/entries.ts: includeReference() validation
- * - src/lib/entry.ts: includeReference() validation
- * - src/lib/query.ts: key/value validation (isValidAlphanumeric)
+ * - src/entries.ts: includeReference() validation
+ * - src/entries.ts: includeReference() validation
+ * - src/query.ts: key/value validation (isValidAlphanumeric)
  * 
  * Why These Tests Matter:
  * - Catch common customer mistakes before API calls
@@ -18,7 +18,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
 import contentstack from '../../src/index';
-import { ErrorMessages } from '../../src/lib/error-messages';
+import { ErrorMessages } from '../../src/common/error-messages';
 
 // Mock console.error to capture validation messages
 let consoleErrorSpy: ReturnType<typeof jest.spyOn>;
@@ -582,7 +582,7 @@ describe('Edge Cases - Production Error Prevention', () => {
     // Boolean is in the type signature but may not pass runtime validation
     const result = query.equalTo('is_published', true as any);
     
-    // Based on src/lib/query.ts line 393: only checks for string or number
+    // Based on src/query.ts line 393: only checks for string or number
     // Boolean would fail the validation
     expect(consoleErrorSpy).toHaveBeenCalledWith(ErrorMessages.INVALID_VALUE_STRING_OR_NUMBER);
   });

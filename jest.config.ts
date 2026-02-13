@@ -1,7 +1,8 @@
 /* eslint-disable */
 export default {
   displayName: "contentstack-delivery",
-  preset: "./jest.preset.js",
+  testEnvironment: "node",
+  testMatch: ["**/__tests__/**/*.ts", "**/?(*.)+(spec|test).ts"],
   transform: {
     "^.+\\.[tj]s$": [
       "ts-jest",
