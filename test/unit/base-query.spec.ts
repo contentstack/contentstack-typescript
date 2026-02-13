@@ -1,5 +1,5 @@
-import { BaseQuery } from '../../src/lib/base-query';
-import { Query } from '../../src/lib/query';
+import { BaseQuery } from '../../src/query';
+import { Query } from '../../src/query';
 import { httpClient, AxiosInstance } from '@contentstack/core';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
 import MockAdapter from 'axios-mock-adapter';

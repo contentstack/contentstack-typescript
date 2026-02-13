@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable promise/always-return */
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
-import { ContentType } from '../../src/lib/content-type';
+import { ContentType } from '../../src/content-type';
 import { stackInstance } from '../utils/stack-instance';
 import { TContentType, TEntry } from './types';
 import dotenv from 'dotenv';

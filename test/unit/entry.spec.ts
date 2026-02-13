@@ -1,10 +1,10 @@
 import { AxiosInstance, httpClient } from '@contentstack/core';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
-import { Entry } from '../../src/lib/entry';
+import { Entry } from '../../src/entries';
 import MockAdapter from 'axios-mock-adapter';
 import { entryFetchMock } from '../utils/mocks';
 import { getData } from '@contentstack/core';
-import { ErrorMessages } from '../../src/lib/error-messages';
+import { ErrorMessages } from '../../src/common/error-messages';
 
 describe('Entry class', () => {
   let entry: Entry;

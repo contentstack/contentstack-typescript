@@ -1,7 +1,7 @@
 import { httpClient, AxiosInstance } from '@contentstack/core';
-import * as Contentstack from '../../src/lib/contentstack';
-import { Stack } from '../../src/lib/stack';
-import { StackConfig } from '../../src/lib/types';
+import * as Contentstack from '../../src/stack';
+import { Stack } from '../../src/stack';
+import { StackConfig } from '../../src/common/types';
 import MockAdapter from 'axios-mock-adapter';
 
 describe('Retry Configuration', () => {
