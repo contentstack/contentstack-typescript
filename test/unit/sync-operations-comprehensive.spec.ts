@@ -5,21 +5,22 @@ import { axiosGetMock } from '../utils/mocks';
 import { httpClient } from '@contentstack/core';
 
 jest.mock('@contentstack/core');
-const getDataMock = <jest.Mock<typeof core.getData>>(<unknown>core.getData);
+const getDataMock = core.getData as jest.MockedFunction<typeof core.getData>;
 
 describe('Comprehensive Sync Operations Tests', () => {
   const SYNC_URL = '/stacks/sync';
   
   beforeEach(() => {
-    getDataMock.mockImplementation((_client, _url, params) => {
-      const resp: any = { ...axiosGetMock };
+    getDataMock.mockImplementation(async (_client, _url, params) => {
+      // getData returns response.data directly, not the full AxiosResponse
+      const data: any = { ...axiosGetMock.data };
       if ('pagination_token' in params.params) {
-        delete resp.data.pagination_token;
-        resp.data.sync_token = '<sync_token>';
+        delete data.pagination_token;
+        data.sync_token = '<sync_token>';
       } else {
-        resp.data.pagination_token = '<pagination_token>';
+        data.pagination_token = '<pagination_token>';
       }
-      return resp;
+      return data;
     });
   });
 
@@ -59,9 +60,9 @@ describe('Comprehensive Sync Operations Tests', () => {
 
   describe('Delta Sync Operations', () => {
     it('should perform delta sync with sync token', async () => {
-      getDataMock.mockImplementation((_client, _url, params) => {
-        const resp: any = { ...axiosGetMock };
-        resp.data.items = [
+      getDataMock.mockImplementation(async (_client, _url, params) => {
+        const data: any = { ...axiosGetMock.data };
+        data.items = [
           {
             type: 'entry_published',
             event_at: new Date().toISOString(),
@@ -69,8 +70,8 @@ describe('Comprehensive Sync Operations Tests', () => {
             data: { uid: 'entry_1', title: 'Updated Entry' }
           }
         ];
-        resp.data.sync_token = 'delta_sync_token';
-        return resp;
+        data.sync_token = 'delta_sync_token';
+        return data;
       });
 
       const result = await syncCall({ syncToken: 'previous_token' });
@@ -80,11 +81,11 @@ describe('Comprehensive Sync Operations Tests', () => {
     });
 
     it('should handle empty delta sync response', async () => {
-      getDataMock.mockImplementation((_client, _url, params) => {
-        const resp: any = { ...axiosGetMock };
-        resp.data.items = [];
-        resp.data.sync_token = 'empty_sync_token';
-        return resp;
+      getDataMock.mockImplementation(async (_client, _url, params) => {
+        const data: any = { ...axiosGetMock.data };
+        data.items = [];
+        data.sync_token = 'empty_sync_token';
+        return data;
       });
 
       const result = await syncCall({ syncToken: 'previous_token' });
@@ -93,9 +94,9 @@ describe('Comprehensive Sync Operations Tests', () => {
     });
 
     it('should handle mixed entry types in delta sync', async () => {
-      getDataMock.mockImplementation((_client, _url, params) => {
-        const resp: any = { ...axiosGetMock };
-        resp.data.items = [
+      getDataMock.mockImplementation(async (_client, _url, params) => {
+        const data: any = { ...axiosGetMock.data };
+        data.items = [
           {
             type: 'entry_published',
             content_type_uid: 'blog',
@@ -112,8 +113,8 @@ describe('Comprehensive Sync Operations Tests', () => {
             data: { uid: 'asset_1', filename: 'image.jpg' }
           }
         ];
-        resp.data.sync_token = 'mixed_sync_token';
-        return resp;
+        data.sync_token = 'mixed_sync_token';
+        return data;
       });
 
       const result = await syncCall({ syncToken: 'previous_token' });
@@ -182,16 +183,16 @@ describe('Comprehensive Sync Operations Tests', () => {
 
   describe('Sync Performance and Optimization', () => {
     it('should handle large dataset efficiently', async () => {
-      getDataMock.mockImplementation((_client, _url, params) => {
-        const resp: any = { ...axiosGetMock };
-        resp.data.items = Array(1000).fill(null).map((_, i) => ({
+      getDataMock.mockImplementation(async (_client, _url, params) => {
+        const data: any = { ...axiosGetMock.data };
+        data.items = Array(1000).fill(null).map((_, i) => ({
           type: 'entry_published',
           event_at: new Date().toISOString(),
           content_type_uid: 'blog',
           data: { uid: `entry_${i}`, title: `Entry ${i}` }
         }));
-        resp.data.sync_token = 'large_dataset_token';
-        return resp;
+        data.sync_token = 'large_dataset_token';
+        return data;
       });
 
       const startTime = performance.now();
@@ -211,9 +212,9 @@ describe('Comprehensive Sync Operations Tests', () => {
 
   describe('Sync Data Consistency', () => {
     it('should maintain data consistency', async () => {
-      getDataMock.mockImplementation((_client, _url, params) => {
-        const resp: any = { ...axiosGetMock };
-        resp.data.items = [
+      getDataMock.mockImplementation(async (_client, _url, params) => {
+        const data: any = { ...axiosGetMock.data };
+        data.items = [
           {
             type: 'entry_published',
             event_at: new Date().toISOString(),
@@ -226,8 +227,8 @@ describe('Comprehensive Sync Operations Tests', () => {
             }
           }
         ];
-        resp.data.sync_token = 'consistent_token';
-        return resp;
+        data.sync_token = 'consistent_token';
+        return data;
       });
 
       const result = await syncCall({ syncToken: 'previous_token' });
@@ -242,10 +243,9 @@ describe('Comprehensive Sync Operations Tests', () => {
     });
 
     it('should handle malformed responses gracefully', async () => {
-      getDataMock.mockImplementation((_client, _url, params) => {
-        const resp: any = { ...axiosGetMock };
-        resp.data = { malformed: true };
-        return resp;
+      getDataMock.mockImplementation(async (_client, _url, params) => {
+        const data: any = { malformed: true };
+        return data;
       });
 
       const result = await syncCall();

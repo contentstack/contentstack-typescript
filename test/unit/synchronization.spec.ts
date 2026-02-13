@@ -6,19 +6,22 @@ import { axiosGetMock } from '../utils/mocks';
 import { httpClient } from '@contentstack/core';
 
 jest.mock('@contentstack/core');
-const getDataMock = <jest.Mock<typeof core.getData>>(<unknown>core.getData);
+const getDataMock = core.getData as jest.MockedFunction<typeof core.getData>;
 
 describe('Synchronization function', () => {
   const SYNC_URL = '/stacks/sync';
   beforeEach(() => {
-    getDataMock.mockImplementation((_client, _url, params) => {
-      const resp: any = axiosGetMock;
-      if ('pagination_token' in params) {
-        delete resp.data.pagination_token;
-        resp.data.sync_token = '<sync_token>';
-      } else resp.data.pagination_token = '<pagination_token>';
+    getDataMock.mockImplementation(async (_client, _url, params) => {
+      // getData returns response.data directly, not the full AxiosResponse
+      const data: any = { ...axiosGetMock.data };
+      if ('pagination_token' in params.params) {
+        delete data.pagination_token;
+        data.sync_token = '<sync_token>';
+      } else {
+        data.pagination_token = '<pagination_token>';
+      }
 
-      return resp;
+      return data;
     });
   });
   afterEach(() => {
