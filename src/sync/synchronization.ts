@@ -1,9 +1,9 @@
 import { AxiosInstance, getData } from '@contentstack/core';
-import { SyncStack, SyncType, PublishType } from '../common/types';
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { SyncStack, SyncType, PublishType, SyncResponse } from '../common/types';
+import { AxiosRequestConfig } from 'axios';
 import humps from 'humps';
 
-export async function synchronization(client: AxiosInstance, params: SyncStack | SyncType = {}, recursive = false) {
+export async function synchronization(client: AxiosInstance, params: SyncStack | SyncType = {}, recursive = false): Promise<SyncResponse> {
   const config: AxiosRequestConfig = { params };
   const SYNC_URL = '/stacks/sync';
 
@@ -17,18 +17,19 @@ export async function synchronization(client: AxiosInstance, params: SyncStack |
     config.params = { ...config.params, type: type.join(',') };
   }
 
-  let response: AxiosResponse = await getData(client, SYNC_URL, { params: humps.decamelizeKeys(config.params) });
-  const data = response.data;
+  // getData returns response.data directly, not the full AxiosResponse
+  let response: SyncResponse = await getData(client, SYNC_URL, { params: humps.decamelizeKeys(config.params) });
 
-  while (recursive && 'pagination_token' in response.data) {
-    const recResponse: AxiosResponse = await getData(
+  while (recursive && 'pagination_token' in response) {
+    const recResponse: SyncResponse = await getData(
       client,
       SYNC_URL,
-      humps.decamelizeKeys({ paginationToken: data.pagination_token })
+      { params: humps.decamelizeKeys({ paginationToken: response.pagination_token }) }
     );
-    recResponse.data.items = { ...response.data.items, ...recResponse.data.items };
-    response = { ...recResponse };
+    // Merge items from all paginated responses
+    recResponse.items = [...response.items, ...recResponse.items];
+    response = recResponse;
   }
 
-  return response.data;
+  return response;
 }
