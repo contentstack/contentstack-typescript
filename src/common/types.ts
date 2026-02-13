@@ -127,6 +127,22 @@ export interface SyncType {
   locale?: string;
   startDate?: string;
 }
+
+export interface SyncItem {
+  type: string;
+  event_at: string;
+  content_type_uid: string;
+  data: any;
+}
+
+export interface SyncResponse {
+  items: SyncItem[];
+  skip?: number;
+  limit?: number;
+  total_count?: number;
+  sync_token?: string;
+  pagination_token?: string;
+}
 export type TransformData = { [key: string]: string | string[] };
 
 export enum Format {
