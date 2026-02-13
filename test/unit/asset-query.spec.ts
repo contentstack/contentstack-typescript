@@ -1,9 +1,9 @@
-import { AssetQuery } from '../../src/lib/asset-query';
+import { AssetQuery } from '../../src/query';
 import { httpClient, AxiosInstance } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
 import { assetQueryFindResponseDataMock } from '../utils/mocks';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
-import { QueryOperation } from '../../src/lib/types';
+import { QueryOperation } from '../../src/common/types';
 
 describe('AssetQuery class', () => {
   let assetQuery: AssetQuery;

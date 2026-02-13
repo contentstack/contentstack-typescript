@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
-import * as contentstack from "../../src/lib/contentstack";
+import * as contentstack from "../../src/stack";
 import { TEntry } from "./types";
 import dotenv from "dotenv";
 
