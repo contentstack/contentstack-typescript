@@ -1,4 +1,4 @@
-import { GlobalFieldQuery } from '../../src/lib/global-field-query';
+import { GlobalFieldQuery } from '../../src/query';
 import { httpClient, AxiosInstance } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
 import { gfieldQueryFindResponseDataMock } from '../utils/mocks';

@@ -1,6 +1,6 @@
 import { describe, it, expect } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
-import { QueryOperation } from '../../src/lib/types';
+import { QueryOperation } from '../../src/common/types';
 
 const stack = stackInstance();
 

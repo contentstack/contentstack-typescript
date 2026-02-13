@@ -1,11 +1,11 @@
 import { AxiosInstance, httpClient } from '@contentstack/core';
-import { ContentType } from '../../src/lib/content-type';
+import { ContentType } from '../../src/content-type';
 import MockAdapter from 'axios-mock-adapter';
-import { Entry } from '../../src/lib/entry';
+import { Entry } from '../../src/entries';
 import { contentTypeResponseMock } from '../utils/mocks';
-import { Entries } from '../../src/lib/entries';
+import { Entries } from '../../src/entries';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
-import { Query } from 'src/lib/query';
+import { Query } from '../../src/query';
 
 describe('ContentType class', () => {
   let contentType: ContentType;

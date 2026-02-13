@@ -5,9 +5,9 @@
  */
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import * as core from "@contentstack/core";
-import * as Contentstack from "../../src/lib/contentstack";
-import { Stack } from "../../src/lib/stack";
-import { Policy, StackConfig, ContentstackPlugin } from "../../src/lib/types";
+import * as Contentstack from "../../src/stack";
+import { Stack } from "../../src/stack";
+import { Policy, StackConfig, ContentstackPlugin } from "../../src/common/types";
 
 jest.mock("@contentstack/core");
 
@@ -286,7 +286,7 @@ describe("Plugin-Interceptor Comprehensive Tests", () => {
         plugins: [cacheInterferingPlugin],
         cacheOptions: {
           policy: Policy.CACHE_THEN_NETWORK,
-          storeType: "localStorage" as any,
+          persistenceStore: { setItem: jest.fn(), getItem: jest.fn() },
         },
       };
 
@@ -309,16 +309,17 @@ describe("Plugin-Interceptor Comprehensive Tests", () => {
         Policy.NETWORK_ELSE_CACHE,
       ];
 
+      const mockPersistenceStore = { setItem: jest.fn(), getItem: jest.fn() };
       policies.forEach((policy) => {
         const config: StackConfig = {
           apiKey: "test-api-key",
           deliveryToken: "test-delivery-token",
           environment: "test-env",
           plugins: [plugin],
-          cacheOptions: {
-            policy,
-            storeType: "localStorage" as any,
-          },
+          cacheOptions:
+            policy === Policy.IGNORE_CACHE
+              ? { policy }
+              : { policy, persistenceStore: mockPersistenceStore },
         };
 
         expect(() => Contentstack.stack(config)).not.toThrow();
@@ -652,7 +653,10 @@ describe("Plugin-Interceptor Comprehensive Tests", () => {
           deliveryToken: "test",
           environment: "test",
           plugins: [plugin],
-          cacheOptions: { policy: Policy.CACHE_THEN_NETWORK },
+          cacheOptions: {
+            policy: Policy.CACHE_THEN_NETWORK,
+            persistenceStore: { setItem: jest.fn(), getItem: jest.fn() },
+          },
           retryOnError: true,
         },
         // With custom retry settings
@@ -764,7 +768,7 @@ describe("Plugin-Interceptor Comprehensive Tests", () => {
         plugins: [plugin],
         cacheOptions: {
           policy: Policy.CACHE_ELSE_NETWORK,
-          storeType: "localStorage" as any,
+          persistenceStore: { setItem: jest.fn(), getItem: jest.fn() },
         },
         retryOnError: true,
         retryLimit: 3,

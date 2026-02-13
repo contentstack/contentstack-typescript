@@ -1,6 +1,6 @@
-import { synchronization } from '../../src/lib/synchronization';
+import { synchronization } from '../../src/sync';
 import * as core from '@contentstack/core';
-import { SyncStack, SyncType } from '../../src/lib/types';
+import { SyncStack, SyncType } from '../../src/common/types';
 import { axiosGetMock } from '../utils/mocks';
 import { httpClient } from '@contentstack/core';
 

@@ -1,5 +1,5 @@
-import { getHostforRegion, encodeQueryParams } from "../../src/lib/utils";
-import { Region } from "../../src/lib/types";
+import { getHostforRegion, encodeQueryParams } from "../../src/common/utils";
+import { Region } from "../../src/common/types";
 import {
   DUMMY_URL,
   HOST_EU_REGION,
