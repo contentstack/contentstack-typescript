@@ -7,8 +7,6 @@
  */
 export default {
   displayName: "browser-environment",
-  preset: "./jest.preset.js",
-  
   // ⚠️ CRITICAL: Use jsdom (browser) instead of node environment
   testEnvironment: "jest-environment-jsdom",
   

@@ -1,4 +1,4 @@
-import { Pagination } from '../../src/lib/pagination';
+import { Pagination } from '../../src/common/pagination';
 
 describe('Pagination class', () => {
 

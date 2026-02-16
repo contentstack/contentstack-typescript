@@ -5,7 +5,7 @@
  * Uses real .env credentials to test with actual API calls
  */
 
-import * as contentstack from '../../src/lib/contentstack';
+import * as contentstack from '../../src/stack';
 import { browserStackInstance, hasRealCredentials, getStackConfig } from './helpers/browser-stack-instance';
 
 describe('Browser Environment - SDK Initialization', () => {

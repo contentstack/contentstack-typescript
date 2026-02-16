@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
-import * as Contentstack from '../../src/lib/contentstack';
-import { StackConfig } from '../../src/lib/types';
+import * as Contentstack from '../../src/stack';
+import { StackConfig } from '../../src/common/types';
 
 describe('Retry Integration Tests', () => {
   const baseConfig: StackConfig = {

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
-import { QueryOperation, QueryOperator } from "../../src/lib/types";
+import { QueryOperation, QueryOperator } from "../../src/common/types";
 import { stackInstance } from "../utils/stack-instance";
 import { TEntries, TEntry } from "./types";
 

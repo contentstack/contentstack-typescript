@@ -1,0 +1,61 @@
+import { AxiosInstance, getData } from '@contentstack/core';
+import { Entry } from '../entries';
+import { Entries } from '../entries';
+
+interface ContentTypeResponse<T> {
+  content_type: T;
+}
+export class ContentType {
+  private _client: AxiosInstance;
+  private _contentTypeUid: string;
+  private _urlPath: string;
+
+  _queryParams: { [key: string]: string | number } = {};
+
+  constructor(client: AxiosInstance, contentTypeUid: string) {
+    this._client = client;
+    this._contentTypeUid = contentTypeUid;
+    this._urlPath = `/content_types/${this._contentTypeUid}`;
+  }
+
+  /**
+   * @method entry
+   * @memberof ContentType
+   * @description Creates entry object of the passed entry uid, or entries query object if no uid is provided.
+   * @param {string} [uid] - Optional entry UID. If provided, returns a single Entry instance. If omitted, returns Entries query object.
+   * @returns {Entry | Entries} Entry instance if uid is provided, otherwise Entries query object
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const entry = stack.contentType("contentTypeUid").entry("entryUid");
+   * // OR
+   * const entries = stack.contentType("contentTypeUid").entry();
+   */
+  entry(uid: string): Entry;
+  entry(): Entries;
+  entry(uid?: string): Entry | Entries {
+    if (uid) return new Entry(this._client, this._contentTypeUid, uid);
+
+    return new Entries(this._client, this._contentTypeUid);
+  }
+
+  /**
+   * @method fetch
+   * @memberof ContentType
+   * @description Fetches the contentType data on the basis of the contentType uid
+   * @returns {Promise<T>} Promise that resolves to the content type data
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.contentType(contenttype_uid).fetch();
+   */
+  async fetch<T>(): Promise<T> {
+    const response = await getData(this._client, this._urlPath);
+
+    if (response.content_type) return response.content_type as T;
+
+    return response;
+  }
+}

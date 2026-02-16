@@ -2,15 +2,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AxiosInstance, httpClient } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
-import { Query } from '../../src/lib/query';
-import { ContentType } from '../../src/lib/content-type';
-import { ContentTypeQuery } from '../../src/lib/contenttype-query';
-import { Entry } from '../../src/lib/entry';
-import { Entries } from '../../src/lib/entries';
-import { GlobalField } from '../../src/lib/global-field';
-import { QueryOperation, QueryOperator, TaxonomyQueryOperation } from '../../src/lib/types';
+import { Query } from '../../src/query';
+import { ContentType } from '../../src/content-type';
+import { ContentTypeQuery } from '../../src/query';
+import { Entry } from '../../src/entries';
+import { Entries } from '../../src/entries';
+import { GlobalField } from '../../src/global-field';
+import { QueryOperation, QueryOperator, TaxonomyQueryOperation } from '../../src/common/types';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
-import { ErrorMessages } from '../../src/lib/error-messages';
+import { ErrorMessages } from '../../src/common/error-messages';
 
 describe('Content Validation - Comprehensive Test Suite', () => {
   let client: AxiosInstance;

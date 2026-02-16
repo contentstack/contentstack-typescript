@@ -9,8 +9,11 @@
  * Usage: node scripts/validate-browser-safe.js
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // ANSI color codes for pretty output
 const colors = {

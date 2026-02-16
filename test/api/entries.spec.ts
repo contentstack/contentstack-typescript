@@ -5,8 +5,8 @@ import {
   QueryOperation,
   QueryOperator,
   TaxonomyQueryOperation,
-} from "../../src/lib/types";
-import { Entries } from "../../src/lib/entries";
+} from "../../src/common/types";
+import { Entries } from "../../src/entries";
 import { stackInstance } from "../utils/stack-instance";
 import { TEntries, TEntry } from "./types";
 
