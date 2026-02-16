@@ -1,7 +1,6 @@
 import { describe, it, expect } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
-import { BaseEntry, Policy, QueryOperation } from '../../src/lib/types';
-import { StorageType } from '../../src/persistance';
+import { BaseEntry, Policy, QueryOperation } from '../../src/common/types';
 
 const stack = stackInstance();
 

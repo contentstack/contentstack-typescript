@@ -1,9 +1,20 @@
+### Version: 5.0.0
+#### Date: Feb-16-2026
+Breaking: Cache persistence is now a separate plugin. When using a cache policy other than `IGNORE_CACHE`, you must pass `cacheOptions.persistenceStore`. Install `@contentstack/persistence-plugin` and use `new PersistenceStore({ ... })` as the store. The SDK no longer bundles persistence code or accepts `storeType` in `cacheOptions`.
+Enhancement: SDK defines only the `PersistenceStore` interface (getItem/setItem); full implementation lives in the plugin for a lighter core package.
+Fix: Sync API returns non-Axios response causing undefined data and recursive sync failure
+
+### Version: 4.11.2
+#### Date: feb-11-2026
+Fix: JS core & axios version bump
+
+
 ### Version: 4.11.2
 #### Date: feb-11-2026
 Fix: JS core & axios version bump
 
 ### Version: 4.11.1
-#### Date: feb-09-2026
+#### Date: Feb-09-2026
 Fix: Fix security issues
 
 ### Version: 4.11.0
