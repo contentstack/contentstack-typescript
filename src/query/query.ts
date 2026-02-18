@@ -29,17 +29,20 @@ export class Query extends BaseQuery {
     return alphanumericRegex.test(input);
   }
 
-  // Validate if input matches any of the safe, pre-approved patterns
+  // Validate if input matches safe regex patterns
   private isValidRegexPattern(input: string): boolean {
-    const validRegex = /^[a-zA-Z0-9|^$.*+?()[\]{}\\-]+$/; // Allow only safe regex characters
+    // Expanded whitelist: includes spaces and common safe special characters
+    // Allows: alphanumeric, regex metacharacters, regular spaces, and common punctuation
+    // Blocks: control characters (newlines, tabs, null bytes), backticks, and other dangerous chars
+    const validRegex = /^[a-zA-Z0-9|^$.*+?()[\]{}:,;&@#%=/!'"_~<> -]+$/;
     if (!validRegex.test(input)) {
-        return false;
+      return false;
     }
     try {
-        new RegExp(input);
-        return true;
+      new RegExp(input);
+      return true;
     } catch (e) {
-        return false;
+      return false;
     }
   }
 
