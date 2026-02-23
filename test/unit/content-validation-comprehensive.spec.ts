@@ -698,6 +698,25 @@ describe('Content Validation - Comprehensive Test Suite', () => {
       expect(() => query.regex('title', '*invalid')).toThrow(ErrorMessages.INVALID_REGEX_PATTERN);
     });
 
+    it('should accept regex patterns with spaces and special characters in blog queries', () => {
+      const query = new Query(client, {}, {}, '', 'blog_post');
+
+      // Patterns with spaces
+      expect(() => query.regex('title', '.*blog post.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*global flex.*', 'i')).not.toThrow();
+
+      // Patterns with punctuation
+      expect(() => query.regex('title', '.*test:value.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*test,value.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*test&value.*', 'i')).not.toThrow();
+      expect(() => query.regex('content', '.*https://example.com.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*test#tag.*', 'i')).not.toThrow();
+
+      // Verify parameters are set correctly
+      query.regex('title', '.*search term.*', 'i');
+      expect(query._parameters.title).toEqual({ $regex: '.*search term.*', $options: 'i' });
+    });
+
     it('should validate query value types', () => {
       const query = new Query(client, {}, {}, '', 'blog_post');
       
