@@ -195,6 +195,23 @@ describe('Query Optimization - Comprehensive Test Suite', () => {
       expect(() => query.regex('title', '*invalid')).toThrow(ErrorMessages.INVALID_REGEX_PATTERN);
     });
 
+    it('should accept regex patterns with spaces and special characters', () => {
+      // Patterns with spaces (user search scenarios)
+      expect(() => query.regex('title', '.*test er.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*global flex.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*two words.*', 'i')).not.toThrow();
+
+      // Patterns with special characters
+      expect(() => query.regex('title', '.*test:value.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*test,value.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*test&value.*', 'i')).not.toThrow();
+      expect(() => query.regex('email', '.*@example.com.*', 'i')).not.toThrow();
+      expect(() => query.regex('url', '.*https://site.com.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*test#tag.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', ".*test'value.*", 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*test_value.*', 'i')).not.toThrow();
+    });
+
     it('should validate containedIn values for proper types', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
