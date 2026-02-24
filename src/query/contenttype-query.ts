@@ -1,6 +1,5 @@
-import { AxiosInstance, getData } from '@contentstack/core';
+import { AxiosInstance } from '@contentstack/core';
 import { BaseQuery } from './base-query';
-import { FindResponse } from '../common/types';
 
 export class ContentTypeQuery extends BaseQuery {
 
