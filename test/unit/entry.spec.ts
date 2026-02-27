@@ -128,6 +128,17 @@ describe('Entry class', () => {
     expect(entry._queryParams.key3).toEqual(['value3']);
   });
 
+  it('should add "asset_fields[]" in _queryParams when assetFields method is called', () => {
+    const returnedValue = entry.assetFields('user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups');
+    expect(returnedValue).toBeInstanceOf(Entry);
+    expect(entry._queryParams['asset_fields[]']).toEqual(['user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups']);
+  });
+
+  it('should not set asset_fields[] when assetFields is called with no arguments', () => {
+    entry.assetFields();
+    expect(entry._queryParams['asset_fields[]']).toBeUndefined();
+  });
+
   it('should get the API response when fetch method is called', async () => {
     mockClient.onGet(`/content_types/contentTypeUid/entries/entryUid`).reply(200, entryFetchMock);
     const returnedValue = await entry.fetch();
@@ -236,5 +247,18 @@ describe('Fetch with variants', () => {
     const result = await entry.fetch();
     
     expect(result).toEqual(responseWithoutEntry);
+  });
+
+  it('should call fetch with asset_fields[] query params when assetFields is set', async () => {
+    mockClient.onGet('/content_types/contentTypeUid/entries/entryUid').reply((config) => {
+      expect(config.params).toBeDefined();
+      expect(config.params['asset_fields[]']).toEqual(['user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups']);
+      return [200, entryFetchMock];
+    });
+
+    entry.assetFields('user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups');
+    const result = await entry.fetch();
+
+    expect(result).toEqual(entryFetchMock.entry);
   });
 })
