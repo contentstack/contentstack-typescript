@@ -25,6 +25,10 @@ test-results/
 src/**/*.js
 src/**/*.js.map
 
+# Compiled test artifacts (use .ts source only)
+test/api/**/*.js
+test/api/**/*.js.map
+
 # Browser test bundle (generated)
 test/e2e/sdk-browser-bundle.js
 test/e2e/sdk-browser-bundle.js.map
@@ -43,3 +47,4 @@ test/docs/*.mjs
 test/docs/sanity-report*
 *.log
 .nx/
+delivery-sdk-persistence/

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
-import { QueryOperation, QueryOperator, TaxonomyQueryOperation } from "../../src/lib/types";
+import { QueryOperation, QueryOperator, TaxonomyQueryOperation } from "../../src/common/types";
 import { stackInstance } from "../utils/stack-instance";
 import dotenv from "dotenv"
 import { TEntries } from "./types";

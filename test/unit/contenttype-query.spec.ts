@@ -1,4 +1,4 @@
-import { ContentTypeQuery } from '../../src/lib/contenttype-query';
+import { ContentTypeQuery } from '../../src/query';
 import { AxiosInstance, HttpClientParams, httpClient } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
 import { HOST_URL } from '../utils/constant';

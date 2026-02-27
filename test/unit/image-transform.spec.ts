@@ -1,6 +1,6 @@
 /* eslint-disable @cspell/spellchecker */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { ImageTransform } from '../../src/lib/image-transform';
+import { ImageTransform } from '../../src/assets';
 import {
   CanvasBy,
   CropBy,
@@ -10,7 +10,7 @@ import {
   OverlayAlign,
   OverlayRepeat,
   ResizeFilter,
-} from '../../src/lib/types';
+} from '../../src/common/types';
 
 describe('ImageTransform class', () => {
   function getBuild(imgTransformObj: ImageTransform) {

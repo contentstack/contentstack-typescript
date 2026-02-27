@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { BaseEntry } from '../../src';
-import { Entry } from '../../src/lib/entry';
+import { Entry } from '../../src/entries';
 import { stackInstance } from '../utils/stack-instance';
 import { TEntry } from './types';
 
