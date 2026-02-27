@@ -2,15 +2,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { AxiosInstance, httpClient } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
-import { Query } from '../../src/lib/query';
-import { ContentType } from '../../src/lib/content-type';
-import { ContentTypeQuery } from '../../src/lib/contenttype-query';
-import { Entry } from '../../src/lib/entry';
-import { Entries } from '../../src/lib/entries';
-import { GlobalField } from '../../src/lib/global-field';
-import { QueryOperation, QueryOperator, TaxonomyQueryOperation } from '../../src/lib/types';
+import { Query } from '../../src/query';
+import { ContentType } from '../../src/content-type';
+import { ContentTypeQuery } from '../../src/query';
+import { Entry } from '../../src/entries';
+import { Entries } from '../../src/entries';
+import { GlobalField } from '../../src/global-field';
+import { QueryOperation, QueryOperator, TaxonomyQueryOperation } from '../../src/common/types';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
-import { ErrorMessages } from '../../src/lib/error-messages';
+import { ErrorMessages } from '../../src/common/error-messages';
 
 describe('Content Validation - Comprehensive Test Suite', () => {
   let client: AxiosInstance;
@@ -696,6 +696,25 @@ describe('Content Validation - Comprehensive Test Suite', () => {
       // Invalid regex patterns
       expect(() => query.regex('title', '[a-z')).toThrow(ErrorMessages.INVALID_REGEX_PATTERN);
       expect(() => query.regex('title', '*invalid')).toThrow(ErrorMessages.INVALID_REGEX_PATTERN);
+    });
+
+    it('should accept regex patterns with spaces and special characters in blog queries', () => {
+      const query = new Query(client, {}, {}, '', 'blog_post');
+
+      // Patterns with spaces
+      expect(() => query.regex('title', '.*blog post.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*global flex.*', 'i')).not.toThrow();
+
+      // Patterns with punctuation
+      expect(() => query.regex('title', '.*test:value.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*test,value.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*test&value.*', 'i')).not.toThrow();
+      expect(() => query.regex('content', '.*https://example.com.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*test#tag.*', 'i')).not.toThrow();
+
+      // Verify parameters are set correctly
+      query.regex('title', '.*search term.*', 'i');
+      expect(query._parameters.title).toEqual({ $regex: '.*search term.*', $options: 'i' });
     });
 
     it('should validate query value types', () => {

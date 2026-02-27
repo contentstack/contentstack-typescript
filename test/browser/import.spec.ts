@@ -9,19 +9,19 @@ describe('Browser Environment - SDK Import', () => {
   describe('Module Import', () => {
     it('should successfully import SDK in browser context', async () => {
       // This import will FAIL if any dependency uses Node.js-only APIs
-      const contentstack = await import('../../src/lib/contentstack');
+      const contentstack = await import('../../src/stack');
       
       expect(contentstack).toBeDefined();
       expect(contentstack.stack).toBeDefined();
     });
 
     it('should import stack function', async () => {
-      const contentstack = await import('../../src/lib/contentstack');
+      const contentstack = await import('../../src/stack');
       expect(typeof contentstack.stack).toBe('function');
     });
 
     it('should create stack instance', async () => {
-      const contentstack = await import('../../src/lib/contentstack');
+      const contentstack = await import('../../src/stack');
       const stack = contentstack.stack({
         apiKey: process.env.API_KEY || 'test_api_key',
         deliveryToken: process.env.DELIVERY_TOKEN || 'test_delivery_token',

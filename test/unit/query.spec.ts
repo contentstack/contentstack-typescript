@@ -1,11 +1,11 @@
 import { httpClient, AxiosInstance } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
 import { HOST_URL } from '../utils/constant';
-import { Query } from '../../src/lib/query';
-import { QueryOperation, QueryOperator } from '../../src/lib/types';
+import { Query } from '../../src/query';
+import { QueryOperation, QueryOperator } from '../../src/common/types';
 import { entryFindMock } from '../utils/mocks';
-import { Entries } from '../../src/lib/entries';
-import { ErrorMessages } from '../../src/lib/error-messages';
+import { Entries } from '../../src/entries';
+import { ErrorMessages } from '../../src/common/error-messages';
 
 describe('Query class', () => {
   let client: AxiosInstance;
@@ -89,14 +89,77 @@ describe('Query class', () => {
     expect(() => regexQuery.regex("fieldUid", "[a-z")).toThrow("Invalid regexPattern: Must be a valid regular expression");
   });
 
-  it('should throw error when regex method is called with invalid characters', async () => {
+  it('should throw error when regex method is called with invalid regex pattern', async () => {
     const regexQuery = getQueryObject(client, 'referenced-content-type-uid');
-    expect(() => regexQuery.regex("fieldUid", "test<script>")).toThrow("Invalid regexPattern: Must be a valid regular expression");
+    // Use an actually invalid regex pattern (unclosed bracket)
+    expect(() => regexQuery.regex("fieldUid", "test[invalid(")).toThrow("Invalid regexPattern: Must be a valid regular expression");
   });
 
   it('should add a regex parameter to _parameters when regex method is called with valid regex', () => {
     query.regex('fieldUid', '^ABCXYZ123');
     expect(query._parameters['fieldUid']).toEqual({ $regex: '^ABCXYZ123' });
+  });
+
+  describe('regex with special characters and spaces', () => {
+    it('should accept regex pattern with spaces', () => {
+      const regexQuery = getQueryObject(client, 'contentTypeUid');
+      expect(() => regexQuery.regex('title', '.*test er.*', 'i')).not.toThrow();
+      expect(regexQuery._parameters['title']).toEqual({ $regex: '.*test er.*', $options: 'i' });
+    });
+
+    it('should accept regex pattern with multiple spaces (e.g. user search)', () => {
+      const regexQuery = getQueryObject(client, 'contentTypeUid');
+      expect(() => regexQuery.regex('title', '.*global flex.*', 'i')).not.toThrow();
+      expect(regexQuery._parameters['title']).toEqual({ $regex: '.*global flex.*', $options: 'i' });
+    });
+
+    it('should accept regex pattern with colon', () => {
+      const regexQuery = getQueryObject(client, 'contentTypeUid');
+      expect(() => regexQuery.regex('title', '.*test:value.*', 'i')).not.toThrow();
+      expect(regexQuery._parameters['title'].$regex).toBe('.*test:value.*');
+    });
+
+    it('should accept regex pattern with comma', () => {
+      const regexQuery = getQueryObject(client, 'contentTypeUid');
+      expect(() => regexQuery.regex('title', '.*test,value.*', 'i')).not.toThrow();
+      expect(regexQuery._parameters['title'].$regex).toBe('.*test,value.*');
+    });
+
+    it('should accept regex pattern with ampersand', () => {
+      const regexQuery = getQueryObject(client, 'contentTypeUid');
+      expect(() => regexQuery.regex('title', '.*test&value.*', 'i')).not.toThrow();
+      expect(regexQuery._parameters['title'].$regex).toBe('.*test&value.*');
+    });
+
+    it('should accept regex pattern with at sign (e.g. email)', () => {
+      const regexQuery = getQueryObject(client, 'contentTypeUid');
+      expect(() => regexQuery.regex('email', '.*@example.com.*', 'i')).not.toThrow();
+      expect(regexQuery._parameters['email'].$regex).toBe('.*@example.com.*');
+    });
+
+    it('should accept regex pattern with semicolon, equals, slash', () => {
+      const regexQuery = getQueryObject(client, 'contentTypeUid');
+      expect(() => regexQuery.regex('url', '.*https://example.com.*', 'i')).not.toThrow();
+      expect(regexQuery._parameters['url'].$regex).toBe('.*https://example.com.*');
+    });
+
+    it('should accept regex pattern with hash and percent', () => {
+      const regexQuery = getQueryObject(client, 'contentTypeUid');
+      expect(() => regexQuery.regex('title', '.*test#tag.*', 'i')).not.toThrow();
+      expect(() => regexQuery.regex('title', '.*test%20.*', 'i')).not.toThrow();
+    });
+
+    it('should accept regex on nested/global field with space in pattern', () => {
+      const regexQuery = getQueryObject(client, 'contentTypeUid');
+      expect(() => regexQuery.regex('card.heading', '.*two words.*', 'i')).not.toThrow();
+      expect(regexQuery._parameters['card.heading']).toEqual({ $regex: '.*two words.*', $options: 'i' });
+    });
+
+    it('should add regex options when third argument provided', () => {
+      const regexQuery = getQueryObject(client, 'contentTypeUid');
+      regexQuery.regex('fieldUid', '.*search.*', 'i');
+      expect(regexQuery._parameters['fieldUid']).toEqual({ $regex: '.*search.*', $options: 'i' });
+    });
   });
 
   it('should add a containedIn parameter to _parameters', () => {

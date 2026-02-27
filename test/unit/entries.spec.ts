@@ -1,11 +1,11 @@
 import { AxiosInstance, httpClient } from '@contentstack/core';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
-import { Entries } from '../../src/lib/entries';
+import { Entries } from '../../src/entries';
 import MockAdapter from 'axios-mock-adapter';
 import { entryFetchMock, entryFindMock } from '../utils/mocks';
-import { Query } from '../../src/lib/query';
-import { QueryOperation, QueryOperator, TaxonomyQueryOperation } from '../../src/lib/types';
-import { ErrorMessages } from '../../src/lib/error-messages';
+import { Query } from '../../src/query';
+import { QueryOperation, QueryOperator, TaxonomyQueryOperation } from '../../src/common/types';
+import { ErrorMessages } from '../../src/common/error-messages';
 
 describe('Entries class', () => {
   let entry: Entries;

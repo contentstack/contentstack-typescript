@@ -1,11 +1,11 @@
 import { AxiosInstance, httpClient } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
-import { Query } from '../../src/lib/query';
-import { QueryOperation, QueryOperator } from '../../src/lib/types';
+import { Query } from '../../src/query';
+import { QueryOperation, QueryOperator } from '../../src/common/types';
 import { entryFindMock } from '../utils/mocks';
-import { Entries } from '../../src/lib/entries';
-import { ErrorMessages } from '../../src/lib/error-messages';
+import { Entries } from '../../src/entries';
+import { ErrorMessages } from '../../src/common/error-messages';
 
 // Mock @contentstack/core
 jest.mock('@contentstack/core', () => ({
@@ -193,6 +193,23 @@ describe('Query Optimization - Comprehensive Test Suite', () => {
       // Invalid regex patterns
       expect(() => query.regex('title', '[a-z')).toThrow(ErrorMessages.INVALID_REGEX_PATTERN);
       expect(() => query.regex('title', '*invalid')).toThrow(ErrorMessages.INVALID_REGEX_PATTERN);
+    });
+
+    it('should accept regex patterns with spaces and special characters', () => {
+      // Patterns with spaces (user search scenarios)
+      expect(() => query.regex('title', '.*test er.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*global flex.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*two words.*', 'i')).not.toThrow();
+
+      // Patterns with special characters
+      expect(() => query.regex('title', '.*test:value.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*test,value.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*test&value.*', 'i')).not.toThrow();
+      expect(() => query.regex('email', '.*@example.com.*', 'i')).not.toThrow();
+      expect(() => query.regex('url', '.*https://site.com.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*test#tag.*', 'i')).not.toThrow();
+      expect(() => query.regex('title', ".*test'value.*", 'i')).not.toThrow();
+      expect(() => query.regex('title', '.*test_value.*', 'i')).not.toThrow();
     });
 
     it('should validate containedIn values for proper types', () => {
