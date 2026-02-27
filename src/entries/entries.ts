@@ -286,7 +286,7 @@ export class Entries extends BaseQuery {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.contentType("contentTypeUid").entry().assetFields("user_defined_fields", "embedded").find();
+   * const result = await stack.contentType("contentTypeUid").entry().assetFields("user_defined_fields", "embedded_metadata").find();
    *
    * @param {...string} fields - Asset field names to include (e.g. user_defined_fields, embedded, ai_suggested, visual_markups)
    * @returns {Entries} - Returns the Entries instance for chaining.
