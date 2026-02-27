@@ -283,7 +283,7 @@ export class Entry {
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const result = await stack.contentType("contentTypeUid").entry("entryUid").assetFields("user_defined_fields", "embedded").fetch();
+   * const result = await stack.contentType("contentTypeUid").entry("entryUid").assetFields("user_defined_fields", "embedded_metadata").fetch();
    *
    * @param {...string} fields - Asset field names to include (e.g. user_defined_fields, embedded, ai_suggested, visual_markups)
    * @returns {Entry} - Returns the Entry instance for chaining.
