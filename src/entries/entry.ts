@@ -278,14 +278,14 @@ export class Entry {
    * @method assetFields
    * @memberof Entry
    * @description Include specific asset fields in the response (CDA getEntry).
-   * Use with asset_fields[]: user_defined_fields, embedded, ai_suggested, visual_markups.
+   * Use with asset_fields[]: user_defined_fields, embedded_metadata, ai_generated_metadata, visual_markups.
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType("contentTypeUid").entry("entryUid").assetFields("user_defined_fields", "embedded_metadata").fetch();
    *
-   * @param {...string} fields - Asset field names to include (e.g. user_defined_fields, embedded, ai_suggested, visual_markups)
+   * @param {...string} fields - Asset field names to include (e.g. user_defined_fields, embedded_metadata, ai_generated_metadata, visual_markups)
    * @returns {Entry} - Returns the Entry instance for chaining.
    */
   assetFields(...fields: string[]): this {
