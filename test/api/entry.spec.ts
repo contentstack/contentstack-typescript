@@ -67,6 +67,16 @@ describe('Entry API tests', () => {
     expect(result._version).toBeDefined();
     expect(result.publish_details).toBeDefined();
   });
+
+  it('should fetch entry with asset_fields[] CDA param (user_defined_fields, embedded, ai_suggested, visual_markups)', async () => {
+    const result = await makeEntry(entryUid)
+      .assetFields('user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups')
+      .fetch<TEntry>();
+    expect(result).toBeDefined();
+    expect(result.uid).toBeDefined();
+    expect(result._version).toBeDefined();
+    expect(result.locale).toBeDefined();
+  });
 });
 function makeEntry(uid = ''): Entry {
   const entry = stack.contentType(BLOG_POST_CT).entry(uid);
