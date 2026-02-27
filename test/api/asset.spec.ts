@@ -103,6 +103,17 @@ describe('Asset API tests', () => {
     expect(result.created_by).toBeDefined();
     expect(result.updated_by).toBeDefined();
   });
+
+  it('should fetch asset with asset_fields[] CDA param (user_defined_fields, embedded, ai_suggested, visual_markups)', async () => {
+    const result = await makeAsset(assetUid)
+      .assetFields('user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups')
+      .fetch<BaseAsset>();
+    expect(result).toBeDefined();
+    expect(result.uid).toBeDefined();
+    expect(result._version).toBeDefined();
+    expect(result.url).toBeDefined();
+    expect(result.filename).toBeDefined();
+  });
 });
 function makeAsset(uid = ''): Asset {
   const asset = stack.asset(uid);
