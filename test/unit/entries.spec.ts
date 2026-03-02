@@ -75,6 +75,17 @@ describe('Entries class', () => {
     expect(entry._queryParams.include_content_type).toBe('true');
   });
 
+  it('should add "asset_fields[]" in _queryParams when assetFields method is called', () => {
+    const returnedValue = entry.assetFields('user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups');
+    expect(returnedValue).toBeInstanceOf(Entries);
+    expect(entry._queryParams['asset_fields[]']).toEqual(['user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups']);
+  });
+
+  it('should not set asset_fields[] when assetFields is called with no arguments', () => {
+    entry.assetFields();
+    expect(entry._queryParams['asset_fields[]']).toBeUndefined();
+  });
+
   it('should add "include_reference_content_type_uid" in _queryParams when includeReferenceContentTypeUID method is called', () => {
     const returnedValue = entry.includeReferenceContentTypeUID();
     expect(returnedValue).toBeInstanceOf(Entries);
@@ -147,6 +158,17 @@ describe('Entries class', () => {
     mockClient.onGet(`/content_types/contentTypeUid/entries`).reply(200, entryFindMock);
     const returnedValue = await entry.find();
     expect(returnedValue).toEqual(entryFindMock);
+  });
+
+  it('should call find with asset_fields[] query params when assetFields is set', async () => {
+    mockClient.onGet(`/content_types/contentTypeUid/entries`).reply((config) => {
+      expect(config.params).toBeDefined();
+      expect(config.params['asset_fields[]']).toEqual(['user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups']);
+      return [200, entryFindMock];
+    });
+    entry.assetFields('user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups');
+    const result = await entry.find();
+    expect(result).toEqual(entryFindMock);
   });
 
   it('CT Taxonomy Query: Get entries with one term', () => {
