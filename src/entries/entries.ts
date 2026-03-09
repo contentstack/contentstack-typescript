@@ -281,14 +281,14 @@ export class Entries extends BaseQuery {
    * @method assetFields
    * @memberof Entries
    * @description Include specific asset fields in the response (CDA getEntry/entries).
-   * Use with asset_fields[]: user_defined_fields, embedded, ai_suggested, visual_markups.
+   * Use with asset_fields[]: user_defined_fields, embedded_metadata, ai_generated_metadata, visual_markups.
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType("contentTypeUid").entry().assetFields("user_defined_fields", "embedded_metadata").find();
    *
-   * @param {...string} fields - Asset field names to include (e.g. user_defined_fields, embedded, ai_suggested, visual_markups)
+   * @param {...string} fields - Asset field names to include (e.g. user_defined_fields, embedded_metadata, ai_generated_metadata, visual_markups)
    * @returns {Entries} - Returns the Entries instance for chaining.
    */
   assetFields(...fields: string[]): this {
