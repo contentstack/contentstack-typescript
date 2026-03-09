@@ -132,7 +132,7 @@ describe("AssetQuery API tests", () => {
   });
   it("should query assets with asset_fields[] CDA param (user_defined_fields, embedded, ai_suggested, visual_markups)", async () => {
     const result = await makeAssetQuery()
-      .assetFields("user_defined_fields", "embedded_metadata", "ai_suggested", "visual_markups")
+      .assetFields("user_defined_fields", "embedded_metadata", "ai_generated_metadata", "visual_markups")
       .limit(2)
       .find<TAsset>();
     if (result.assets) {

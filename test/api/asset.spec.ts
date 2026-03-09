@@ -104,9 +104,9 @@ describe('Asset API tests', () => {
     expect(result.updated_by).toBeDefined();
   });
 
-  it('should fetch asset with asset_fields[] CDA param (user_defined_fields, embedded, ai_suggested, visual_markups)', async () => {
+  it('should fetch asset with asset_fields[] CDA param (user_defined_fields, embedded_metadata, ai_suggested, visual_markups)', async () => {
     const result = await makeAsset(assetUid)
-      .assetFields('user_defined_fields', 'embedded', 'ai_suggested', 'visual_markups')
+      .assetFields('user_defined_fields', 'embedded_metadata', 'ai_generated_metadata', 'visual_markups')
       .fetch<BaseAsset>();
     expect(result).toBeDefined();
     expect(result.uid).toBeDefined();

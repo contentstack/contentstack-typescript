@@ -173,7 +173,7 @@ describe("Entries API test cases", () => {
 
   it("should query entries with asset_fields[] CDA param (user_defined_fields, embedded, ai_suggested, visual_markups)", async () => {
     const result = await makeEntries(BLOG_POST_CT)
-      .assetFields("user_defined_fields", "embedded_metadata", "ai_suggested", "visual_markups")
+      .assetFields("user_defined_fields", "embedded_metadata", "ai_generated_metadata", "visual_markups")
       .find<TEntry>();
     if (result.entries) {
       expect(result.entries).toBeDefined();
