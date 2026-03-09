@@ -1,3 +1,7 @@
+### Version: 5.1.1
+#### Date: Mar-09-2026
+Fix: Added support of special symbols in regex method with safe pattern.
+
 ### Version: 5.1.0
 #### Date: Mar-02-2026
 Fix: Added support of asset fields in assets & entries class.
