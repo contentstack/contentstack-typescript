@@ -34,7 +34,7 @@ export class Query extends BaseQuery {
     // Expanded whitelist: includes spaces and common safe special characters
     // Allows: alphanumeric, regex metacharacters, regular spaces, and common punctuation
     // Blocks: control characters (newlines, tabs, null bytes), backticks, and other dangerous chars
-    const validRegex = /^[a-zA-Z0-9|^$.*+?()[\]{}:,;&@#%=/!'"_~<> -]+$/;
+    const validRegex = /^[a-zA-Z0-9|^$.*+?()[\]{}\\:,;&@#%=/!'"_~<>` -]+$/;
     if (!validRegex.test(input)) {
       return false;
     }

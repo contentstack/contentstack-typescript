@@ -137,6 +137,12 @@ describe('Query class', () => {
       expect(regexQuery._parameters['email'].$regex).toBe('.*@example.com.*');
     });
 
+    it('should accept escaped regex metacharacters from user input', () => {
+      const regexQuery = getQueryObject(client, 'contentTypeUid');
+      expect(() => regexQuery.regex('title', '.*debt\\?.*', 'i')).not.toThrow();
+      expect(regexQuery._parameters['title']).toEqual({ $regex: '.*debt\\?.*', $options: 'i' });
+    });
+
     it('should accept regex pattern with semicolon, equals, slash', () => {
       const regexQuery = getQueryObject(client, 'contentTypeUid');
       expect(() => regexQuery.regex('url', '.*https://example.com.*', 'i')).not.toThrow();

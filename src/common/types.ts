@@ -337,9 +337,10 @@ export interface BaseContentType {
   schema: any;
 }
 
-export interface FindResponse<T> {
+export interface FindResponse<T, TContentType = unknown> {
   entries?: T[];
-  content_types?: T[];
+  content_type?: TContentType;
+  content_types?: TContentType[];
   assets?: T[];
   global_fields?: T[];
   count?: number;
