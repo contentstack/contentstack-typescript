@@ -1,12 +1,10 @@
-import { AxiosInstance, getData } from '@contentstack/core';
-import { FindResponse } from '../common/types';
+import { AxiosInstance } from '@contentstack/core';
+import { BaseQuery } from './base-query';
 
-export class ContentTypeQuery {
-  private _client: AxiosInstance;
-  private _urlPath: string;
-  _queryParams: { [key: string]: string | number } = {};
+export class ContentTypeQuery extends BaseQuery {
 
   constructor(client: AxiosInstance) {
+    super()
     this._client = client;
     this._urlPath = '/content_types';
   }
@@ -26,22 +24,5 @@ export class ContentTypeQuery {
     this._queryParams.include_global_field_schema = 'true';
 
     return this;
-  }
-  /**
-   * @method find
-   * @memberof ContentTypeQuery
-   * @description Fetches all contentTypes of the stack
-   * @returns {Promise<FindResponse<T>>} Promise that resolves to the find response containing content types
-   * @example
-   * import contentstack from '@contentstack/delivery-sdk'
-   *
-   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
-   * const contentTypeQuery = stack.contentType();
-   * const result = await contentTypeQuery.find();
-   */
-  async find<T>(): Promise<FindResponse<T>> {
-    const response = await getData(this._client, this._urlPath, { params: this._queryParams });
-
-    return response as FindResponse<T>;
   }
 }
