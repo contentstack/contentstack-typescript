@@ -9,7 +9,7 @@ The Typescript SDK can also be used to create Node.js and React native applicati
 
 ### Prerequisite
 
-You need Node.js version 4.4.7 or later installed to use the Contentstack JavaScript SDK.
+You need Node.js version 18 or later installed to use the Contentstack TypeScript SDK.
 
 ### Setup and Installation
 
@@ -65,6 +65,63 @@ You will need to specify the API key, Delivery Token, and Environment Name of yo
 ```
 
 Once you have initialized the SDK, you can start getting content in your app.
+
+#### Region and Host Configuration
+
+The SDK supports region and custom host configuration to connect to different Contentstack data centers or custom endpoints.
+
+**Region Support**
+
+You can specify a region to connect to the appropriate Contentstack data center. Available regions are:
+- `US` (default) - Uses `cdn.contentstack.io`
+- `EU` - Uses `eu-cdn.contentstack.com`
+- `AU` - Uses `au-cdn.contentstack.com`
+- `AZURE_NA` - Uses `azure-na-cdn.contentstack.com`
+- `AZURE_EU` - Uses `azure-eu-cdn.contentstack.com`
+- `GCP_NA` - Uses `gcp-na-cdn.contentstack.com`
+- `GCP_EU` - Uses `gcp-eu-cdn.contentstack.com`
+
+```typescript
+import contentstack, { Region } from '@contentstack/delivery-sdk'
+
+// Using region enum
+const stack = contentstack.stack({
+  apiKey: "apiKey",
+  deliveryToken: "deliveryToken",
+  environment: "environment",
+  region: Region.EU
+});
+
+// Using region string
+const stack = contentstack.stack({
+  apiKey: "apiKey",
+  deliveryToken: "deliveryToken",
+  environment: "environment",
+  region: "eu"
+});
+```
+
+**Custom Host Support**
+
+You can specify a custom host to connect to a custom endpoint. If a custom host is provided, it takes priority over the region-based host.
+
+```typescript
+const stack = contentstack.stack({
+  apiKey: "apiKey",
+  deliveryToken: "deliveryToken",
+  environment: "environment",
+  host: "custom-cdn.example.com"
+});
+
+// Custom host with region (host takes priority)
+const stack = contentstack.stack({
+  apiKey: "apiKey",
+  deliveryToken: "deliveryToken",
+  environment: "environment",
+  region: Region.EU,
+  host: "custom-cdn.example.com"
+});
+```
 
 #### Querying content from your stack
 
@@ -132,6 +189,35 @@ const pagedResult = await query
 
 ```
 
+### Caching
+
+To use cache policies (`CACHE_THEN_NETWORK`, `CACHE_ELSE_NETWORK`, `NETWORK_ELSE_CACHE`), you must provide a persistence store via `cacheOptions.persistenceStore`. Install the optional persistence plugin and pass a `PersistenceStore` instance:
+
+```bash
+npm install @contentstack/persistence-plugin
+```
+
+```typescript
+import contentstack, { Policy } from '@contentstack/delivery-sdk';
+import { PersistenceStore } from '@contentstack/persistence-plugin';
+
+const stack = contentstack.stack({
+  apiKey: 'your-api-key',
+  deliveryToken: 'your-delivery-token',
+  environment: 'your-environment',
+  cacheOptions: {
+    policy: Policy.CACHE_THEN_NETWORK,
+    persistenceStore: new PersistenceStore({ storeType: 'localStorage', maxAge: 86400000 }),
+  },
+});
+```
+
+See [@contentstack/persistence-plugin](https://www.npmjs.com/package/@contentstack/persistence-plugin) for options (`storeType`, `maxAge`, custom storage).
+
+### Development
+
+When contributing or running tests from the repository, run `npm run build` before running tests. The published package includes a pre-built `dist/` directory.
+
 ### Helpful Links
 
 - [Contentstack Website](https://www.contentstack.com)
@@ -140,7 +226,7 @@ const pagedResult = await query
 
 ### The MIT License (MIT)
 
-Copyright © 2012-2025 [Contentstack](https://www.contentstack.com). All Rights Reserved
+Copyright © 2012-2026 [Contentstack](https://www.contentstack.com). All Rights Reserved
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

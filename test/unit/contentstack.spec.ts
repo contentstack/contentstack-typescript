@@ -1,9 +1,8 @@
 import * as exp from "constants";
 import * as core from "@contentstack/core";
-import * as Contentstack from "../../src/lib/contentstack";
-import { Stack } from "../../src/lib/stack";
-import { Policy, Region, StackConfig } from "../../src/lib/types";
-import { StorageType } from "../../src/persistance/types/storage-type";
+import * as Contentstack from "../../src/stack";
+import { Stack } from "../../src/stack";
+import { Policy, Region, StackConfig } from "../../src/common/types";
 import {
   CUSTOM_HOST,
   DUMMY_URL,
@@ -15,7 +14,7 @@ import {
   HOST_GCP_EU_REGION,
 } from "../utils/constant";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
-import * as utils from "../../src/lib/utils";
+import * as utils from "../../src/common/utils";
 
 jest.mock("@contentstack/core");
 const createHttpClientMock = <jest.Mock<typeof core.httpClient>>(
@@ -380,7 +379,7 @@ describe("Contentstack", () => {
   });
 
   describe('cache adapter configuration', () => {
-    it('should set cache adapter when cacheOptions with policy is provided', () => {
+    it('should set cache adapter when cacheOptions with persistenceStore is provided', () => {
       const mockAdapter = jest.fn();
       const mockClient = {
         defaults: {
@@ -399,13 +398,17 @@ describe("Contentstack", () => {
 
       createHttpClientMock.mockReturnValue(mockClient as any);
 
+      const mockPersistenceStore = {
+        setItem: jest.fn(),
+        getItem: jest.fn(),
+      };
       const config = {
         apiKey: "apiKey",
         deliveryToken: "delivery",
         environment: "env",
         cacheOptions: {
           policy: Policy.CACHE_THEN_NETWORK,
-          storeType: 'localStorage' as StorageType
+          persistenceStore: mockPersistenceStore,
         },
       };
       
@@ -413,6 +416,19 @@ describe("Contentstack", () => {
       
       expect(stackInstance).toBeInstanceOf(Stack);
       expect(mockClient.defaults.adapter).toBeDefined();
+    });
+
+    it('should throw when cache policy is set but persistenceStore is missing', () => {
+      const config = {
+        apiKey: "apiKey",
+        deliveryToken: "delivery",
+        environment: "env",
+        cacheOptions: {
+          policy: Policy.CACHE_THEN_NETWORK,
+        },
+      };
+      
+      expect(() => createStackInstance(config)).toThrow(/persistenceStore/);
     });
   });
 

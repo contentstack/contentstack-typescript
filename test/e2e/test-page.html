@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contentstack SDK - Browser Test Page</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #2c3e50;
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 10px;
+    }
+    .test-section {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f9f9f9;
+      border-left: 4px solid #3498db;
+    }
+    .result {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    #console {
+      background: #1e1e1e;
+      color: #00ff00;
+      padding: 15px;
+      border-radius: 4px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      margin-top: 20px;
+    }
+    .log-line {
+      margin: 3px 0;
+      padding: 2px 0;
+    }
+    .log-error { color: #ff6b6b; }
+    .log-success { color: #51cf66; }
+    .log-info { color: #74c0fc; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 Contentstack SDK - Real Browser Tests</h1>
+    <p>This page tests the SDK in a real browser environment (Chrome, Firefox, Safari)</p>
+    
+    <div class="test-section">
+      <h2>Test Results</h2>
+      <div id="results"></div>
+    </div>
+    
+    <div class="test-section">
+      <h2>Console Output</h2>
+      <div id="console"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Console logger
+    const consoleDiv = document.getElementById('console');
+    const resultsDiv = document.getElementById('results');
+    
+    function log(message, type = 'info') {
+      const line = document.createElement('div');
+      line.className = `log-line log-${type}`;
+      line.textContent = `[${new Date().toISOString().substr(11, 8)}] ${message}`;
+      consoleDiv.appendChild(line);
+      consoleDiv.scrollTop = consoleDiv.scrollHeight;
+    }
+    
+    function addResult(test, passed, message = '') {
+      const result = document.createElement('div');
+      result.className = `result ${passed ? 'success' : 'error'}`;
+      result.innerHTML = `
+        <strong>${passed ? '✓' : '✗'} ${test}</strong>
+        ${message ? `<br><small>${message}</small>` : ''}
+      `;
+      resultsDiv.appendChild(result);
+      
+      // Also log to console
+      log(`${test}: ${passed ? 'PASS' : 'FAIL'} ${message}`, passed ? 'success' : 'error');
+    }
+    
+    // Capture console errors
+    const originalConsoleError = console.error;
+    const consoleErrors = [];
+    console.error = function(...args) {
+      consoleErrors.push(args.join(' '));
+      log('Console Error: ' + args.join(' '), 'error');
+      originalConsoleError.apply(console, args);
+    };
+    
+    // Run tests
+    async function runTests() {
+      log('Starting SDK Browser Tests...', 'info');
+      log('User Agent: ' + navigator.userAgent, 'info');
+      
+      // Test 1: SDK loaded
+      try {
+        const ContentstackSDK = window.ContentstackSDK || window.contentstack;
+        if (!ContentstackSDK) {
+          throw new Error('ContentstackSDK not found on window');
+        }
+        addResult('SDK loads in browser', true, 'SDK is available on window object');
+      } catch (error) {
+        addResult('SDK loads in browser', false, error.message);
+        return; // Can't continue without SDK
+      }
+      
+      // Get SDK reference
+      const ContentstackSDK = window.ContentstackSDK || window.contentstack;
+      const sdk = ContentstackSDK.default || ContentstackSDK;
+      
+      // Test 2: SDK has stack function
+      try {
+        if (typeof sdk.stack !== 'function') {
+          throw new Error('stack is not a function');
+        }
+        addResult('SDK has stack() function', true);
+      } catch (error) {
+        addResult('SDK has stack() function', false, error.message);
+        return;
+      }
+      
+      // Test 3-9: All 7 regions work
+      const regions = [
+        { name: 'US (AWS-NA)', value: 'US', host: 'cdn.contentstack.io' },
+        { name: 'EU (AWS-EU)', value: 'EU', host: 'eu-cdn.contentstack.com' },
+        { name: 'AWS-AU', value: 'AWS-AU', host: 'au-cdn.contentstack.com' },
+        { name: 'AZURE-NA', value: 'AZURE-NA', host: 'azure-na-cdn.contentstack.com' },
+        { name: 'AZURE-EU', value: 'AZURE-EU', host: 'azure-eu-cdn.contentstack.com' },
+        { name: 'GCP-NA', value: 'GCP-NA', host: 'gcp-na-cdn.contentstack.com' },
+        { name: 'GCP-EU', value: 'GCP-EU', host: 'gcp-eu-cdn.contentstack.com' },
+      ];
+      
+      for (const region of regions) {
+        try {
+          const stack = sdk.stack({
+            apiKey: 'test_api_key',
+            deliveryToken: 'test_delivery_token',
+            environment: 'test',
+            region: region.value
+          });
+          
+          if (!stack || !stack.config || !stack.config.host) {
+            throw new Error('Stack not initialized');
+          }
+          
+          if (!stack.config.host.includes(region.host)) {
+            throw new Error(`Wrong host: ${stack.config.host}, expected: ${region.host}`);
+          }
+          
+          addResult(`Region ${region.name} works`, true, `Host: ${stack.config.host}`);
+        } catch (error) {
+          addResult(`Region ${region.name} works`, false, error.message);
+        }
+      }
+      
+      // Test 10: Custom host works
+      try {
+        const stack = sdk.stack({
+          apiKey: 'test_api_key',
+          deliveryToken: 'test_delivery_token',
+          environment: 'test',
+          host: 'custom-cdn.example.com'
+        });
+        
+        if (!stack.config.host.includes('custom-cdn.example.com')) {
+          throw new Error('Custom host not set');
+        }
+        
+        addResult('Custom host works', true, 'Host: ' + stack.config.host);
+      } catch (error) {
+        addResult('Custom host works', false, error.message);
+      }
+      
+      // Test 11: No Node.js module errors
+      const nodeModules = ['fs', 'path', 'crypto', 'http', 'https', 'stream'];
+      const nodeModuleErrors = consoleErrors.filter(err => 
+        nodeModules.some(mod => err.includes(mod))
+      );
+      
+      if (nodeModuleErrors.length > 0) {
+        addResult('No Node.js module errors', false, 
+          'Found Node.js module references: ' + nodeModuleErrors.join(', '));
+      } else {
+        addResult('No Node.js module errors', true, 
+          'SDK does not try to import Node.js modules');
+      }
+      
+      // Test 12: SDK methods available
+      try {
+        const stack = sdk.stack({
+          apiKey: 'test_api_key',
+          deliveryToken: 'test_delivery_token',
+          environment: 'test'
+        });
+        
+        const methods = ['contentType', 'asset', 'getLastActivities'];
+        const missing = methods.filter(m => typeof stack[m] !== 'function');
+        
+        if (missing.length > 0) {
+          throw new Error('Missing methods: ' + missing.join(', '));
+        }
+        
+        addResult('SDK methods available', true, 'All core methods present');
+      } catch (error) {
+        addResult('SDK methods available', false, error.message);
+      }
+      
+      // Test 13: ContentType can be created
+      try {
+        const stack = sdk.stack({
+          apiKey: 'test_api_key',
+          deliveryToken: 'test_delivery_token',
+          environment: 'test'
+        });
+        
+        const ct = stack.contentType('test_ct');
+        if (!ct) {
+          throw new Error('ContentType is null');
+        }
+        
+        if (typeof ct.entry !== 'function') {
+          throw new Error('entry() method missing');
+        }
+        
+        addResult('ContentType can be created', true, 'ContentType initialized');
+      } catch (error) {
+        addResult('ContentType can be created', false, error.message);
+      }
+      
+      log('All tests completed!', 'success');
+      
+      // Store results for Playwright
+      window.testResults = {
+        total: resultsDiv.children.length,
+        passed: resultsDiv.querySelectorAll('.success').length,
+        failed: resultsDiv.querySelectorAll('.error').length,
+        consoleErrors: consoleErrors
+      };
+    }
+    
+    // Load SDK and run tests
+    (async function initTests() {
+      try {
+        console.log('Loading SDK...');
+        
+        // Import SDK from pre-bundled browser version
+        const module = await import('./sdk-browser-bundle.js');
+        const ContentstackSDK = module.default;
+        
+        // Make it available globally
+        window.ContentstackSDK = ContentstackSDK;
+        window.contentstack = ContentstackSDK;
+        
+        console.log('SDK loaded:', {
+          hasDefault: !!ContentstackSDK,
+          hasStack: typeof ContentstackSDK?.stack === 'function',
+          keys: Object.keys(ContentstackSDK || {})
+        });
+        
+        // Run tests now that SDK is loaded
+        runTests();
+      } catch (error) {
+        console.error('Failed to load SDK:', error);
+        log('Failed to load SDK: ' + error.message, 'error');
+        window.testResults = {
+          total: 1,
+          passed: 0,
+          failed: 1,
+          consoleErrors: ['SDK import failed: ' + error.message]
+        };
+      }
+    })();
+    
+    // Fallback if SDK doesn't load in 5 seconds
+    setTimeout(() => {
+      if (!window.testResults) {
+        console.error('ERROR: Tests did not complete within 5 seconds!');
+        log('ERROR: Tests did not complete within 5 seconds!', 'error');
+        window.testResults = {
+          total: 1,
+          passed: 0,
+          failed: 1,
+          consoleErrors: ['Tests did not complete within timeout']
+        };
+      }
+    }, 5000);
+  </script>
+</body>
+</html>
+

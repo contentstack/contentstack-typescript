@@ -1,5 +1,5 @@
-import { ImageTransform } from '../../src/lib/image-transform';
-import '../../src/lib/string-extensions';
+import { ImageTransform } from '../../src/assets';
+import '../../src/common/string-extensions';
 
 describe('String Extension', () => {
   it('should return correct string value', () => {

@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
 /* eslint-disable promise/always-return */
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { BaseAsset } from 'src';
-import { Asset } from '../../src/lib/asset';
+import { Asset } from '../../src/assets';
 import { stackInstance } from '../utils/stack-instance';
 import { TAsset } from './types';
 import dotenv from 'dotenv';
@@ -9,7 +10,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const stack = stackInstance();
-const assetUid = process.env.ASSET_UID;
+// Using new standardized env variable names
+const assetUid = process.env.IMAGE_ASSET_UID || process.env.ASSET_UID || '';
 describe('Asset API tests', () => {
   it('should check for asset is defined', async () => {
     const result = await makeAsset(assetUid).fetch<BaseAsset>();
@@ -100,6 +102,17 @@ describe('Asset API tests', () => {
     expect(result.content_type).toBeDefined();
     expect(result.created_by).toBeDefined();
     expect(result.updated_by).toBeDefined();
+  });
+
+  it('should fetch asset with asset_fields[] CDA param (user_defined_fields, embedded_metadata, ai_suggested, visual_markups)', async () => {
+    const result = await makeAsset(assetUid)
+      .assetFields('user_defined_fields', 'embedded_metadata', 'ai_generated_metadata', 'visual_markups')
+      .fetch<BaseAsset>();
+    expect(result).toBeDefined();
+    expect(result.uid).toBeDefined();
+    expect(result._version).toBeDefined();
+    expect(result.url).toBeDefined();
+    expect(result.filename).toBeDefined();
   });
 });
 function makeAsset(uid = ''): Asset {

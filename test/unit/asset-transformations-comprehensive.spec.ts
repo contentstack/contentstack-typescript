@@ -1,7 +1,7 @@
 /* eslint-disable @cspell/spellchecker */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { ImageTransform } from '../../src/lib/image-transform';
-import '../../src/lib/string-extensions';
+import { ImageTransform } from '../../src/assets';
+import '../../src/common/string-extensions';
 import {
   CanvasBy,
   CropBy,
@@ -11,7 +11,7 @@ import {
   OverlayAlign,
   OverlayRepeat,
   ResizeFilter,
-} from '../../src/lib/types';
+} from '../../src/common/types';
 
 describe('Asset Transformations - Comprehensive Test Suite', () => {
   const baseImageUrl = 'https://images.contentstack.io/v3/assets/blt633c211b8df38a6a/blt123456789/image.jpg';

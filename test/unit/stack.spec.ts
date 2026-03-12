@@ -1,18 +1,18 @@
 import { httpClient, AxiosInstance } from '@contentstack/core';
 import { jest } from '@jest/globals';
 import MockAdapter from 'axios-mock-adapter';
-import { Stack } from '../../src/lib/stack';
-import { Asset } from '../../src/lib/asset';
-import { ContentType } from '../../src/lib/content-type';
+import { Stack } from '../../src/stack';
+import { Asset } from '../../src/assets';
+import { ContentType } from '../../src/content-type';
 import { HOST_URL, LOCALE } from '../utils/constant';
 import { contentTypeQueryFindResponseDataMock, syncResult } from '../utils/mocks';
-import { synchronization } from '../../src/lib/synchronization';
-import { ContentTypeQuery } from '../../src/lib/contenttype-query';
-import { AssetQuery } from '../../src/lib/asset-query';
-import { StackConfig } from '../../src/lib/types';
-import * as utils from '../../src/lib/utils';
+import { synchronization } from '../../src/sync';
+import { ContentTypeQuery } from '../../src/query';
+import { AssetQuery } from '../../src/query';
+import { StackConfig } from '../../src/common/types';
+import * as utils from '../../src/common/utils';
 
-jest.mock('../../src/lib/synchronization');
+jest.mock('../../src/sync');
 const syncMock = <jest.Mock<typeof synchronization>>(<unknown>synchronization);
 
 describe('Stack class tests', () => {

@@ -1,5 +1,6 @@
 // @ts-nocheck
-import { ContentTypeQuery } from '../../src/lib/contenttype-query';
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
+import { ContentTypeQuery } from '../../src/query';
 import { stackInstance } from '../utils/stack-instance';
 import { TContentType, TContentTypes } from './types';
 
