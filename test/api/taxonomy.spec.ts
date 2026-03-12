@@ -3,8 +3,8 @@
 import { stackInstance } from '../utils/stack-instance';
 import { TTaxonomies, TTaxonomy } from './types';
 import dotenv from 'dotenv';
-import { TaxonomyQuery } from '../../src/lib/taxonomy-query';
-import { Taxonomy } from '../../src/lib/taxonomy';
+import { TaxonomyQuery } from '../../src/query/taxonomy-query';
+import { Taxonomy } from '../../src/taxonomy';
 
 dotenv.config()
 
