@@ -1,5 +1,5 @@
 import { AxiosInstance, getData } from '@contentstack/core';
-import { FindResponse } from './types';
+import { FindResponse } from '../common/types';
 
 /**
  * @class TermQuery
