@@ -1,4 +1,4 @@
-import { TermQuery } from "../../src/lib/term-query";
+import { TermQuery } from "../../src/query/term-query";
 import { stackInstance } from "../utils/stack-instance";
 import { TTerm } from "./types";
 

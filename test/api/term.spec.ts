@@ -1,4 +1,4 @@
-import { Term } from "../../src/lib/term";
+import { Term } from "../../src/taxonomy/term";
 import { stackInstance } from "../utils/stack-instance";
 import { TTerm, TTerms } from "./types";
 
