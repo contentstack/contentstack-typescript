@@ -8,6 +8,7 @@ import { synchronization } from '../sync';
 import { TaxonomyQuery } from '../query';
 import { GlobalFieldQuery } from '../query';
 import { GlobalField } from '../global-field';
+import { Taxonomy } from '../taxonomy';
 
 export class Stack {
   readonly config: StackConfig;

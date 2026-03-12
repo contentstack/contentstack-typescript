@@ -13,7 +13,7 @@ export type { ImageTransform } from './assets';
 export type { AssetQuery } from './query';
 export type { TaxonomyQuery } from './query';
 export type { ContentTypeQuery } from './query';
-export type { Taxonomy } from './taxonomy/taxonomy';
+export type { Taxonomy } from './taxonomy';
 export { ErrorMessages, ErrorCode } from './common/error-messages';
 
 export default contentstack;
