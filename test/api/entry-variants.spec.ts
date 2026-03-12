@@ -1,10 +1,12 @@
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { stackInstance } from '../utils/stack-instance';
 import { TEntry } from './types';
 
 const stack = stackInstance();
-const contentTypeUid = process.env.CONTENT_TYPE_UID || 'sample_content_type';
-const entryUid = process.env.ENTRY_UID || 'sample_entry';
-const variantUid = process.env.VARIANT_UID || 'sample_variant';
+// Using new standardized env variable names
+const contentTypeUid = process.env.COMPLEX_CONTENT_TYPE_UID || 'cybersecurity';
+const entryUid = process.env.COMPLEX_ENTRY_UID || '';
+const variantUid = process.env.VARIANT_UID || '';
 
 describe('Entry Variants API Tests', () => {
   describe('Single Entry Variant Operations', () => {
