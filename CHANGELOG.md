@@ -1,3 +1,7 @@
+### Version: 5.1.2
+#### Date: Mar-16-2026
+Fix: Added security issues
+
 ### Version: 5.1.1
 #### Date: Mar-09-2026
 Fix: Added support of special symbols in regex method with safe pattern.
