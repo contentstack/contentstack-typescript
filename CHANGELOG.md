@@ -1,3 +1,7 @@
+### Version: 5.2.0
+#### Date: Apr-09-2026
+Enhancement: `ContentTypeQuery` extends `BaseQuery` so `stack.contentType()` supports `paginate`, `skip`, `limit`, and related query helpers without mutating `_queryParams`; `includeGlobalFieldSchema()` and `find()` stay backward compatible. Expanded unit tests for `ContentTypeQuery`.
+
 ### Version: 5.1.2
 #### Date: Mar-16-2026
 Fix: Added security issues
