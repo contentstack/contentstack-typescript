@@ -1,34 +1,25 @@
 ---
 name: testing
-description: Jest unit/api/browser and Playwright e2e for @contentstack/delivery-sdk.
+description: Use for Jest, Playwright e2e, API tests, and bundler smoke tests in contentstack-typescript.
 ---
 
-# Testing — `@contentstack/delivery-sdk`
+# Testing – contentstack-typescript
 
-## Commands
+## When to use
 
-| Goal | Command |
-|------|---------|
-| Unit | `npm run test:unit` |
-| API (live stack) | `npm run test:api` |
-| Browser | `npm run test:browser` |
-| All three | `npm run test:all` |
-| E2E | `npm run test:e2e` |
-| CI-style matrix | `npm run test:cicd` (includes reports + browser tests) |
+- Adding or fixing tests under `test/unit`, `test/api`, or browser/e2e flows
+- Investigating failures in `test/bundlers` or Playwright
 
-## Environment
+## Instructions
 
-See **`test/utils/stack-instance.ts`**:
+### Layers
 
-- **Required:** `HOST`, `API_KEY`, `DELIVERY_TOKEN`, `ENVIRONMENT`
-- **Optional:** `PREVIEW_TOKEN`, `LIVE_PREVIEW_HOST`
+- **Unit**: `npm run test:unit` → `jest ./test/unit`.
+- **API**: `npm run test:api` — may require stack credentials via env files (see project docs and `.gitignore`).
+- **Browser**: `npm run test:browser` uses a dedicated Jest config.
+- **E2E**: `npm run test:e2e` builds a browser bundle then runs Playwright—slower; run before large release changes.
+- **Bundlers**: `test/bundlers/` exercises webpack/vite/rollup/next/esbuild—run `npm run validate:bundlers` when changing packaging.
 
-Use a **`.env`** at repo root for local API runs.
+### Hygiene
 
-## Setup
-
-- **`jest.setup.ts`** — global hooks and expected-error suppression; read before changing console behavior.
-
-## References
-
-- `.cursor/rules/testing.mdc`
+- Do not commit secrets or live tokens; use fixtures or CI secrets only where documented.

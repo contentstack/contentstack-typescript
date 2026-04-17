@@ -1,59 +1,45 @@
-# AGENTS.md — AI / automation context
+# Contentstack TypeScript Delivery SDK – Agent guide
 
-## Project
+**Universal entry point** for contributors and AI agents. Detailed conventions live in **`skills/*/SKILL.md`**.
 
-| | |
-|---|---|
-| **Name** | **`@contentstack/delivery-sdk`** (npm) — **Contentstack TypeScript Content Delivery SDK** |
-| **Purpose** | TypeScript client for the **Content Delivery API (CDA)**: stacks, entries, assets, queries, sync, live preview, cache. Built on **`@contentstack/core`** (**Axios** HTTP + retry helpers) and **`@contentstack/utils`**. |
-| **Repository** | [contentstack/contentstack-typescript](https://github.com/contentstack/contentstack-typescript.git) |
+## What this repo is
 
-## Tech stack
+| Field | Detail |
+|--------|--------|
+| **Name:** | [contentstack-typescript](https://github.com/contentstack/contentstack-typescript) (`@contentstack/delivery-sdk`) |
+| **Purpose:** | TypeScript/JavaScript Content Delivery SDK for fetching and working with stack content in Node and browsers. |
+| **Out of scope:** | Not the Management API or CLI; use the appropriate Contentstack tools for non-delivery workflows. |
+
+## Tech stack (at a glance)
 
 | Area | Details |
 |------|---------|
-| **Language** | **TypeScript**, **ES modules** (`"type": "module"`) |
-| **Runtime** | Node **>= 18** (`package.json` `engines`) |
-| **Build** | **Rollup** (`npm run build:rollup`) + **`tsc`** declarations (`config/tsconfig.decl-esm.json`) → **`dist/modern/`** |
-| **Tests** | **Jest** + **ts-jest**: **`test/unit`**, **`test/api`**, **`test/browser`**; **Playwright** e2e (`test/e2e`, `npm run test:e2e`) |
-| **Lint** | **ESLint** (`.eslintrc.json`) |
+| Language | TypeScript (`typescript` in `package.json`); Node **≥ 18** |
+| Build | Rollup (`rollup -c`), declaration emit (`config/tsconfig.decl-esm.json`) → `dist/modern/` |
+| Tests | Jest: `test/unit`, `test/api`, browser config; Playwright for e2e (`test/e2e`); bundler smoke tests under `test/bundlers/` |
+| Lint / coverage | No root `lint` script—use `npm run validate:all` and `.github/workflows/coverage-check.yml` for quality gates |
+| CI | `.github/workflows/coverage-check.yml`, `check-branch.yml`, `sca-scan.yml`, `policy-scan.yml`, `npm-publish.yml` |
 
-## Source layout
+## Commands (quick reference)
 
-| Path | Role |
-|------|------|
-| `src/stack/contentstack.ts` | **`stack(config)`** factory — wires **`httpClient`** from **`@contentstack/core`**, region/host, live preview |
-| `src/stack/stack.ts` | **Stack** class |
-| `src/query/**` | Queries (entry, asset, taxonomy, content type, …) |
-| `src/entries/**`, `src/assets/**`, `src/sync/**`, `src/cache/**` | Domain modules |
-| `src/common/**` | Types, utils, errors, pagination |
-| `src/index.ts` | Public package exports |
-| `test/utils/stack-instance.ts` | **`stackInstance()`** — loads **dotenv**, **`HOST`**, **`API_KEY`**, **`DELIVERY_TOKEN`**, **`ENVIRONMENT`**, optional live-preview vars |
+| Command type | Command |
+|--------------|---------|
+| Build | `npm run build` |
+| Test (common) | `npm run test:unit` / `npm run test:api` / `npm run test:all` |
+| Validate | `npm run validate:all` |
+| Full CI-style suite | `npm run test:cicd` or `npm run test:cicd:no-browser` (see `package.json`) |
 
-## Common commands
+## Where the documentation lives: skills
 
-```bash
-npm install
-npm run build
-npm run test:unit      # jest ./test/unit
-npm run test:api       # live API — needs .env (see stack-instance)
-npm run test:browser
-npm run test:e2e       # Playwright (builds browser bundle first)
-npm run test:all       # unit + browser + api
-```
+| Skill | Path | What it covers |
+|-------|------|----------------|
+| **Development workflow** | [`skills/dev-workflow/SKILL.md`](skills/dev-workflow/SKILL.md) | Branches, CI, npm scripts, prerelease |
+| **Delivery SDK** | [`skills/contentstack-delivery-typescript/SKILL.md`](skills/contentstack-delivery-typescript/SKILL.md) | Public API, stack client, `@contentstack/core` usage |
+| **TypeScript & layout** | [`skills/typescript/SKILL.md`](skills/typescript/SKILL.md) | `src/`, Rollup outputs, modern CJS/ESM |
+| **Testing** | [`skills/testing/SKILL.md`](skills/testing/SKILL.md) | Jest, API tests, Playwright, bundler matrix |
+| **Build & platform** | [`skills/framework/SKILL.md`](skills/framework/SKILL.md) | Rollup, browser safety, bundler validation |
+| **Code review** | [`skills/code-review/SKILL.md`](skills/code-review/SKILL.md) | PR checklist for SDK changes |
 
-## Environment variables (API / integration tests)
+## Using Cursor (optional)
 
-Loaded via **`dotenv`** in **`test/utils/stack-instance.ts`**:
-
-- **`HOST`**, **`API_KEY`**, **`DELIVERY_TOKEN`**, **`ENVIRONMENT`** — stack connection
-- Optional: **`PREVIEW_TOKEN`**, **`LIVE_PREVIEW_HOST`** for live preview tests
-
-Do not commit secrets.
-
-## Further guidance
-
-- **Cursor rules:** [`.cursor/rules/README.md`](.cursor/rules/README.md)
-- **Skills:** [`skills/README.md`](skills/README.md)
-
-Product docs: [Content Delivery API](https://www.contentstack.com/docs/developers/apis/content-delivery-api/).
+If you use **Cursor**, [`.cursor/rules/README.md`](.cursor/rules/README.md) only points to **`AGENTS.md`**—same docs as everyone else.
