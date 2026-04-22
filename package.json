@@ -57,6 +57,9 @@
     "package.json",
     "README.md"
   ],
+  "overrides": {
+    "follow-redirects": "^1.16.0"
+  },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
     "@slack/bolt": "^4.6.0",
