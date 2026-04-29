@@ -1,3 +1,9 @@
+## [5.2.1](https://github.com/contentstack/contentstack-typescript/compare/v5.2.0...v5.2.1) - 2026-04-29
+
+### Changed
+
+- Release automation: align CI workflows with the direct `development` → `main` release model (back-merge automation, version bump checks, remove staging-era branch gate).
+
 ### Version: 5.2.0
 #### Date: Apr-09-2026
 Enhancement: `ContentTypeQuery` extends `BaseQuery` so `stack.contentType()` supports `paginate`, `skip`, `limit`, and related query helpers without mutating `_queryParams`; `includeGlobalFieldSchema()` and `find()` stay backward compatible. Expanded unit tests for `ContentTypeQuery`.
