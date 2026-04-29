@@ -1,7 +1,3 @@
-### Version: 5.2.1
-#### Date: May-04-2026
-Fix: Snyk fixes
-
 ### Version: 5.2.0
 #### Date: Apr-09-2026
 Enhancement: `ContentTypeQuery` extends `BaseQuery` so `stack.contentType()` supports `paginate`, `skip`, `limit`, and related query helpers without mutating `_queryParams`; `includeGlobalFieldSchema()` and `find()` stay backward compatible. Expanded unit tests for `ContentTypeQuery`.
