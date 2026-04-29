@@ -1,8 +1,6 @@
-## [5.2.1](https://github.com/contentstack/contentstack-typescript/compare/v5.2.0...v5.2.1) - 2026-04-29
-
-### Changed
-
-- Release automation: align CI workflows with the direct `development` → `main` release model (back-merge automation, version bump checks, remove staging-era branch gate).
+### Version: 5.2.1
+#### Date: May-04-2026
+Fix: Snyk fixes
 
 ### Version: 5.2.0
 #### Date: Apr-09-2026
