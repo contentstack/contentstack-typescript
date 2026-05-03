@@ -2,12 +2,12 @@ import { AxiosInstance } from '@contentstack/core';
 import { BaseQuery } from './base-query';
 
 export class ContentTypeQuery extends BaseQuery {
-
   constructor(client: AxiosInstance) {
-    super()
+    super();
     this._client = client;
     this._urlPath = '/content_types';
   }
+
   /**
    * @method includeGlobalFieldSchema
    * @memberof ContentTypeQuery
