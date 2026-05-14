@@ -18,6 +18,13 @@ const stack = stackInstance();
 const BLOG_POST_CT = process.env.MEDIUM_CONTENT_TYPE_UID || 'article';
 const SOURCE_CT = process.env.COMPLEX_CONTENT_TYPE_UID || 'cybersecurity';
 
+// Taxonomy test data - uses real taxonomy terms from the test stack
+// USA taxonomy: california > san_diago, san_jose
+// India taxonomy: maharashtra > mumbai, pune
+const TAX_FIELD = 'taxonomies.usa';
+const TAX_TERM = process.env.TAX_USA_STATE || 'california';
+const TAX_CHILD_TERM = 'san_diago';
+
 describe("Entries API test cases", () => {
   it("should check for entries is defined", async () => {
     const result = await makeEntries(BLOG_POST_CT).find<TEntry>();
@@ -113,60 +120,55 @@ describe("Entries API test cases", () => {
   });
 
   it("CT Taxonomies Query: Get Entries With One Term", async () => {
-    let Query = makeEntries(SOURCE_CT).query().where("taxonomies.one", QueryOperation.EQUALS, "term_one");
+    let Query = makeEntries(SOURCE_CT).query().where(TAX_FIELD, QueryOperation.EQUALS, TAX_TERM);
     const data = await Query.find<TEntries>();
     if (data.entries) expect(data.entries.length).toBeGreaterThan(0);
   });
 
   it("CT Taxonomies Query: Get Entries With Any Term ($in)", async () => {
-    let Query = makeEntries(SOURCE_CT).query().where("taxonomies.one", QueryOperation.INCLUDES, ["term_one","term_two",]);
+    let Query = makeEntries(SOURCE_CT).query().where(TAX_FIELD, QueryOperation.INCLUDES, [TAX_TERM, TAX_CHILD_TERM]);
     const data = await Query.find<TEntries>();
     if (data.entries) expect(data.entries.length).toBeGreaterThan(0);
   });
 
   it("CT Taxonomies Query: Get Entries With Any Term ($or)", async () => {
-    let Query1 = makeEntries(SOURCE_CT).query().where("taxonomies.one", QueryOperation.EQUALS, "term_one");
-    let Query2 = makeEntries(SOURCE_CT).query().where("taxonomies.two", QueryOperation.EQUALS, "term_two");
+    let Query1 = makeEntries(SOURCE_CT).query().where(TAX_FIELD, QueryOperation.EQUALS, TAX_TERM);
+    let Query2 = makeEntries(SOURCE_CT).query().where("taxonomies.india", QueryOperation.EQUALS, process.env.TAX_INDIA_STATE || "maharashtra");
     let Query = makeEntries(SOURCE_CT).query().queryOperator(QueryOperator.OR, Query1, Query2);
     const data = await Query.find<TEntries>();
     if (data.entries) expect(data.entries.length).toBeGreaterThan(0);
   });
 
   it("CT Taxonomies Query: Get Entries With All Terms ($and)", async () => {
-    let Query1 = makeEntries(SOURCE_CT).query().where("taxonomies.one", QueryOperation.EQUALS, "term_one");
-    let Query2 = makeEntries(SOURCE_CT).query().where("taxonomies.two", QueryOperation.EQUALS, "term_two");
+    let Query1 = makeEntries(SOURCE_CT).query().where(TAX_FIELD, QueryOperation.EQUALS, TAX_TERM);
+    let Query2 = makeEntries(SOURCE_CT).query().where(TAX_FIELD, QueryOperation.EXISTS, true);
     let Query = makeEntries(SOURCE_CT).query().queryOperator(QueryOperator.AND, Query1, Query2);
     const data = await Query.find<TEntries>();
     if (data.entries) expect(data.entries.length).toBeGreaterThan(0);
   });
 
   it("CT Taxonomies Query: Get Entries With Any Taxonomy Terms ($exists)", async () => {
-    let Query = makeEntries(SOURCE_CT).query().where("taxonomies.one", QueryOperation.EXISTS, true);
+    let Query = makeEntries(SOURCE_CT).query().where(TAX_FIELD, QueryOperation.EXISTS, true);
     const data = await Query.find<TEntries>();
     if (data.entries) expect(data.entries.length).toBeGreaterThan(0);
   });
 
   it("CT Taxonomies Query: Get Entries With Taxonomy Terms and Also Matching Its Children Term ($eq_below, level)", async () => {
-    let Query = makeEntries(SOURCE_CT).query().where("taxonomies.one", TaxonomyQueryOperation.EQ_BELOW, "term_one", { levels: 1,
- });
+    let Query = makeEntries(SOURCE_CT).query().where(TAX_FIELD, TaxonomyQueryOperation.EQ_BELOW, TAX_TERM, { levels: 1 });
     const data = await Query.find<TEntries>();
     if (data.entries) expect(data.entries.length).toBeGreaterThan(0);
   });
 
   it("CT Taxonomies Query: Get Entries With Taxonomy Terms Children's and Excluding the term itself ($below, level)", async () => {
-    let Query = makeEntries(SOURCE_CT).query().where("taxonomies.one", TaxonomyQueryOperation.BELOW, "term_one", { levels: 1 });
+    let Query = makeEntries(SOURCE_CT).query().where(TAX_FIELD, TaxonomyQueryOperation.BELOW, TAX_TERM, { levels: 1 });
     const data = await Query.find<TEntries>();
-    // May return 0 entries if no entries are tagged with children of term_one
     if (data.entries) {
       expect(data.entries.length).toBeGreaterThanOrEqual(0);
-      if (data.entries.length === 0) {
-        console.log('⚠️ No entries found with taxonomy children of term_one - test data dependent');
-      }
     }
   });
 
   it("CT Taxonomies Query: Get Entries With Taxonomy Terms and Also Matching Its Parent Term ($eq_above, level)", async () => {
-    let Query = makeEntries(SOURCE_CT).query().where("taxonomies.one", TaxonomyQueryOperation.EQ_ABOVE, "term_one", { levels: 1 });
+    let Query = makeEntries(SOURCE_CT).query().where(TAX_FIELD, TaxonomyQueryOperation.EQ_ABOVE, TAX_CHILD_TERM, { levels: 1 });
     const data = await Query.find<TEntries>();
     if (data.entries) expect(data.entries.length).toBeGreaterThan(0);
   });
@@ -186,20 +188,10 @@ describe("Entries API test cases", () => {
 
   it("CT Taxonomies Query: Get Entries With Taxonomy Terms Parent and Excluding the term itself ($above, level)", async () => {
     // ABOVE operation finds entries tagged with PARENT terms of the given term
-    // Requires a child term (e.g., term_one_child) to find its parents
-    try {
-      let Query = makeEntries(SOURCE_CT).query().where("taxonomies.one", TaxonomyQueryOperation.ABOVE, "term_one_child", { levels: 1 });
-      const data = await Query.find<TEntries>();
-      if (data.entries) expect(data.entries.length).toBeGreaterThanOrEqual(0);
-    } catch (error: any) {
-      // Handle gracefully if term_one_child doesn't exist or API doesn't support ABOVE
-      if (error.status === 400 || error.status === 422 || error.status === 141) {
-        console.log(`⚠️ TaxonomyQueryOperation.ABOVE returned ${error.status} - term_one_child may not exist or ABOVE not supported`);
-        expect([400, 422, 141]).toContain(error.status);
-      } else {
-        throw error;
-      }
-    }
+    // Using san_diago (child of california) to find its parent
+    let Query = makeEntries(SOURCE_CT).query().where(TAX_FIELD, TaxonomyQueryOperation.ABOVE, TAX_CHILD_TERM, { levels: 1 });
+    const data = await Query.find<TEntries>();
+    if (data.entries) expect(data.entries.length).toBeGreaterThanOrEqual(0);
   });
 });
 function makeEntries(contentTypeUid = ""): Entries {
