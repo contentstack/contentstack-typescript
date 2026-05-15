@@ -2,7 +2,7 @@ import { AxiosInstance, getData } from '@contentstack/core';
 import { Query } from '../query';
 import { BaseQuery } from '../query';
 import { FindResponse } from '../common/types';
-import { encodeQueryParams } from '../common/utils';
+import { buildVariantRequestHeaders, encodeQueryParams } from '../common/utils';
 import { ErrorMessages } from '../common/error-messages';
 
 export class Entries extends BaseQuery {
@@ -14,6 +14,7 @@ export class Entries extends BaseQuery {
     this._contentTypeUid = contentTypeUid;
     this._urlPath = `/content_types/${this._contentTypeUid}/entries`;
     this._variants = '';
+    this._variantsBranch = '';
   }
 
   /**
@@ -252,27 +253,35 @@ export class Entries extends BaseQuery {
    * const query = stack.contentType("contentTypeUid").entry().query();
    */
   query(queryObj?: { [key: string]: any }) {
-    if (queryObj) return new Query(this._client, this._parameters, this._queryParams, this._variants, this._contentTypeUid, queryObj);
+    if (queryObj) {
+      return new Query(this._client, this._parameters, this._queryParams, this._variants, this._contentTypeUid, this._variantsBranch, queryObj);
+    }
 
-    return new Query(this._client, this._parameters, this._queryParams, this._variants, this._contentTypeUid);
+    return new Query(this._client, this._parameters, this._queryParams, this._variants, this._contentTypeUid, this._variantsBranch);
   }
 
   /**
    * @method variants
    * @memberof Entries
-   * @description The variant header will be added to axios client
+   * @description The variant header will be added to axios client. Branch is optional.
+   * @param {string | string[]} variants - Variant UID or UIDs
+   * @param {string} [branchName] - Optional branch name sent as the `branch` header
    * @returns {Entries}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType('abc').entry().variants('xyz').find();
+   * const resultWithBranch = await stack.contentType('abc').entry().variants('xyz', 'branch_name').find();
    */
-  variants(variants: string | string[]): Entries {
+  variants(variants: string | string[], branchName?: string): Entries {
     if (Array.isArray(variants) && variants.length > 0) {
       this._variants = variants.join(',');
     } else if (typeof variants == 'string' && variants.length > 0) {
       this._variants = variants;
+    }
+    if (typeof branchName === 'string' && branchName.length > 0) {
+      this._variantsBranch = branchName;
     }
     return this;
   }
@@ -320,10 +329,11 @@ export class Entries extends BaseQuery {
       contentTypeUid: this._contentTypeUid
     };
 
-    if (this._variants) {
+    const variantHeaders = buildVariantRequestHeaders(this._variants, this._variantsBranch);
+    if (variantHeaders) {
       getRequestOptions.headers = {
         ...getRequestOptions.headers,
-        'x-cs-variant-uid': this._variants
+        ...variantHeaders
       };
     }
     const response = await getData(this._client, this._urlPath, getRequestOptions);

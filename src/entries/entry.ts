@@ -1,5 +1,6 @@
 import { AxiosInstance, getData } from '@contentstack/core';
 import { ErrorMessages } from '../common/error-messages';
+import { buildVariantRequestHeaders } from '../common/utils';
 
 interface EntryResponse<T> {
   entry: T;
@@ -10,6 +11,7 @@ export class Entry {
   private _entryUid: string;
   private _urlPath: string;
   protected _variants: string;
+  protected _variantsBranch: string;
   _queryParams: { [key: string]: string | number | string[] } = {};
   constructor(client: AxiosInstance, contentTypeUid: string, entryUid: string) {
     this._client = client;
@@ -17,6 +19,7 @@ export class Entry {
     this._entryUid = entryUid;
     this._urlPath = `/content_types/${this._contentTypeUid}/entries/${this._entryUid}`;
     this._variants = '';
+    this._variantsBranch = '';
   }
 
   /**
@@ -39,19 +42,25 @@ export class Entry {
   /**
    * @method variants
    * @memberof Entry
-   * @description The variant header will be added to axios client
+   * @description The variant header will be added to axios client. Branch is optional.
+   * @param {string | string[]} variants - Variant UID or UIDs
+   * @param {string} [branchName] - Optional branch name sent as the `branch` header
    * @returns {Entry}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.contentType('abc').entry('entry_uid').variants('xyz').fetch();
+   * const resultWithBranch = await stack.contentType('abc').entry('entry_uid').variants('xyz', 'branch_name').fetch();
    */
-  variants(variants: string | string[]): this {
+  variants(variants: string | string[], branchName?: string): this {
     if (Array.isArray(variants) && variants.length > 0) {
       this._variants = variants.join(',');
     } else if (typeof variants == 'string' && variants.length > 0) {
       this._variants = variants;
+    }
+    if (typeof branchName === 'string' && branchName.length > 0) {
+      this._variantsBranch = branchName;
     }
 
     return this;
@@ -189,10 +198,11 @@ export class Entry {
       contentTypeUid: this._contentTypeUid,
       entryUid: this._entryUid
     };
-    if (this._variants) {
+    const variantHeaders = buildVariantRequestHeaders(this._variants, this._variantsBranch);
+    if (variantHeaders) {
       getRequestOptions.headers = {
         ...getRequestOptions.headers,
-        'x-cs-variant-uid': this._variants
+        ...variantHeaders
       };
     }
 

@@ -1,3 +1,7 @@
+### Version: 5.3.0
+#### Date: May-18-2026
+Enhancement: Entry variants support an optional branch name as the second argument to `variants()` on `Entry` and `Entries`. When provided, the branch is sent as the `branch` request header together with `x-cs-variant-uid`. Existing `variants(uid)` and `variants(uids)` calls remain backward compatible. Added unit and API tests for variant + branch requests.
+
 ### Version: 5.2.0
 #### Date: Apr-09-2026
 Enhancement: `ContentTypeQuery` extends `BaseQuery` so `stack.contentType()` supports `paginate`, `skip`, `limit`, and related query helpers without mutating `_queryParams`; `includeGlobalFieldSchema()` and `find()` stay backward compatible. Expanded unit tests for `ContentTypeQuery`.
