@@ -37,3 +37,24 @@ export function encodeQueryParams(params: params): params {
   
   return encodedParams;
 }
+
+/**
+ * Builds request headers for entry variant requests.
+ * @param variants - Comma-separated variant UID(s)
+ * @param branch - Optional branch name to scope the variant request
+ */
+export function buildVariantRequestHeaders(
+  variants: string,
+  branch?: string
+): Record<string, string> | undefined {
+  const headers: Record<string, string> = {};
+
+  if (variants) {
+    headers['x-cs-variant-uid'] = variants;
+  }
+  if (branch) {
+    headers.branch = branch;
+  }
+
+  return Object.keys(headers).length > 0 ? headers : undefined;
+}

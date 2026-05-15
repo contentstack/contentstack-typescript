@@ -1,4 +1,4 @@
-import { getHostforRegion, encodeQueryParams } from "../../src/common/utils";
+import { buildVariantRequestHeaders, getHostforRegion, encodeQueryParams } from "../../src/common/utils";
 import { Region } from "../../src/common/types";
 import {
   DUMMY_URL,
@@ -212,6 +212,26 @@ describe("Utils functions", () => {
       mockGetContentstackEndpoint.mock.calls.forEach((call) => {
         expect(call[2]).toBe(true);
       });
+    });
+  });
+
+  describe("buildVariantRequestHeaders function", () => {
+    it("should return variant and branch headers when both are provided", () => {
+      expect(buildVariantRequestHeaders("variant1,variant2", "branch_name")).toEqual({
+        "x-cs-variant-uid": "variant1,variant2",
+        branch: "branch_name",
+      });
+    });
+
+    it("should return only variant header when branch is not provided", () => {
+      expect(buildVariantRequestHeaders("variant1")).toEqual({
+        "x-cs-variant-uid": "variant1",
+      });
+    });
+
+    it("should return undefined when neither variant nor branch is provided", () => {
+      expect(buildVariantRequestHeaders("", "")).toBeUndefined();
+      expect(buildVariantRequestHeaders("", undefined)).toBeUndefined();
     });
   });
 

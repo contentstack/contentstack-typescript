@@ -1,13 +1,21 @@
 import { AxiosInstance, getData } from '@contentstack/core';
 import { BaseQuery } from './base-query';
 import { BaseQueryParameters, QueryOperation, QueryOperator, TaxonomyQueryOperation, params, queryParams, FindResponse } from '../common/types';
-import { encodeQueryParams } from '../common/utils';
+import { buildVariantRequestHeaders, encodeQueryParams } from '../common/utils';
 import { ErrorMessages } from '../common/error-messages';
 
 export class Query extends BaseQuery {
   private _contentTypeUid?: string;
 
-  constructor(client: AxiosInstance, params: params, queryParams: queryParams, variants?: string, uid?: string, queryObj?: { [key: string]: any }) {
+  constructor(
+    client: AxiosInstance,
+    params: params,
+    queryParams: queryParams,
+    variants?: string,
+    uid?: string,
+    variantsBranchOrQueryObj?: string | { [key: string]: any },
+    queryObj?: { [key: string]: any }
+  ) {
     super();
     this._client = client;
     this._contentTypeUid = uid;
@@ -16,11 +24,23 @@ export class Query extends BaseQuery {
     this._queryParams = queryParams || {};
     this._variants = variants || '';
 
+    let variantsBranch = '';
+    let resolvedQueryObj: { [key: string]: any } | undefined;
+
+    if (typeof variantsBranchOrQueryObj === 'string') {
+      variantsBranch = variantsBranchOrQueryObj;
+      resolvedQueryObj = queryObj;
+    } else if (variantsBranchOrQueryObj) {
+      resolvedQueryObj = variantsBranchOrQueryObj;
+    }
+
+    this._variantsBranch = variantsBranch;
+
     if (!uid) {
       this._urlPath = `/assets`;
     }
-    if (queryObj) {
-      this._parameters = { ...this._parameters, ...queryObj };
+    if (resolvedQueryObj) {
+      this._parameters = { ...this._parameters, ...resolvedQueryObj };
     }
   }
   // Validate if input is alphanumeric 
@@ -651,10 +671,11 @@ export class Query extends BaseQuery {
       contentTypeUid: this._contentTypeUid
     };
 
-    if (this._variants) {
+    const variantHeaders = buildVariantRequestHeaders(this._variants, this._variantsBranch);
+    if (variantHeaders) {
       getRequestOptions.headers = {
         ...getRequestOptions.headers,
-        'x-cs-variant-uid': this._variants
+        ...variantHeaders
       };
     }
     const response = await getData(this._client, this._urlPath, getRequestOptions);

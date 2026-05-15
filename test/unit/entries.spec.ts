@@ -275,6 +275,13 @@ describe('Variants test', () => {
     testVariantObj.variants([]);
     expect(testVariantObj.getVariants()).toBe('');
   });
+
+  it('should set branch when branch name is provided', () => {
+    const testVariantObj = new TestVariants(client);
+    testVariantObj.variants(['variant1', 'variant2'], 'branch_name');
+    expect(testVariantObj.getVariants()).toBe('variant1,variant2');
+    expect(testVariantObj['_variantsBranch']).toBe('branch_name');
+  });
 });
 
 describe('Find with encode and variants', () => {
@@ -309,6 +316,28 @@ describe('Find with encode and variants', () => {
     
     entry.variants(['variant1', 'variant2']);
     await entry.find();
+  });
+
+  it('should call find with variant and branch headers when branch is set', async () => {
+    mockClient.onGet('/content_types/contentTypeUid/entries').reply((config) => {
+      expect(config.headers?.['x-cs-variant-uid']).toBe('variant1,variant2');
+      expect(config.headers?.branch).toBe('branch_name');
+      return [200, entryFindMock];
+    });
+
+    entry.variants(['variant1', 'variant2'], 'branch_name');
+    await entry.find();
+  });
+
+  it('should pass branch to query find when variants include branch', async () => {
+    mockClient.onGet('/content_types/contentTypeUid/entries').reply((config) => {
+      expect(config.headers?.['x-cs-variant-uid']).toBe('variant1');
+      expect(config.headers?.branch).toBe('branch_name');
+      return [200, entryFindMock];
+    });
+
+    entry.variants('variant1', 'branch_name');
+    await entry.query().find();
   });
 
   it('should handle find with both encode and variants', async () => {
