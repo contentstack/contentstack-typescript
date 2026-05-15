@@ -1,7 +1,7 @@
 import { AxiosInstance, getData } from '@contentstack/core';
 import { Pagination } from '../common/pagination';
 import { FindResponse, params } from '../common/types';
-import { encodeQueryParams } from '../common/utils';
+import { buildVariantRequestHeaders, encodeQueryParams } from '../common/utils';
 import type { Query } from './query';
 
 export class BaseQuery extends Pagination {
@@ -10,6 +10,7 @@ export class BaseQuery extends Pagination {
   protected _client!: AxiosInstance;
   protected _urlPath!: string;
   protected _variants!: string;
+  protected _variantsBranch!: string;
 
   /**
    * Helper method to cast this instance to Query type
@@ -231,10 +232,11 @@ export class BaseQuery extends Pagination {
       contentTypeUid: this.extractContentTypeUidFromUrl()
     };
 
-    if (this._variants) {
+    const variantHeaders = buildVariantRequestHeaders(this._variants, this._variantsBranch);
+    if (variantHeaders) {
       getRequestOptions.headers = {
         ...getRequestOptions.headers,
-        'x-cs-variant-uid': this._variants
+        ...variantHeaders
       };
     }
     const response = await getData(this._client, this._urlPath, getRequestOptions);
