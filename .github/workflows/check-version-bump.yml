@@ -74,9 +74,9 @@ jobs:
             echo "::error::Version bump required: package.json version ($PKG_VERSION) equals latest tag ($LATEST_TAG). Please bump the version in package.json."
             exit 1
           fi
-          CHANGELOG_VERSION=$(sed -nE 's/^## \[v?([0-9]+\.[0-9]+\.[0-9]+).*/\1/p' CHANGELOG.md | head -1)
+          CHANGELOG_VERSION=$(sed -nE 's/^(## \[v?|### Version: )([0-9]+\.[0-9]+\.[0-9]+).*/\2/p' CHANGELOG.md | head -1)
           if [ -z "$CHANGELOG_VERSION" ]; then
-            echo "::error::Could not find a version entry in CHANGELOG.md (expected line like '## [v1.0.0](...)')."
+            echo "::error::Could not find a version entry in CHANGELOG.md (expected '## [v1.0.0](...)' or '### Version: 1.0.0')."
             exit 1
           fi
           if [ "$CHANGELOG_VERSION" != "$PKG_VERSION" ]; then
