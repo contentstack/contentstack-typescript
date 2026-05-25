@@ -1,35 +1,26 @@
 ---
 name: contentstack-delivery-typescript
-description: @contentstack/delivery-sdk — TypeScript CDA client, stack factory, queries, sync, cache, live preview.
+description: Use for the public Delivery SDK API, stack initialization, and integration with @contentstack/core and utils.
 ---
 
-# Contentstack TypeScript Delivery SDK skill
+# Contentstack Delivery SDK – contentstack-typescript
 
-## Entry
+## When to use
 
-- **`contentstack.stack(config)`** — **`src/stack/contentstack.ts`**: merges **StackConfig**, resolves **Region** → host, attaches **@contentstack/core** **`httpClient`** with retry handlers, returns **`Stack`**.
+- Changing how consumers initialize the SDK or call stack APIs
+- Updating dependencies on `@contentstack/core` or `@contentstack/utils`
 
-## Structure
+## Instructions
 
-- **`Stack`** — **`src/stack/stack.ts`**: content types, entries, assets, sync, taxonomy helpers.
-- **Queries** — **`src/query/`**: **BaseQuery**, **Query**, **AssetQuery**, **TaxonomyQuery**, **ContentTypeQuery**, **GlobalFieldQuery**, **EntryQueryable**, etc.
-- **Sync** — **`src/sync/`**
-- **Cache** — **`src/cache/`** + **Policy** enum in types.
+### Package identity
 
-## Extending
+- Published as **`@contentstack/delivery-sdk`**; entry is built into **`dist/modern/`** with dual CJS/ESM typings (`package.json` `exports`).
 
-- Add query methods on the appropriate class; keep param names aligned with **CDA** query docs.
-- Prefer delegating transport concerns to **core** rather than duplicating Axios logic.
+### Design constraints
 
-## Consumer packages
+- Preserve backward compatibility for public imports and options unless shipping a **semver major**.
+- HTTP and low-level client behavior often delegate to **`@contentstack/core`**—avoid duplicating retry or error logic; extend in one place when possible.
 
-- **`@contentstack/core`** — HTTP + retries
-- **`@contentstack/utils`** — utilities; re-exported where documented.
+### Documentation
 
-## Docs
-
-- [Content Delivery API](https://www.contentstack.com/docs/developers/apis/content-delivery-api/)
-
-## Rule shortcut
-
-- `.cursor/rules/contentstack-delivery-typescript.mdc`
+- User-facing behavior belongs in **`README.md`** and official Contentstack docs; keep code samples accurate when changing APIs.

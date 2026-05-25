@@ -1,23 +1,27 @@
 ---
 name: framework
-description: HTTP and retry integration — @contentstack/core with httpClient on the Delivery SDK stack.
+description: Use for Rollup build, browser-safe validation, and bundler compatibility in contentstack-typescript.
 ---
 
-# Framework skill — `@contentstack/core` + Delivery SDK
+# Build & platform – contentstack-typescript
 
-## Integration point
+## When to use
 
-- **`src/stack/contentstack.ts`** imports **`httpClient`**, **`retryRequestHandler`**, **`retryResponseErrorHandler`**, **`retryResponseHandler`** from **`@contentstack/core`** and composes them with stack-specific **headers**, **live_preview**, and **cache**-related request handling (**`handleRequest`**).
+- Changing Rollup plugins, bundle splits, or `dist/` layout
+- Debugging issues specific to browser, Next.js, Vite, or other bundlers
 
-## When to change
+## Instructions
 
-- **Retry behavior** shared across Contentstack TS clients → prefer **`@contentstack/core`** (**contentstack-js-core** repo) if appropriate; otherwise document SDK-only overrides here.
-- **Base URL / region** — **`getHostforRegion`** and **StackConfig.host** in **`src/common/utils.ts`** (verify imports from current **`contentstack.ts`**).
+### Rollup
 
-## Testing
+- Production build: `npm run build:rollup` (high Node memory options may apply—see `package.json`).
+- Declaration files: `npm run build:types` (`tsc` with `config/tsconfig.decl-esm.json`).
 
-- **Unit** — mock HTTP layers; **API** — full stack via **`stackInstance()`**.
+### Browser and bundlers
 
-## Rule shortcut
+- `npm run validate:browser` checks browser-safe assumptions.
+- `test/bundlers/` validates multiple toolchains—run `./validate-all.sh` or `npm run validate:bundlers` after dependency or export map changes.
 
-- `.cursor/rules/contentstack-delivery-typescript.mdc`
+### Outputs
+
+- Consumers import from **`@contentstack/delivery-sdk`**—verify both `import` and `require` paths after changing `exports`.
