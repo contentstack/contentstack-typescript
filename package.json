@@ -1,6 +1,6 @@
 {
   "name": "@contentstack/delivery-sdk",
-  "version": "5.2.1",
+  "version": "5.2.2",
   "type": "module",
   "license": "MIT",
   "engines": {
@@ -48,8 +48,8 @@
   },
   "dependencies": {
     "@contentstack/core": "^1.4.0",
-    "@contentstack/utils": "^1.8.0",
-    "axios": "^1.16.1",
+    "@contentstack/utils": "^1.9.1",
+    "axios": "^1.18.1",
     "humps": "^2.0.1"
   },
   "files": [
