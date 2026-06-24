@@ -1,3 +1,7 @@
+### Version: 5.2.2
+#### Date: June-29-2026
+Fix: Upgrade dependencies
+
 ### Version: 5.2.1
 #### Date: May-25-2026
 Fix: Upgrade dependencies
