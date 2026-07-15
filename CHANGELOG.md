@@ -1,3 +1,7 @@
+### Version: 5.3.0
+#### Date: Jul-15-2026
+Feature: Added Taxonomy Content Delivery API support via `stack.taxonomy()` — fetch published taxonomies and terms, term ancestors/descendants, and term locales, with `locale`, fallback, branch, `depth`, and pagination query helpers. Requires the `taxonomy_publish` feature flag.
+
 ### Version: 5.2.2
 #### Date: June-29-2026
 Fix: Upgrade dependencies
