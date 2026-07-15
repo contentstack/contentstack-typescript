@@ -32,7 +32,7 @@ describe("Terms API test cases", () => {
   });
 
   it("should get a localized term when fetch is called with locale", async () => {
-    const result = await stack.taxonomy("taxonomy_testing").term("vehicles").fetch<TTerm>("fr-fr");
+    const result = await stack.taxonomy("gadgets").term("smartphone").fetch<TTerm>("fr-fr");
     expect(result).toBeDefined();
   });
 
@@ -40,21 +40,21 @@ describe("Terms API test cases", () => {
     const result = await makeTerms("texas").locales<TTerms>();
     expect(result).toBeDefined();
     expect(result.terms).toBeDefined();
-    expect(result.terms[0].name).toBeDefined();
+    expect(result.terms![0].name).toBeDefined();
   });
 
   it("should get ancestors for a term", async () => {
     const result = await makeTerms("houston").ancestors<TTerms>();
     expect(result).toBeDefined();
     expect(result.terms).toBeDefined();
-    expect(result.terms[0].name).toBeDefined();
+    expect(result.terms![0].name).toBeDefined();
   });
 
   it("should get descendants for a term", async () => {
     const result = await makeTerms("texas").descendants<TTerms>();
     expect(result).toBeDefined();
     expect(result.terms).toBeDefined();
-    expect(result.terms[0].name).toBeDefined();
+    expect(result.terms![0].name).toBeDefined();
   });
 });
 
@@ -83,23 +83,23 @@ describe("Terms API test cases - gadgets taxonomy", () => {
     const result = await stack.taxonomy("gadgets").term("smartphone").locales<TTerms>();
     expect(result).toBeDefined();
     expect(result.terms).toBeDefined();
-    expect(result.terms.length).toBeGreaterThan(0);
-    const locales = result.terms.map((t: any) => t.locale);
+    expect(result.terms!.length).toBeGreaterThan(0);
+    const locales = result.terms!.map((t: any) => t.locale);
     expect(locales).toContain("en-us");
-    expect(locales).toContain("hi-in");
+    expect(locales).toContain("fr-fr");
   });
 
   it("should return empty ancestors for a root-level term in gadgets", async () => {
     const result = await stack.taxonomy("gadgets").term("smartphone").ancestors<TTerms>();
     expect(result).toBeDefined();
     expect(result.terms).toBeDefined();
-    expect(result.terms.length).toBe(0);
+    expect(result.terms!.length).toBe(0);
   });
 
   it("should return empty descendants for a leaf term in gadgets", async () => {
     const result = await stack.taxonomy("gadgets").term("smartphone").descendants<TTerms>();
     expect(result).toBeDefined();
     expect(result.terms).toBeDefined();
-    expect(result.terms.length).toBe(0);
+    expect(result.terms!.length).toBe(0);
   });
 });
