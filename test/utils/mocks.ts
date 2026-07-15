@@ -1855,6 +1855,71 @@ const termQueryFindResponseDataMock = {
 ]
 }
 
+const taxonomyLocalizedFetchMock = {
+  "taxonomy": {
+    "uid": "taxonomy_testing",
+    "locale": "hi-in",
+    "name": "टैक्सोनॉमी परीक्षण",
+    "description": "",
+    "created_at": "2025-10-10T06:42:48.644Z",
+    "updated_at": "2025-10-10T06:42:48.644Z",
+    "created_by": "created_by",
+    "updated_by": "updated_by",
+    "publish_details": {
+      "time": "2025-10-10T08:01:48.174Z",
+      "user": "user",
+      "environment": "env",
+      "locale": "hi-in"
+    }
+  }
+};
+
+const termLocalizedFetchMock = {
+  "term": {
+    "taxonomy_uid": "taxonomy_testing",
+    "uid": "term1",
+    "locale": "hi-in",
+    "name": "टर्म एक",
+    "ancestors": [{ "uid": "taxonomy_testing", "name": "taxonomy testing", "type": "TAXONOMY" }],
+    "depth": 1,
+    "parent_uid": null,
+    "created_by": "created_by",
+    "created_at": "2025-10-10T06:43:13.799Z",
+    "updated_by": "updated_by",
+    "updated_at": "2025-10-10T06:43:13.799Z",
+    "publish_details": {
+      "time": "2025-10-10T08:01:48.351Z",
+      "user": "user",
+      "environment": "environment",
+      "locale": "hi-in"
+    }
+  }
+};
+
+const termQueryLocalizedFindMock = {
+  "terms": [
+    {
+      "taxonomy_uid": "taxonomy_testing",
+      "uid": "term1",
+      "locale": "hi-in",
+      "name": "टर्म एक",
+      "ancestors": [{ "uid": "taxonomy_testing", "name": "taxonomy testing", "type": "TAXONOMY" }],
+      "depth": 1,
+      "parent_uid": null,
+      "created_by": "created_by",
+      "created_at": "2025-10-10T06:43:13.799Z",
+      "updated_by": "updated_by",
+      "updated_at": "2025-10-10T06:43:13.799Z",
+      "publish_details": {
+        "time": "2025-10-10T08:01:48.351Z",
+        "user": "user",
+        "environment": "environment",
+        "locale": "hi-in"
+      }
+    }
+  ]
+};
+
 const syncResult: any = { ...axiosGetMock.data };
 
 export { 
@@ -1873,4 +1938,7 @@ export {
   termLocalesResponseDataMock,
   termAncestorsResponseDataMock,
   termDescendantsResponseDataMock,
+  taxonomyLocalizedFetchMock,
+  termLocalizedFetchMock,
+  termQueryLocalizedFindMock,
 };

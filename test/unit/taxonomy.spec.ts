@@ -2,7 +2,7 @@ import { TaxonomyQuery } from '../../src/query/taxonomy-query';
 import { Taxonomy } from '../../src/taxonomy';
 import { AxiosInstance, httpClient } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
-import { taxonomyFindResponseDataMock } from '../utils/mocks';
+import { taxonomyFindResponseDataMock, taxonomyLocalizedFetchMock } from '../utils/mocks';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
 import { Term } from '../../src/taxonomy/term';
 import { TermQuery } from '../../src/query/term-query';
@@ -52,5 +52,11 @@ describe('ta class', () => {
     });
 
     await taxonomy.includeFallback().includeBranch().param('locale', 'fr-fr').fetch();
+  });
+
+  it('should return localized taxonomy when fetch is called with locale', async () => {
+    mockClient.onGet('/taxonomies/taxonomy_testing').reply(200, taxonomyLocalizedFetchMock);
+    const response = await taxonomy.fetch('hi-in');
+    expect(response).toEqual(taxonomyLocalizedFetchMock.taxonomy);
   });
 });

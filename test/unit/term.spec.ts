@@ -1,6 +1,6 @@
 import { AxiosInstance, httpClient } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
-import { termQueryFindResponseDataMock, termLocalesResponseDataMock, termAncestorsResponseDataMock, termDescendantsResponseDataMock } from '../utils/mocks';
+import { termQueryFindResponseDataMock, termLocalesResponseDataMock, termAncestorsResponseDataMock, termDescendantsResponseDataMock, termLocalizedFetchMock } from '../utils/mocks';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
 import { Term } from '../../src/taxonomy/term';
 import { Taxonomy } from '../../src/taxonomy';
@@ -74,5 +74,12 @@ describe('Term class', () => {
     });
 
     await term.param('depth', 1).addParams({ locale: 'fr-fr' }).ancestors();
+  });
+
+  it('should fetch localized term when fetch is called with locale', async () => {
+    mockClient.onGet('/taxonomies/taxonomy_testing/terms/term1').reply(200, termLocalizedFetchMock);
+
+    const response = await term.fetch('hi-in');
+    expect(response).toEqual(termLocalizedFetchMock.term);
   });
 });
