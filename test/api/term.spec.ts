@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 
 dotenv.config()
 const countryUsa = process.env.TAX_COUNTRY_USA || 'usa'
+const locale = process.env.TAX_LOCALE || 'en-us'
 const stack = stackInstance();
 
 describe("Terms API test cases", () => {
@@ -15,6 +16,19 @@ describe("Terms API test cases", () => {
     expect(result.uid).toBeDefined();
     expect(result.created_by).toBeDefined();
     expect(result.updated_by).toBeDefined();
+  });
+
+  it("should get a localized term when a locale is passed to fetch", async () => {
+    const result = await makeTerms("texas").fetch<TTerm>(locale);
+    expect(result).toBeDefined();
+    if (result.publish_details) {
+      expect(result.publish_details.locale).toBeDefined();
+    }
+  });
+
+  it("should get a term with locale fallback when includeFallback is chained", async () => {
+    const result = await makeTerms("texas").includeFallback().fetch<TTerm>(locale);
+    expect(result).toBeDefined();
   });
 
   it("should get locales for a term", async () => {
