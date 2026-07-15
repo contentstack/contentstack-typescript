@@ -1,5 +1,5 @@
 ### Version: 5.3.0
-#### Date: Jul-15-2026
+#### Date: Jul-16-2026
 Feature: Added Taxonomy Publishing support to the Content Delivery SDK via `stack.taxonomy()`.
 - Fetch all published taxonomies: `stack.taxonomy().find()`
 - Fetch a single published taxonomy by UID: `stack.taxonomy(uid).fetch(locale?)`
