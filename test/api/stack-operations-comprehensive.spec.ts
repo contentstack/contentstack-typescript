@@ -380,8 +380,8 @@ describe('Stack Operations - Comprehensive Coverage', () => {
           .find<any>();
 
         expect(taxonomyResult).toBeDefined();
-        expect(taxonomyResult.entries).toBeDefined();
-        expect(Array.isArray(taxonomyResult.entries)).toBe(true);
+        expect(taxonomyResult.taxonomies).toBeDefined();
+        expect(Array.isArray(taxonomyResult.taxonomies)).toBe(true);
         
         // Then get last activities
         const activitiesResult = await (stack as any).getLastActivities();
@@ -394,7 +394,7 @@ describe('Stack Operations - Comprehensive Coverage', () => {
         expect(activitiesResult).toBeDefined();
         if (activitiesResult.content_types) {
           expect(Array.isArray(activitiesResult.content_types)).toBe(true);
-          console.log(`Taxonomy operations: ${taxonomyResult.entries?.length} taxonomies`);
+          console.log(`Taxonomy operations: ${taxonomyResult.taxonomies?.length} taxonomies`);
           console.log(`Last activities: ${activitiesResult.content_types.length} content types`);
         }
       } catch (error: any) {
