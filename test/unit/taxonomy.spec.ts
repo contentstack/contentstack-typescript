@@ -44,4 +44,13 @@ describe('ta class', () => {
     const response = await taxonomy.fetch();
     expect(response).toEqual(taxonomyFindResponseDataMock.taxonomies[0]);
   });
+
+  it('should send include and arbitrary params on fetch() when chained', async () => {
+    mockClient.onGet('/taxonomies/taxonomy_testing').reply((config) => {
+      expect(config.params).toEqual(expect.objectContaining({ include_fallback: 'true', include_branch: 'true', locale: 'fr-fr' }));
+      return [200, taxonomyFindResponseDataMock.taxonomies[0]];
+    });
+
+    await taxonomy.includeFallback().includeBranch().param('locale', 'fr-fr').fetch();
+  });
 });

@@ -1,12 +1,15 @@
 import { Term } from "../../src/taxonomy/term";
 import { stackInstance } from "../utils/stack-instance";
 import { TTerm, TTerms } from "./types";
+import dotenv from 'dotenv';
 
+dotenv.config()
+const countryUsa = process.env.TAX_COUNTRY_USA || 'usa'
 const stack = stackInstance();
 
 describe("Terms API test cases", () => {
   it("should get a term by uid", async () => {
-    const result = await makeTerms("vehicles").fetch<TTerm>();
+    const result = await makeTerms("texas").fetch<TTerm>();
     expect(result).toBeDefined();
     expect(result.taxonomy_uid).toBeDefined();
     expect(result.uid).toBeDefined();
@@ -15,21 +18,21 @@ describe("Terms API test cases", () => {
   });
 
   it("should get locales for a term", async () => {
-    const result = await makeTerms("vehicles").locales<TTerms>();
+    const result = await makeTerms("texas").locales<TTerms>();
     expect(result).toBeDefined();
     expect(result.terms).toBeDefined();
     expect(result.terms[0].name).toBeDefined();
   });
 
   it("should get ancestors for a term", async () => {
-    const result = await makeTerms("sleeper").ancestors<TTerms>();
+    const result = await makeTerms("houston").ancestors<TTerms>();
     expect(result).toBeDefined();
     expect(result.terms).toBeDefined();
     expect(result.terms[0].name).toBeDefined();
   });
 
   it("should get descendants for a term", async () => {
-    const result = await makeTerms("vrl").descendants<TTerms>();
+    const result = await makeTerms("texas").descendants<TTerms>();
     expect(result).toBeDefined();
     expect(result.terms).toBeDefined();
     expect(result.terms[0].name).toBeDefined();
@@ -37,6 +40,6 @@ describe("Terms API test cases", () => {
 });
 
 function makeTerms(termUid = ""): Term {
-  const terms = stack.taxonomy("taxonomy_testing").term(termUid);
+  const terms = stack.taxonomy(countryUsa).term(termUid);
   return terms;
 }

@@ -7,7 +7,7 @@ import { TaxonomyQuery } from '../../src/query/taxonomy-query';
 import { Taxonomy } from '../../src/taxonomy';
 
 dotenv.config()
-
+const countryUsa = process.env.TAX_COUNTRY_USA || 'usa'
 const stack = stackInstance();
 describe('ContentType API test cases', () => {
   it('should give taxonomies when taxonomies method is called', async () => {
@@ -16,7 +16,7 @@ describe('ContentType API test cases', () => {
   });
 
   it('should give a single taxonomy when taxonomy method is called with taxonomyUid', async () => {
-    const result = await makeTaxonomy('taxonomy_testing').fetch<TTaxonomy>();
+    const result = await makeTaxonomy(countryUsa).fetch<TTaxonomy>();
     expect(result).toBeDefined();
   });
 });

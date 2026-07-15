@@ -46,4 +46,33 @@ describe('Term class', () => {
     const response = await term.descendants();
     expect(response).toEqual(termDescendantsResponseDataMock);
   });
+
+  it('should send depth param on descendants() when depth() is chained', async () => {
+    mockClient
+      .onGet('/taxonomies/taxonomy_testing/terms/term1/descendants')
+      .reply((config) => {
+        expect(config.params).toEqual(expect.objectContaining({ depth: 2 }));
+        return [200, termDescendantsResponseDataMock];
+      });
+
+    await term.depth(2).descendants();
+  });
+
+  it('should send include_fallback and include_branch params on fetch()', async () => {
+    mockClient.onGet('/taxonomies/taxonomy_testing/terms/term1').reply((config) => {
+      expect(config.params).toEqual(expect.objectContaining({ include_fallback: 'true', include_branch: 'true' }));
+      return [200, termQueryFindResponseDataMock.terms[0]];
+    });
+
+    await term.includeFallback().includeBranch().fetch();
+  });
+
+  it('should send arbitrary params added via param() and addParams() on ancestors()', async () => {
+    mockClient.onGet('/taxonomies/taxonomy_testing/terms/term1/ancestors').reply((config) => {
+      expect(config.params).toEqual(expect.objectContaining({ depth: 1, locale: 'fr-fr' }));
+      return [200, termAncestorsResponseDataMock];
+    });
+
+    await term.param('depth', 1).addParams({ locale: 'fr-fr' }).ancestors();
+  });
 });
