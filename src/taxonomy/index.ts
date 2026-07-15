@@ -50,16 +50,19 @@ export class Taxonomy {
   /**
    * @method fetch
    * @memberof Taxonomy
-   * @description Fetches the taxonomy data by UID
+   * @description Fetches the taxonomy data by UID. Pass a locale code to retrieve the localized version.
+   * @param {string} [locale] - Optional locale code (e.g. 'hi-in'). Omit to retrieve the master locale.
    * @returns {Promise<T>}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.taxonomy('taxonomy_uid').fetch();
+   * const localized = await stack.taxonomy('taxonomy_uid').fetch('hi-in');
    */
-  async fetch<T>(): Promise<T> {
-    const response = await getData(this._client, this._urlPath);
+  async fetch<T>(locale?: string): Promise<T> {
+    if (locale) this._queryParams.locale = locale;
+    const response = await getData(this._client, this._urlPath, { params: this._queryParams });
 
     if (response.taxonomy) return response.taxonomy as T;
 
