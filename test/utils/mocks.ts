@@ -1676,6 +1676,250 @@ const gfieldQueryFindResponseDataMock = {
   ]
 }
 
+const taxonomyFindResponseDataMock = {
+  "taxonomies": [
+    {
+      "uid": "taxonomy_testing",
+      "name": "taxonomy testing",
+      "description": "",
+      "terms_count": 1,
+      "created_at": "2025-10-10T06:42:48.644Z",
+      "updated_at": "2025-10-10T06:42:48.644Z",
+      "created_by": "created_by",
+      "updated_by": "updated_by",
+      "type": "TAXONOMY",
+      "ACL": {},
+      "publish_details": {
+        "time": "2025-10-10T08:01:48.174Z",
+        "user": "user",
+        "environment": "env",
+        "locale": "en-us"
+      }
+    }
+  ]
+}
+
+const termLocalesResponseDataMock = {
+  terms: []
+}
+
+const termAncestorsResponseDataMock = {
+  "terms": [
+    {
+      "uid": "vehicles",
+      "name": "vehicles",
+      "publish_details": {
+        "time": "2025-10-28T06:54:12.505Z",
+        "user": "user",
+        "environment": "environment",
+        "locale": "en-us"
+      }
+    },
+    {
+      "uid": "buses",
+      "name": "buses",
+      "publish_details": {
+        "time": "2025-10-28T06:54:12.514Z",
+        "user": "user",
+        "environment": "environment",
+        "locale": "en-us"
+      }
+    },
+    {
+      "uid": "vrl",
+      "name": "vrl",
+      "publish_details": {
+        "time": "2025-10-28T06:54:12.570Z",
+        "user": "user",
+        "environment": "environment",
+        "locale": "en-us"
+      }
+    }
+  ]
+}
+
+const termDescendantsResponseDataMock = {
+  "terms": [
+    {
+      "taxonomy_uid": "taxonomy_testing",
+      "uid": "sleeper",
+      "ancestors": [
+        {
+          "uid": "taxonomy_testing",
+          "name": "taxonomy_testing",
+          "type": "TAXONOMY"
+        },
+        {
+          "uid": "vehicles",
+          "name": "vehicles",
+          "type": ""
+        },
+        {
+          "uid": "buses",
+          "name": "buses",
+          "type": ""
+        },
+        {
+          "uid": "vrl",
+          "name": "vrl",
+          "type": ""
+        }
+      ],
+      "name": "sleeper",
+      "parent_uid": "vrl",
+      "created_by": "created_by",
+      "created_at": "2025-10-28T07:58:46.870Z",
+      "updated_by": "updated_by",
+      "updated_at": "2025-10-28T07:58:46.870Z",
+      "children_count": 0,
+      "depth": 4,
+      "ACL": {},
+      "publish_details": {
+        "time": "2025-10-28T07:59:12.557Z",
+        "user": "user",
+        "environment": "environment",
+        "locale": "en-us"
+      }
+    },
+    {
+      "taxonomy_uid": "taxonomy_testing",
+      "uid": "intercity",
+      "ancestors": [
+        {
+          "uid": "taxonomy_testing",
+          "name": "taxonomy_testing",
+          "type": "TAXONOMY"
+        },
+        {
+          "uid": "vehicles",
+          "name": "vehicles",
+          "type": ""
+        },
+        {
+          "uid": "buses",
+          "name": "buses",
+          "type": ""
+        },
+        {
+          "uid": "vrl",
+          "name": "vrl",
+          "type": ""
+        }
+      ],
+      "name": "intercity",
+      "parent_uid": "vrl",
+      "created_by": "created_by",
+      "created_at": "2025-10-28T07:58:46.870Z",
+      "updated_by": "updated_by",
+      "updated_at": "2025-10-28T07:58:46.870Z",
+      "children_count": 0,
+      "depth": 4,
+      "ACL": {},
+      "publish_details": {
+        "time": "2025-10-28T07:59:12.565Z",
+        "user": "user",
+        "environment": "environment",
+        "locale": "en-us"
+      }
+    }
+  ]
+}
+
+const termQueryFindResponseDataMock = {
+  "terms": [
+    {
+        "taxonomy_uid": "taxonomy_testing",
+        "uid": "term1",
+        "ancestors": [
+            {
+                "uid": "taxonomy_testing",
+                "name": "taxonomy testing",
+                "type": "TAXONOMY"
+            }
+        ],
+        "name": "term1",
+        "created_by": "created_by",
+        "created_at": "2025-10-10T06:43:13.799Z",
+        "updated_by": "updated_by",
+        "updated_at": "2025-10-10T06:43:13.799Z",
+        "children_count": 0,
+        "depth": 1,
+        "ACL": {},
+        "publish_details": {
+            "time": "2025-10-10T08:01:48.351Z",
+            "user": "user",
+            "environment": "environment",
+            "locale": "en-us"
+        }
+    }
+]
+}
+
+const taxonomyLocalizedFetchMock = {
+  "taxonomy": {
+    "uid": "taxonomy_testing",
+    "locale": "hi-in",
+    "name": "टैक्सोनॉमी परीक्षण",
+    "description": "",
+    "created_at": "2025-10-10T06:42:48.644Z",
+    "updated_at": "2025-10-10T06:42:48.644Z",
+    "created_by": "created_by",
+    "updated_by": "updated_by",
+    "publish_details": {
+      "time": "2025-10-10T08:01:48.174Z",
+      "user": "user",
+      "environment": "env",
+      "locale": "hi-in"
+    }
+  }
+};
+
+const termLocalizedFetchMock = {
+  "term": {
+    "taxonomy_uid": "taxonomy_testing",
+    "uid": "term1",
+    "locale": "hi-in",
+    "name": "टर्म एक",
+    "ancestors": [{ "uid": "taxonomy_testing", "name": "taxonomy testing", "type": "TAXONOMY" }],
+    "depth": 1,
+    "parent_uid": null,
+    "created_by": "created_by",
+    "created_at": "2025-10-10T06:43:13.799Z",
+    "updated_by": "updated_by",
+    "updated_at": "2025-10-10T06:43:13.799Z",
+    "publish_details": {
+      "time": "2025-10-10T08:01:48.351Z",
+      "user": "user",
+      "environment": "environment",
+      "locale": "hi-in"
+    }
+  }
+};
+
+const termQueryLocalizedFindMock = {
+  "terms": [
+    {
+      "taxonomy_uid": "taxonomy_testing",
+      "uid": "term1",
+      "locale": "hi-in",
+      "name": "टर्म एक",
+      "ancestors": [{ "uid": "taxonomy_testing", "name": "taxonomy testing", "type": "TAXONOMY" }],
+      "depth": 1,
+      "parent_uid": null,
+      "created_by": "created_by",
+      "created_at": "2025-10-10T06:43:13.799Z",
+      "updated_by": "updated_by",
+      "updated_at": "2025-10-10T06:43:13.799Z",
+      "publish_details": {
+        "time": "2025-10-10T08:01:48.351Z",
+        "user": "user",
+        "environment": "environment",
+        "locale": "hi-in"
+      }
+    }
+  ]
+};
+
 const syncResult: any = { ...axiosGetMock.data };
 
 export { 
@@ -1688,5 +1932,13 @@ export {
   entryFindMock,
   entryFetchMock,
   gfieldFetchDataMock,
-  gfieldQueryFindResponseDataMock
+  gfieldQueryFindResponseDataMock,
+  taxonomyFindResponseDataMock,
+  termQueryFindResponseDataMock,
+  termLocalesResponseDataMock,
+  termAncestorsResponseDataMock,
+  termDescendantsResponseDataMock,
+  taxonomyLocalizedFetchMock,
+  termLocalizedFetchMock,
+  termQueryLocalizedFindMock,
 };
