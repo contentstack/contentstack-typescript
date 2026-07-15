@@ -48,6 +48,77 @@ export class Taxonomy {
   }
 
   /**
+   * @method includeFallback
+   * @memberof Taxonomy
+   * @description Falls back through the branch locale hierarchy when the taxonomy is not published in the requested locale.
+   * @returns {Taxonomy}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.taxonomy('taxonomy_uid').includeFallback().fetch();
+   */
+  includeFallback(): Taxonomy {
+    this._queryParams.include_fallback = 'true';
+
+    return this;
+  }
+
+  /**
+   * @method includeBranch
+   * @memberof Taxonomy
+   * @description Adds a _branch field to the response object.
+   * @returns {Taxonomy}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.taxonomy('taxonomy_uid').includeBranch().fetch();
+   */
+  includeBranch(): Taxonomy {
+    this._queryParams.include_branch = 'true';
+
+    return this;
+  }
+
+  /**
+   * @method param
+   * @memberof Taxonomy
+   * @description Adds a single query parameter to the request.
+   * @param {string} key - The parameter key
+   * @param {string | number} value - The parameter value
+   * @returns {Taxonomy}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.taxonomy('taxonomy_uid').param('key', 'value').fetch();
+   */
+  param(key: string, value: string | number): Taxonomy {
+    this._queryParams[key] = value;
+
+    return this;
+  }
+
+  /**
+   * @method addParams
+   * @memberof Taxonomy
+   * @description Adds multiple query parameters to the request.
+   * @param {object} paramObj - The parameters to add
+   * @returns {Taxonomy}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.taxonomy('taxonomy_uid').addParams({ key: 'value' }).fetch();
+   */
+  addParams(paramObj: { [key: string]: string | number }): Taxonomy {
+    this._queryParams = { ...this._queryParams, ...paramObj };
+
+    return this;
+  }
+
+  /**
    * @method fetch
    * @memberof Taxonomy
    * @description Fetches the taxonomy data by UID. Pass a locale code to retrieve the localized version.
