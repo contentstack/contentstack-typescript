@@ -2,8 +2,8 @@ import { AxiosInstance, httpClient } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
 import { termQueryFindResponseDataMock, termLocalesResponseDataMock, termAncestorsResponseDataMock, termDescendantsResponseDataMock } from '../utils/mocks';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
-import { Term } from '../../src/lib/term';
-import { Taxonomy } from '../../src/lib/taxonomy';
+import { Term } from '../../src/taxonomy/term';
+import { Taxonomy } from '../../src/taxonomy';
 
 describe('Term class', () => {
   let term: Term;

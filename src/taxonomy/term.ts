@@ -77,16 +77,19 @@ export class Term {
   /**
    * @method fetch
    * @memberof Term
-   * @description Fetches all descendants of a single published term.
+   * @description Fetches a single published term. Pass a locale code to retrieve the localized version.
+   * @param {string} [locale] - Optional locale code (e.g. 'mr-in'). Omit to retrieve the master locale.
    * @returns {Promise<T>}
    * @example
    * import contentstack from '@contentstack/delivery-sdk'
    *
    * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
    * const result = await stack.taxonomy('taxonomy_uid').term('term_uid').fetch();
+   * const localized = await stack.taxonomy('taxonomy_uid').term('term_uid').fetch('mr-in');
    */
-  async fetch<T>(): Promise<T> {
-    const response = await getData(this._client, this._urlPath);
+  async fetch<T>(locale?: string): Promise<T> {
+    const params = locale ? { locale } : undefined;
+    const response = await getData(this._client, this._urlPath, params ? { params } : undefined);
     if (response.term) return response.term as T;
     return response;
   }

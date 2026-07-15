@@ -1,11 +1,11 @@
-import { TaxonomyQuery } from '../../src/lib/taxonomy-query';
-import { Taxonomy } from '../../src/lib/taxonomy';
+import { TaxonomyQuery } from '../../src/query/taxonomy-query';
+import { Taxonomy } from '../../src/taxonomy';
 import { AxiosInstance, httpClient } from '@contentstack/core';
 import MockAdapter from 'axios-mock-adapter';
 import { taxonomyFindResponseDataMock } from '../utils/mocks';
 import { MOCK_CLIENT_OPTIONS } from '../utils/constant';
-import { Term } from '../../src/lib/term';
-import { TermQuery } from '../../src/lib/term-query';
+import { Term } from '../../src/taxonomy/term';
+import { TermQuery } from '../../src/query/term-query';
 
 describe('ta class', () => {
   let taxonomies: TaxonomyQuery;

@@ -23,6 +23,39 @@ export class TermQuery {
   }
   
   /**
+   * @method locale
+   * @memberof TermQuery
+   * @description Retrieves terms published in the specified locale.
+   * @param {string} locale - The locale code (e.g. 'hi-in', 'en-us')
+   * @returns {TermQuery}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.taxonomy('taxonomy_uid').term().locale('hi-in').find();
+   */
+  locale(locale: string): TermQuery {
+    this._queryParams.locale = locale;
+    return this;
+  }
+
+  /**
+   * @method includeFallback
+   * @memberof TermQuery
+   * @description When a term is not localized in the requested locale, falls back to the master locale.
+   * @returns {TermQuery}
+   * @example
+   * import contentstack from '@contentstack/delivery-sdk'
+   *
+   * const stack = contentstack.stack({ apiKey: "apiKey", deliveryToken: "deliveryToken", environment: "environment" });
+   * const result = await stack.taxonomy('taxonomy_uid').term().locale('hi-in').includeFallback().find();
+   */
+  includeFallback(): TermQuery {
+    this._queryParams.include_fallback = 'true';
+    return this;
+  }
+
+  /**
    * @method find
    * @memberof TermQuery
    * @description Fetches a list of all published terms within a specific taxonomy.
