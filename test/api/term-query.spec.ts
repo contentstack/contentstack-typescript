@@ -40,17 +40,17 @@ describe("Terms Query API test cases", () => {
   });
 
   it("should return terms for given locale when locale() is chained", async () => {
-    const result = await makeTerms("taxonomy_testing").locale("hi-in").find<TTerm>();
+    const result = await makeTerms("gadgets").locale("fr-fr").find<TTerm>();
     expect(result).toBeDefined();
   });
 
   it("should return terms with fallback when includeFallback() is chained", async () => {
-    const result = await makeTerms("taxonomy_testing").includeFallback().find<TTerm>();
+    const result = await makeTerms("gadgets").includeFallback().find<TTerm>();
     expect(result).toBeDefined();
   });
 
   it("should return localized terms with fallback when locale() and includeFallback() are chained", async () => {
-    const result = await makeTerms("taxonomy_testing").locale("hi-in").includeFallback().find<TTerm>();
+    const result = await makeTerms("gadgets").locale("fr-fr").includeFallback().find<TTerm>();
     expect(result).toBeDefined();
   });
 });
@@ -67,14 +67,14 @@ describe("Term Query API test cases - gadgets taxonomy", () => {
     const result = await stack.taxonomy("gadgets").term().locale("en-us").find<TTerm>();
     expect(result).toBeDefined();
     expect(result.terms).toBeDefined();
-    expect(result.terms.length).toBe(5);
-    const byUid = Object.fromEntries(result.terms.map((t: any) => [t.uid, t]));
+    expect(result.terms!.length).toBe(5);
+    const byUid = Object.fromEntries(result.terms!.map((t: any) => [t.uid, t]));
     expect(byUid["tablet"].name).toBe("Tablet");
     expect(byUid["laptop"].name).toBe("Laptop");
     expect(byUid["smartwatch"].name).toBe("Smartwatch");
     expect(byUid["smartphone"].name).toBe("Smartphone");
     expect(byUid["headphone"].name).toBe("Headphone");
-    result.terms.forEach((t: any) => expect(t.locale).toBe("en-us"));
+    result.terms!.forEach((t: any) => expect(t.locale).toBe("en-us"));
   });
 
   // Case 2: locale=en-us, include_fallback=true
@@ -83,14 +83,14 @@ describe("Term Query API test cases - gadgets taxonomy", () => {
     const result = await stack.taxonomy("gadgets").term().locale("en-us").includeFallback().find<TTerm>();
     expect(result).toBeDefined();
     expect(result.terms).toBeDefined();
-    expect(result.terms.length).toBe(5);
-    const byUid = Object.fromEntries(result.terms.map((t: any) => [t.uid, t]));
+    expect(result.terms!.length).toBe(5);
+    const byUid = Object.fromEntries(result.terms!.map((t: any) => [t.uid, t]));
     expect(byUid["tablet"].name).toBe("Tablet");
     expect(byUid["laptop"].name).toBe("Laptop");
     expect(byUid["smartwatch"].name).toBe("Smartwatch");
     expect(byUid["smartphone"].name).toBe("Smartphone");
     expect(byUid["headphone"].name).toBe("Headphone");
-    result.terms.forEach((t: any) => expect(t.locale).toBe("en-us"));
+    result.terms!.forEach((t: any) => expect(t.locale).toBe("en-us"));
   });
 
   // Case 3: locale=fr-fr, include_fallback=false
@@ -99,14 +99,14 @@ describe("Term Query API test cases - gadgets taxonomy", () => {
     const result = await stack.taxonomy("gadgets").term().locale("fr-fr").find<TTerm>();
     expect(result).toBeDefined();
     expect(result.terms).toBeDefined();
-    expect(result.terms.length).toBe(3);
-    const byUid = Object.fromEntries(result.terms.map((t: any) => [t.uid, t]));
+    expect(result.terms!.length).toBe(3);
+    const byUid = Object.fromEntries(result.terms!.map((t: any) => [t.uid, t]));
     expect(byUid["headphone"].name).toBe("Headphone-fr");
     expect(byUid["smartphone"].name).toBe("Smartphone-fr");
     expect(byUid["smartwatch"].name).toBe("Smartwatch-fr");
     expect(byUid["tablet"]).toBeUndefined();
     expect(byUid["laptop"]).toBeUndefined();
-    result.terms.forEach((t: any) => expect(t.locale).toBe("fr-fr"));
+    result.terms!.forEach((t: any) => expect(t.locale).toBe("fr-fr"));
   });
 
   // Case 4: locale=fr-fr, include_fallback=true
@@ -115,8 +115,8 @@ describe("Term Query API test cases - gadgets taxonomy", () => {
     const result = await stack.taxonomy("gadgets").term().locale("fr-fr").includeFallback().find<TTerm>();
     expect(result).toBeDefined();
     expect(result.terms).toBeDefined();
-    expect(result.terms.length).toBe(5);
-    const byUid = Object.fromEntries(result.terms.map((t: any) => [t.uid, t]));
+    expect(result.terms!.length).toBe(5);
+    const byUid = Object.fromEntries(result.terms!.map((t: any) => [t.uid, t]));
     expect(byUid["headphone"].name).toBe("Headphone-fr");
     expect(byUid["headphone"].locale).toBe("fr-fr");
     expect(byUid["smartphone"].name).toBe("Smartphone-fr");

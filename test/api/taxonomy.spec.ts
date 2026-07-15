@@ -35,7 +35,7 @@ describe('Taxonomy API test cases', () => {
   });
 
   it('should give a localized taxonomy when fetch is called with locale', async () => {
-    const result = await makeTaxonomy('taxonomy_testing').fetch<TTaxonomy>('fr-fr');
+    const result = await makeTaxonomy('gadgets').fetch<TTaxonomy>('fr-fr');
     expect(result).toBeDefined();
   });
 });
@@ -58,7 +58,7 @@ describe('Taxonomy API test cases - gadgets', () => {
     const result = await makeTaxonomies().find<TTaxonomies>();
     expect(result).toBeDefined();
     expect(result.taxonomies).toBeDefined();
-    const gadgets = result.taxonomies.find((t: any) => t.uid === 'gadgets');
+    const gadgets = result.taxonomies!.find((t: any) => t.uid === 'gadgets');
     expect(gadgets).toBeDefined();
   });
 });
