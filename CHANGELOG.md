@@ -1,3 +1,29 @@
+### Version: 5.3.0
+#### Date: Jul-16-2026
+Feature: Added Taxonomy Publishing support to the Content Delivery SDK via `stack.taxonomy()`.
+- Fetch all published taxonomies: `stack.taxonomy().find()`
+- Fetch a single published taxonomy by UID: `stack.taxonomy(uid).fetch(locale?)`
+- Fetch all terms for a taxonomy: `stack.taxonomy(uid).term().find()`
+- Fetch a single term by UID: `stack.taxonomy(uid).term(uid).fetch(locale?)`
+- Fetch all localized versions of a term: `stack.taxonomy(uid).term(uid).locales()`
+- Fetch ancestors of a term: `stack.taxonomy(uid).term(uid).ancestors()`
+- Fetch descendants of a term: `stack.taxonomy(uid).term(uid).descendants()`
+- Locale support on term queries via chainable `locale()` and `includeFallback()` methods on `TermQuery`
+
+Note: Taxonomy Publishing requires the `taxonomy_publish`.
+
+### Version: 5.2.2
+#### Date: June-29-2026
+Fix: Upgrade dependencies
+
+### Version: 5.2.1
+#### Date: May-25-2026
+Fix: Upgrade dependencies
+
+### Version: 5.2.0
+#### Date: Apr-09-2026
+Enhancement: `ContentTypeQuery` extends `BaseQuery` so `stack.contentType()` supports `paginate`, `skip`, `limit`, and related query helpers without mutating `_queryParams`; `includeGlobalFieldSchema()` and `find()` stay backward compatible. Expanded unit tests for `ContentTypeQuery`.
+
 ### Version: 5.1.2
 #### Date: Mar-16-2026
 Fix: Added security issues
