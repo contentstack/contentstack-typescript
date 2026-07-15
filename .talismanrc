@@ -64,4 +64,10 @@ fileignoreconfig:
   checksum: 9185df498914e2966d78d9d216acaaa910d43cd7ac9a5e9a26e7241ac9edc9b5
 - filename: test/reporting/generate-unified-report.js
   checksum: 9e7a4696561b790cb93f3be8406a70ec6fdc90a3f8bbb9739504495690158fe3
+- filename: src/query/term-query.ts
+  checksum: a8d8442b14e5d7e8160ce3cdb315cda546d5e5bb7cd9a5b28d90428fe90fc848
+- filename: src/taxonomy/index.ts
+  checksum: e460faf8c78456b02b9f90c061ec6d3d4c2329aee0c80fd798a710085482d5fa
+- filename: src/taxonomy/term.ts
+  checksum: 9cdddc7e1c547b7b4b61d81b1ea88943cbdbd168611c6930fac5f8e915ee8b93
 version: "1.0"
