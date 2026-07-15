@@ -1,6 +1,16 @@
 ### Version: 5.3.0
-#### Date: Jul-15-2026
-Feature: Added Taxonomy Content Delivery API support via `stack.taxonomy()` — fetch published taxonomies and terms, term ancestors/descendants, and term locales, with `locale`, fallback, branch, `depth`, and pagination query helpers. Requires the `taxonomy_publish` feature flag.
+#### Date: Jul-16-2026
+Feature: Added Taxonomy Publishing support to the Content Delivery SDK via `stack.taxonomy()`.
+- Fetch all published taxonomies: `stack.taxonomy().find()`
+- Fetch a single published taxonomy by UID: `stack.taxonomy(uid).fetch(locale?)`
+- Fetch all terms for a taxonomy: `stack.taxonomy(uid).term().find()`
+- Fetch a single term by UID: `stack.taxonomy(uid).term(uid).fetch(locale?)`
+- Fetch all localized versions of a term: `stack.taxonomy(uid).term(uid).locales()`
+- Fetch ancestors of a term: `stack.taxonomy(uid).term(uid).ancestors()`
+- Fetch descendants of a term: `stack.taxonomy(uid).term(uid).descendants()`
+- Locale support on term queries via chainable `locale()` and `includeFallback()` methods on `TermQuery`
+
+Note: Taxonomy Publishing requires the `taxonomy_publish`.
 
 ### Version: 5.2.2
 #### Date: June-29-2026
