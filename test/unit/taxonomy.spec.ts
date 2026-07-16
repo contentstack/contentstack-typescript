@@ -54,9 +54,9 @@ describe('ta class', () => {
     await taxonomy.includeFallback().includeBranch().param('locale', 'fr-fr').fetch();
   });
 
-  it('should return localized taxonomy when fetch is called with locale', async () => {
+  it('should return localized taxonomy when param is used to set locale', async () => {
     mockClient.onGet('/taxonomies/taxonomy_testing').reply(200, taxonomyLocalizedFetchMock);
-    const response = await taxonomy.fetch('hi-in');
+    const response = await taxonomy.param('locale', 'hi-in').fetch();
     expect(response).toEqual(taxonomyLocalizedFetchMock.taxonomy);
   });
 });

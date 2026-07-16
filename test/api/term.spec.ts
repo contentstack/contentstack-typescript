@@ -18,8 +18,8 @@ describe("Terms API test cases", () => {
     expect(result.updated_by).toBeDefined();
   });
 
-  it("should get a localized term when a locale is passed to fetch", async () => {
-    const result = await makeTerms("texas").fetch<TTerm>(locale);
+  it("should get a localized term when locale is set via param()", async () => {
+    const result = await makeTerms("texas").param('locale', locale).fetch<TTerm>();
     expect(result).toBeDefined();
     if (result.publish_details) {
       expect(result.publish_details.locale).toBeDefined();
@@ -27,12 +27,12 @@ describe("Terms API test cases", () => {
   });
 
   it("should get a term with locale fallback when includeFallback is chained", async () => {
-    const result = await makeTerms("texas").includeFallback().fetch<TTerm>(locale);
+    const result = await makeTerms("texas").param('locale', locale).includeFallback().fetch<TTerm>();
     expect(result).toBeDefined();
   });
 
-  it("should get a localized term when fetch is called with locale", async () => {
-    const result = await stack.taxonomy("gadgets").term("smartphone").fetch<TTerm>("fr-fr");
+  it("should get a localized term when locale is set via param()", async () => {
+    const result = await stack.taxonomy("gadgets").term("smartphone").param('locale', 'fr-fr').fetch<TTerm>();
     expect(result).toBeDefined();
   });
 
@@ -71,8 +71,8 @@ describe("Terms API test cases - gadgets taxonomy", () => {
     expect(result.taxonomy_uid).toBe("gadgets");
   });
 
-  it("should fetch smartphone term from gadgets in fr-fr locale", async () => {
-    const result = await stack.taxonomy("gadgets").term("smartphone").fetch<TTerm>("fr-fr");
+  it("should fetch smartphone term from gadgets in fr-fr locale via param()", async () => {
+    const result = await stack.taxonomy("gadgets").term("smartphone").param('locale', 'fr-fr').fetch<TTerm>();
     expect(result).toBeDefined();
     expect(result.uid).toBe("smartphone");
     expect(result.locale).toBe("fr-fr");
