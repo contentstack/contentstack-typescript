@@ -1,3 +1,10 @@
+### Version: 5.4.0
+#### Date: Jul-16-2026
+Enhancement: Removed `locale?` parameter from `Taxonomy.fetch()` and `Term.fetch()` — locale is now set via the chainable `.param('locale', value)` API, consistent with other query modifiers.
+- `.param('locale', 'fr-fr').fetch()` is the correct pattern for localized taxonomy/term fetches
+- Updated all tests and the `taxonomy-demo.mjs` script to use the new pattern
+- No breaking change for calls that did not pass locale to `fetch()`
+
 ### Version: 5.3.0
 #### Date: Jul-16-2026
 Feature: Added Taxonomy Publishing support to the Content Delivery SDK via `stack.taxonomy()`.
