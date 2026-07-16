@@ -21,8 +21,8 @@ describe('Taxonomy API test cases', () => {
     expect(result).toBeDefined();
   });
 
-  it('should give a localized taxonomy when a locale is passed to fetch', async () => {
-    const result = await makeTaxonomy(countryUsa).fetch<TTaxonomy>(locale);
+  it('should give a localized taxonomy when locale is set via param()', async () => {
+    const result = await makeTaxonomy(countryUsa).param('locale', locale).fetch<TTaxonomy>();
     expect(result).toBeDefined();
     if (result.publish_details) {
       expect(result.publish_details.locale).toBeDefined();
@@ -30,12 +30,12 @@ describe('Taxonomy API test cases', () => {
   });
 
   it('should give a taxonomy with locale fallback when includeFallback is chained', async () => {
-    const result = await makeTaxonomy(countryUsa).includeFallback().fetch<TTaxonomy>(locale);
+    const result = await makeTaxonomy(countryUsa).param('locale', locale).includeFallback().fetch<TTaxonomy>();
     expect(result).toBeDefined();
   });
 
-  it('should give a localized taxonomy when fetch is called with locale', async () => {
-    const result = await makeTaxonomy('gadgets').fetch<TTaxonomy>('fr-fr');
+  it('should give a localized taxonomy when locale is set via param()', async () => {
+    const result = await makeTaxonomy('gadgets').param('locale', 'fr-fr').fetch<TTaxonomy>();
     expect(result).toBeDefined();
   });
 });
@@ -47,8 +47,8 @@ describe('Taxonomy API test cases - gadgets', () => {
     expect(result.uid).toBe('gadgets');
   });
 
-  it('should fetch gadgets taxonomy in fr-fr locale', async () => {
-    const result = await makeTaxonomy('gadgets').fetch<TTaxonomy>('fr-fr');
+  it('should fetch gadgets taxonomy in fr-fr locale via param()', async () => {
+    const result = await makeTaxonomy('gadgets').param('locale', 'fr-fr').fetch<TTaxonomy>();
     expect(result).toBeDefined();
     expect(result.uid).toBe('gadgets');
     expect(result.locale).toBe('fr-fr');
