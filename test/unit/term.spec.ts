@@ -76,10 +76,10 @@ describe('Term class', () => {
     await term.param('depth', 1).addParams({ locale: 'fr-fr' }).ancestors();
   });
 
-  it('should fetch localized term when fetch is called with locale', async () => {
+  it('should fetch localized term when param is used to set locale', async () => {
     mockClient.onGet('/taxonomies/taxonomy_testing/terms/term1').reply(200, termLocalizedFetchMock);
 
-    const response = await term.fetch('hi-in');
+    const response = await term.param('locale', 'hi-in').fetch();
     expect(response).toEqual(termLocalizedFetchMock.term);
   });
 });
