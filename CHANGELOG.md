@@ -1,6 +1,31 @@
+### Version: 5.4.0
+#### Date: Jul-16-2026
+Enhancement: Removed `locale?` parameter from `Taxonomy.fetch()` and `Term.fetch()` — locale is now set via the chainable `.param('locale', value)` API, consistent with other query modifiers.
+- `.param('locale', 'fr-fr').fetch()` is the correct pattern for localized taxonomy/term fetches
+- Updated all tests and the `taxonomy-demo.mjs` script to use the new pattern
+- No breaking change for calls that did not pass locale to `fetch()`
+
 ### Version: 5.3.0
-#### Date: May-18-2026
-Enhancement: Entry variants support an optional branch name as the second argument to `variants()` on `Entry` and `Entries`. When provided, the branch is sent as the `branch` request header together with `x-cs-variant-uid`. Existing `variants(uid)` and `variants(uids)` calls remain backward compatible. Added unit and API tests for variant + branch requests.
+#### Date: Jul-16-2026
+Feature: Added Taxonomy Publishing support to the Content Delivery SDK via `stack.taxonomy()`.
+- Fetch all published taxonomies: `stack.taxonomy().find()`
+- Fetch a single published taxonomy by UID: `stack.taxonomy(uid).fetch(locale?)`
+- Fetch all terms for a taxonomy: `stack.taxonomy(uid).term().find()`
+- Fetch a single term by UID: `stack.taxonomy(uid).term(uid).fetch(locale?)`
+- Fetch all localized versions of a term: `stack.taxonomy(uid).term(uid).locales()`
+- Fetch ancestors of a term: `stack.taxonomy(uid).term(uid).ancestors()`
+- Fetch descendants of a term: `stack.taxonomy(uid).term(uid).descendants()`
+- Locale support on term queries via chainable `locale()` and `includeFallback()` methods on `TermQuery`
+
+Note: Taxonomy Publishing requires the `taxonomy_publish`.
+
+### Version: 5.2.2
+#### Date: June-29-2026
+Fix: Upgrade dependencies
+
+### Version: 5.2.1
+#### Date: May-25-2026
+Fix: Upgrade dependencies
 
 ### Version: 5.2.0
 #### Date: Apr-09-2026
