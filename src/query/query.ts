@@ -13,6 +13,23 @@ export class Query extends BaseQuery {
     queryParams: queryParams,
     variants?: string,
     uid?: string,
+    queryObj?: { [key: string]: any }
+  );
+  constructor(
+    client: AxiosInstance,
+    params: params,
+    queryParams: queryParams,
+    variants?: string,
+    uid?: string,
+    variantsBranch?: string,
+    queryObj?: { [key: string]: any }
+  );
+  constructor(
+    client: AxiosInstance,
+    params: params,
+    queryParams: queryParams,
+    variants?: string,
+    uid?: string,
     variantsBranchOrQueryObj?: string | { [key: string]: any },
     queryObj?: { [key: string]: any }
   ) {
