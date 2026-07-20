@@ -263,7 +263,7 @@ export class Entries extends BaseQuery {
   /**
    * @method variants
    * @memberof Entries
-   * @description The variant header will be added to axios client. Branch is optional.
+   * @description Stores the variant UID(s) and optional branch name, which are sent as the `x-cs-variant-uid` and `branch` headers on the request when find() is called.
    * @param {string | string[]} variants - Variant UID or UIDs
    * @param {string} [branchName] - Optional branch name sent as the `branch` header
    * @returns {Entries}
