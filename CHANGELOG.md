@@ -1,3 +1,7 @@
+### Version: 5.5.0
+#### Date: Jul-27-2026
+Enhancement: Entry variants support an optional branch name as the second argument to `variants()` on `Entry` and `Entries`. When provided, the branch is sent as the `branch` request header together with `x-cs-variant-uid`. Existing `variants(uid)` and `variants(uids)` calls remain backward compatible. Added unit and API tests for variant + branch requests.
+
 ### Version: 5.4.0
 #### Date: Jul-16-2026
 Enhancement: Removed `locale?` parameter from `Taxonomy.fetch()` and `Term.fetch()` — locale is now set via the chainable `.param('locale', value)` API, consistent with other query modifiers.
