@@ -158,10 +158,15 @@ class TestableBaseQuery extends BaseQuery {
       this._urlPath = urlPath;
     }
     this._variants = '';
+    this._variantsBranch = '';
   }
 
   setVariants(variants: string) {
     this._variants = variants;
+  }
+
+  setVariantsBranch(branch: string) {
+    this._variantsBranch = branch;
   }
 
   setParameters(params: any) {
@@ -302,6 +307,18 @@ describe('BaseQuery find method', () => {
     const result = await query.find();
     
     expect(result).toEqual(entryFindMock);
+  });
+
+  it('should call find with variant and branch headers when branch is set', async () => {
+    mockClient.onGet('/content_types/test_uid/entries').reply((config) => {
+      expect(config.headers?.['x-cs-variant-uid']).toBe('variant1,variant2');
+      expect(config.headers?.branch).toBe('branch_name');
+      return [200, entryFindMock];
+    });
+
+    query.setVariants('variant1,variant2');
+    query.setVariantsBranch('branch_name');
+    await query.find();
   });
 
   it('should call find with variants header when variants are set', async () => {
