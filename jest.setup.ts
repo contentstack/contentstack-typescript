@@ -6,6 +6,15 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
+import {
+  getLastCapturedRequest,
+  clearCapturedRequests,
+} from './test/utils/request-capture-plugin';
+import {
+  installAssertionTracker,
+  clearAssertions,
+  getAssertions,
+} from './test/utils/assertion-tracker';
 
 // Store captured console logs
 interface ConsoleLog {
@@ -37,7 +46,7 @@ const originalConsole = {
 const expectedErrors = [
   'Invalid key:',                                      // From query.search() validation
   'Invalid value (expected string or number):',       // From query.equalTo() validation
-  'Argument should be a String or an Array.',         // From entry/entries.includeReference() validation
+  'Invalid argument. Provide a string or an array',    // From entry/entries.includeReference() validation (ErrorMessages.INVALID_ARGUMENT_STRING_OR_ARRAY)
   'Invalid fieldUid:',                                 // From asset query validation
 ];
 
@@ -75,6 +84,47 @@ console.warn = captureConsole('warn');
 console.error = captureConsole('error');
 console.info = captureConsole('info');
 console.debug = captureConsole('debug');
+
+// ---------------------------------------------------------------------------
+// Rich per-test HTTP context (cURL / SDK method / request+response / status).
+// Active only when ENABLE_HTTP_CAPTURE=true (the request-capture plugin is
+// attached to the stack instance under the same flag). Each test's last
+// captured HTTP call is appended to a JSONL sidecar that the custom
+// rich-html-reporter reads at run-end to build the single-file HTML report.
+// ---------------------------------------------------------------------------
+const HTTP_CAPTURE_ENABLED = process.env.ENABLE_HTTP_CAPTURE === 'true';
+const CAPTURES_FILE = path.resolve(__dirname, 'test-results', 'http-captures.jsonl');
+
+if (HTTP_CAPTURE_ENABLED) {
+  beforeEach(() => {
+    // Install inside beforeEach so it runs AFTER the spec's `import { expect } from
+    // '@jest/globals'` has resolved the shared module object (idempotent via a guard).
+    // Records every assertion (expected/actual/pass) without changing any test.
+    installAssertionTracker();
+    clearCapturedRequests();
+    clearAssertions();
+  });
+
+  afterEach(() => {
+    try {
+      const cap = getLastCapturedRequest();
+      const assertions = getAssertions();
+      if (!cap && assertions.length === 0) return;
+      const state: any = (expect as any).getState();
+      const rec = {
+        testPath: state.testPath,
+        testName: state.currentTestName,
+        capture: cap || null,
+        assertions,
+      };
+      const dir = path.dirname(CAPTURES_FILE);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.appendFileSync(CAPTURES_FILE, JSON.stringify(rec) + '\n');
+    } catch {
+      // never let reporting break a test
+    }
+  });
+}
 
 // After all tests complete, write logs to file
 afterAll(() => {

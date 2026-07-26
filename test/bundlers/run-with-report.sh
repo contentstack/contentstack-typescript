@@ -43,10 +43,26 @@ run_bundler_test() {
   if [ -d "$bundler_dir" ]; then
     cd "$bundler_dir"
     
-    # Install dependencies
+    # Install dependencies.
+    # Regenerate the lockfile each run: these apps depend on the SDK via `file:../../..`,
+    # and a stale package-lock.json triggers npm's "Cannot read properties of undefined
+    # (reading 'extraneous')" bug. Don't suppress errors — surface them so a real install
+    # failure is visible instead of a silent exit (the script runs with `set -e`).
     echo "📦 Installing dependencies..."
-    npm install --silent > /dev/null 2>&1
-    
+    rm -f package-lock.json
+    if ! npm install --no-audit --no-fund > /tmp/${bundler}-install.log 2>&1; then
+      echo "❌ Install failed:"
+      tail -20 "/tmp/${bundler}-install.log"
+      tests=$((tests + 1))
+      failed=$((failed + 1))
+      # Record the failure for this bundler and move on to the next one.
+      BUNDLERS+=("{\"bundler\":\"$bundler\",\"total\":1,\"passed\":0,\"failed\":1,\"duration\":0,\"success\":false}")
+      TOTAL_TESTS=$((TOTAL_TESTS + 1))
+      FAILED_TESTS=$((FAILED_TESTS + 1))
+      cd "$SCRIPT_DIR"
+      return 0
+    fi
+
     # Build
     echo "🔨 Building..."
     if npm run build > /dev/null 2>&1; then
@@ -62,14 +78,19 @@ run_bundler_test() {
     # Run tests
     echo "🧪 Running tests..."
     if npm test 2>&1 | tee /tmp/${bundler}-test-output.txt; then
-      # Count passing tests from output
-      local test_count=$(grep -c "✓" /tmp/${bundler}-test-output.txt || echo "0")
+      # Count passing tests from output. grep -c already prints "0" on no match; the old
+      # `|| echo N` appended a second line ("0\nN") and broke the later $(( )) arithmetic.
+      local test_count=$(grep -c "✓" /tmp/${bundler}-test-output.txt 2>/dev/null || true)
+      test_count=${test_count:-0}
       tests=$((tests + test_count))
       passed=$((passed + test_count))
       echo "✅ Tests passed ($test_count tests)"
     else
-      local test_count=$(grep -c "✓\|✗" /tmp/${bundler}-test-output.txt || echo "1")
-      local pass_count=$(grep -c "✓" /tmp/${bundler}-test-output.txt || echo "0")
+      local test_count=$(grep -c "✓\|✗" /tmp/${bundler}-test-output.txt 2>/dev/null || true)
+      test_count=${test_count:-0}
+      [ "$test_count" -eq 0 ] && test_count=1
+      local pass_count=$(grep -c "✓" /tmp/${bundler}-test-output.txt 2>/dev/null || true)
+      pass_count=${pass_count:-0}
       local fail_count=$((test_count - pass_count))
       tests=$((tests + test_count))
       passed=$((passed + pass_count))

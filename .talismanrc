@@ -66,4 +66,12 @@ fileignoreconfig:
   checksum: 9e7a4696561b790cb93f3be8406a70ec6fdc90a3f8bbb9739504495690158fe3
 - filename: src/query/term-query.ts
   checksum: 1f5b23177460d562076d93cf28b375106b19123a5ab135ffef75f4b2bb332d35
+- filename: test/bundlers/run-with-report.sh
+  checksum: fedb0c262e3d88ad3537943e828d8ed9412a9f7d78b6406997b3955b29816f20
+- filename: test/utils/assertion-tracker.ts
+  checksum: f02ce0af5948cd813020367c21da2cd0cd00168eeeb9e8af1858b852ae83e269
+- filename: test/utils/request-capture-plugin.ts
+  checksum: 596fbbbf4aace2431dc165208a81f1a03c5f1d5268aceda83385debeaba79b97
+- filename: test/reporting/rich-html-reporter.cjs
+  checksum: 1da275d7d083cc671a3888b1a045a616f79ac1fe023ee64ea34f0f23ddbc3706
 version: "1.0"

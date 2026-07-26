@@ -11,8 +11,7 @@
     "@contentstack/delivery-sdk": "file:../../.."
   },
   "devDependencies": {
-    "webpack": "^5.89.0",
+    "webpack": "5.108.0",
     "webpack-cli": "^5.1.4"
   }
 }
-
