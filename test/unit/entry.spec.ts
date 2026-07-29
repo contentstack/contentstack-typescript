@@ -200,6 +200,13 @@ describe('Variants test', () => {
     testVariantObj.variants([]);
     expect(testVariantObj.getVariants()).toBe('');
   });
+
+  it('should set branch when branch name is provided', () => {
+    const testVariantObj = new TestVariants(client);
+    testVariantObj.variants('variant1', 'branch_name');
+    expect(testVariantObj.getVariants()).toBe('variant1');
+    expect(testVariantObj['_variantsBranch']).toBe('branch_name');
+  });
 });
 
 describe('Fetch with variants', () => {
@@ -226,6 +233,32 @@ describe('Fetch with variants', () => {
     entry.variants(['variant1', 'variant2']);
     const result = await entry.fetch();
     
+    expect(result).toEqual(entryFetchMock.entry);
+  });
+
+  it('should call fetch with variant and branch headers when branch is set', async () => {
+    mockClient.onGet('/content_types/contentTypeUid/entries/entryUid').reply((config) => {
+      expect(config.headers?.['x-cs-variant-uid']).toBe('variant1');
+      expect(config.headers?.branch).toBe('branch_name');
+      return [200, entryFetchMock];
+    });
+
+    entry.variants('variant1', 'branch_name');
+    const result = await entry.fetch();
+
+    expect(result).toEqual(entryFetchMock.entry);
+  });
+
+  it('should call fetch with variant and branch headers for multiple variants', async () => {
+    mockClient.onGet('/content_types/contentTypeUid/entries/entryUid').reply((config) => {
+      expect(config.headers?.['x-cs-variant-uid']).toBe('variant1,variant2');
+      expect(config.headers?.branch).toBe('branch_name');
+      return [200, entryFetchMock];
+    });
+
+    entry.variants(['variant1', 'variant2'], 'branch_name');
+    const result = await entry.fetch();
+
     expect(result).toEqual(entryFetchMock.entry);
   });
 

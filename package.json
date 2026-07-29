@@ -1,6 +1,6 @@
 {
   "name": "@contentstack/delivery-sdk",
-  "version": "5.4.0",
+  "version": "5.5.0",
   "type": "module",
   "license": "MIT",
   "engines": {
@@ -26,11 +26,11 @@
     "prepare": "npm run build",
     "test": "jest ./test/unit",
     "test:unit": "jest ./test/unit",
-    "test:api": "jest ./test/api",
+    "test:api": "ENABLE_HTTP_CAPTURE=true jest ./test/api",
     "test:browser": "jest --config jest.config.browser.ts",
     "test:e2e": "node test/e2e/build-browser-bundle.js && playwright test",
     "test:e2e:ui": "node test/e2e/build-browser-bundle.js && playwright test --ui",
-    "test:api:report": "jest ./test/api --json --outputFile=test-results/jest-results.json",
+    "test:api:report": "ENABLE_HTTP_CAPTURE=true jest ./test/api --json --outputFile=test-results/jest-results.json",
     "test:bundlers:report": "cd test/bundlers && ./run-with-report.sh",
     "test:cicd": "mkdir -p test-results && npm run test:api:report && npm run test:bundlers:report && npm run test:e2e && node test/reporting/generate-unified-report.js",
     "test:cicd:no-browser": "mkdir -p test-results && npm run test:api:report && npm run test:bundlers:report && node test/reporting/generate-unified-report.js",
