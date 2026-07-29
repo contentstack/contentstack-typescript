@@ -337,7 +337,9 @@ describe('Asset Management Tests', () => {
         console.log('Non-existent asset properly rejected:', (error as Error).message);
         // Should handle gracefully
       }
-    });
+      // Non-prod regions can be slow to resolve a bogus asset UID; allow 60s so this
+      // error-path test rejects/resolves within timeout instead of flaking.
+    }, 60000);
 
     it('should handle empty asset queries', async () => {
       const result = await stack

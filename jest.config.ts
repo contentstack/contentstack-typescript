@@ -38,16 +38,12 @@ export default {
         includeConsoleLog: true,
       },
     ],
+    // Rich single-file HTML report with inline per-test HTTP context (cURL,
+    // SDK method, request/response). Fixed path (the one the GoCD pipelines link to);
+    // prints the absolute path at run end.
     [
-      "jest-html-reporters",
-      {
-        publicPath: "./reports/contentstack-delivery/html",
-        filename: "index.html",
-        expand: true,
-        // Enable console log capture in reports
-        enableMergeData: true,
-        dataMergeLevel: 2,
-      },
+      "./test/reporting/rich-html-reporter.cjs",
+      { outputPath: "reports/contentstack-delivery/html/index.html" },
     ],
     [
       "jest-junit",
