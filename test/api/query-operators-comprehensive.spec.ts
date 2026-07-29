@@ -438,20 +438,20 @@ describe('Query Operators - Comprehensive Coverage', () => {
         .contentType(COMPLEX_CT)
         .entry()
         .query()
-        .referenceIn('authors', authorQuery)
+        .referenceIn('single_ref', authorQuery)
         .find<any>();
 
       expect(result).toBeDefined();
-      
+
       if (result.entries && result.entries?.length > 0) {
-        console.log(`Found ${result.entries?.length} entries with referenceIn authors`);
-        
-        // Verify all returned entries have authors references
+        console.log(`Found ${result.entries?.length} entries with referenceIn single_ref`);
+
+        // Verify all returned entries have single_ref references
         result.entries.forEach((entry: any) => {
-          if (entry.authors) {
-            expect(Array.isArray(entry.authors)).toBe(true);
-            // Verify authors are resolved
-            entry.authors.forEach((author: any) => {
+          if (entry.single_ref) {
+            expect(Array.isArray(entry.single_ref)).toBe(true);
+            // Verify references are resolved
+            entry.single_ref.forEach((author: any) => {
               expect(author.uid).toBeDefined();
               expect(author._content_type_uid).toBe('author');
             });
@@ -472,20 +472,20 @@ describe('Query Operators - Comprehensive Coverage', () => {
         .contentType(COMPLEX_CT)
         .entry()
         .query()
-        .referenceNotIn('authors', excludeAuthorQuery)
+        .referenceNotIn('single_ref', excludeAuthorQuery)
         .find<any>();
 
       expect(result).toBeDefined();
-      
+
       if (result.entries && result.entries?.length > 0) {
-        console.log(`Found ${result.entries?.length} entries with referenceNotIn authors`);
-        
+        console.log(`Found ${result.entries?.length} entries with referenceNotIn single_ref`);
+
         // Verify all returned entries don't have excluded author references
         result.entries.forEach((entry: any) => {
-          if (entry.authors) {
-            expect(Array.isArray(entry.authors)).toBe(true);
+          if (entry.single_ref) {
+            expect(Array.isArray(entry.single_ref)).toBe(true);
             // Verify no excluded author UID is referenced
-            entry.authors.forEach((author: any) => {
+            entry.single_ref.forEach((author: any) => {
               expect(author.uid).not.toBe('non_existent_author_uid');
             });
           }

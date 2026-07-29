@@ -23,7 +23,9 @@ describe("AssetQuery API tests", () => {
   it("should check for include dimensions", async () => {
     const result = await makeAssetQuery().includeDimension().find<TAsset>();
     if (result.assets) {
-      expect(result.assets[0].dimension).toBeDefined();
+      // dimension is only present on image assets; the first asset may be a video/pdf/etc.
+      const imageAsset = result.assets.find((a: any) => String(a.content_type).startsWith("image/")) || result.assets[0];
+      expect(imageAsset.dimension).toBeDefined();
       expect(result.assets[0]._version).toBeDefined();
       expect(result.assets[0].uid).toBeDefined();
       expect(result.assets[0].content_type).toBeDefined();

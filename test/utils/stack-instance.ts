@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import * as contentstack from '../../src/stack';
 import { StackConfig } from '../../src/common/types';
+import { requestCapturePlugin } from './request-capture-plugin';
 
 dotenv.config();
 
@@ -16,6 +17,11 @@ function stackInstance() {
       host: process.env.LIVE_PREVIEW_HOST || '',
     }
   };
+
+  // Attach the HTTP request-capture plugin for rich test reports (opt-in).
+  if (process.env.ENABLE_HTTP_CAPTURE === 'true') {
+    params.plugins = [requestCapturePlugin];
+  }
 
   return contentstack.stack(params);
 }
