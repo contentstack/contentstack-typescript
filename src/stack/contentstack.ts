@@ -172,9 +172,19 @@ export function stack(config: StackConfig): StackClass {
     }
   }
 
-  // Retry policy handlers
+  // Retry policy handlers.
+  // Network-layer errors (DNS failures, connection resets, etc.) are retried
+  // by default, composed on top of any user-supplied retryCondition. `config`
+  // itself is never mutated, so stack.config / client.defaults keep reflecting
+  // exactly what the consumer passed in.
+  const combinedRetryCondition = (error: any) => {
+    if (config.retryCondition && config.retryCondition(error)) {
+      return true;
+    }
+    return Utility.isTransientNetworkError(error);
+  };
   const errorHandler = (error: any) => {
-    return retryResponseErrorHandler(error, config, client);
+    return retryResponseErrorHandler(error, { ...config, retryCondition: combinedRetryCondition }, client);
   };
   client.interceptors.request.use(retryRequestHandler);
   client.interceptors.response.use(retryResponseHandler, errorHandler);
