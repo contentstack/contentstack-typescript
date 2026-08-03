@@ -16,27 +16,20 @@ export function isBrowser() {
 }
 
 /**
- * Node.js/libuv error codes representing transient, retryable network-layer
- * failures (DNS resolution, connection reset/refused, no route to host, etc.),
- * plus Axios's own client-side timeout/abort signal ('ECONNABORTED'). All of
- * these occur before an HTTP response is received, so `error.response` is
- * undefined for all of them.
- *
- * 'ECONNABORTED' is included deliberately: @contentstack/core's own timeout
- * handling never retries it (it throws immediately on the first occurrence),
- * so without this, a single transient timeout has the same crash-the-caller
- * effect as an unretried DNS failure.
+ * Node.js/libuv error codes that represent transient, retryable network-layer
+ * failures. All occur before an HTTP response is received (error.response is
+ * undefined). ECONNABORTED is excluded — @contentstack/core handles it as a
+ * structured TIMEOUT error and it should not be retried here.
  */
 export const TRANSIENT_NETWORK_ERROR_CODES: ReadonlySet<string> = new Set([
-  'ENOTFOUND',
-  'ENETUNREACH',
-  'ECONNRESET',
-  'ECONNREFUSED',
-  'EAI_AGAIN',
-  'ETIMEDOUT',
-  'EHOSTUNREACH',
-  'ENETDOWN',
-  'ECONNABORTED',
+  'ENOTFOUND',    // DNS resolution failed
+  'ENETUNREACH',  // no route to host
+  'ECONNRESET',   // connection reset mid-flight
+  'ECONNREFUSED', // port closed / service not listening
+  'EAI_AGAIN',    // DNS server returned SERVFAIL (transient)
+  'ETIMEDOUT',    // OS-level connection timeout
+  'EHOSTUNREACH', // no route to host at IP layer
+  'ENETDOWN',     // local network interface down
 ]);
 
 /**

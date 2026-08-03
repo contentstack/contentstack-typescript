@@ -1,3 +1,8 @@
+### Version: 5.5.1
+#### Date: Aug-03-2026
+Fix: Transient network-layer errors (ENOTFOUND, ENETUNREACH, ECONNRESET, ECONNREFUSED, EAI_AGAIN, ETIMEDOUT, EHOSTUNREACH, ENETDOWN) are now retried automatically using the SDK's configured retry policy instead of failing immediately.
+Enhancement: User-supplied `retryCondition` is composed with the default network-error retry logic — both are honoured without either replacing the other. If `retryCondition` throws, the SDK logs a warning via `logHandler` and falls back to default retry behaviour.
+
 ### Version: 5.5.0
 #### Date: Jul-27-2026
 Enhancement: Entry variants support an optional branch name as the second argument to `variants()` on `Entry` and `Entries`. When provided, the branch is sent as the `branch` request header together with `x-cs-variant-uid`. Existing `variants(uid)` and `variants(uids)` calls remain backward compatible. Added unit and API tests for variant + branch requests.

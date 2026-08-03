@@ -178,8 +178,10 @@ export function stack(config: StackConfig): StackClass {
   // itself is never mutated, so stack.config / client.defaults keep reflecting
   // exactly what the consumer passed in.
   const combinedRetryCondition = (error: any) => {
-    if (config.retryCondition && config.retryCondition(error)) {
-      return true;
+    try {
+      if (config.retryCondition?.(error)) return true;
+    } catch (e) {
+      config.logHandler?.('warn', `[Contentstack SDK] retryCondition callback threw: "${(e as Error)?.message ?? e}". Check your retryCondition implementation. Falling back to default network-error retry behavior.`);
     }
     return Utility.isTransientNetworkError(error);
   };
