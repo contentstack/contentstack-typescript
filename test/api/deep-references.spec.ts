@@ -282,9 +282,9 @@ describe('Deep Reference Chains Tests', () => {
         .contentType(COMPLEX_CT)
         .entry(COMPLEX_ENTRY_UID!)
         .includeReference([
-          'related_content',
-          'authors',
-          'page_footer'
+          'single_ref',
+          'multi_ref',
+          'self_ref'
         ])
         .fetch<any>();
 
@@ -319,14 +319,14 @@ describe('Deep Reference Chains Tests', () => {
       };
 
       // Analyze root level reference fields
-      if (result.related_content) {
-        analyzeReferenceTypes(result.related_content);
+      if (result.single_ref) {
+        analyzeReferenceTypes(result.single_ref);
       }
-      if (result.authors) {
-        analyzeReferenceTypes(result.authors);
+      if (result.multi_ref) {
+        analyzeReferenceTypes(result.multi_ref);
       }
-      if (result.page_footer) {
-        analyzeReferenceTypes(result.page_footer);
+      if (result.self_ref) {
+        analyzeReferenceTypes(result.self_ref);
       }
         
       console.log('Reference type distribution:', referenceTypes);
