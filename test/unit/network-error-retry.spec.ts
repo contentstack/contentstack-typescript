@@ -148,7 +148,38 @@ describe('Default network-error retry behavior', () => {
     expect(res.status).toBe(200);
   });
 
-  it('(g) retryOnError: false disables network-error retries — ENOTFOUND throws immediately', async () => {
+  it('(g) retryCondition that throws is caught — warning logged and SDK falls back to default retry', async () => {
+    const warnMessages: string[] = [];
+    const throwingCondition = () => { throw new Error('boom'); };
+    const config: StackConfig = {
+      apiKey: 'TEST-API-KEY',
+      deliveryToken: 'TEST-DELIVERY-TOKEN',
+      environment: 'TEST-ENVIRONMENT',
+      retryDelay: 10,
+      retryCondition: throwingCondition,
+      logHandler: (level: string, msg: any) => {
+        if (level === 'warn') warnMessages.push(msg);
+      },
+    };
+    const stack = Contentstack.stack(config);
+    const client = stack.getClient();
+    mockClient = new MockAdapter(client);
+
+    // SDK should fall back to default network-error retry and succeed.
+    mockClient
+      .onGet('/content_types/test')
+      .replyOnce(dnsError('ENOTFOUND'))
+      .onGet('/content_types/test')
+      .reply(200, { content_types: [] });
+
+    const res = await client.get('/content_types/test');
+    expect(res.status).toBe(200);
+    expect(warnMessages.length).toBeGreaterThan(0);
+    expect(warnMessages[0]).toContain('[Contentstack SDK]');
+    expect(warnMessages[0]).toContain('boom');
+  });
+
+  it('(i) retryOnError: false disables network-error retries — ENOTFOUND throws immediately', async () => {
     const config: StackConfig = {
       apiKey: 'TEST-API-KEY',
       deliveryToken: 'TEST-DELIVERY-TOKEN',
@@ -171,7 +202,7 @@ describe('Default network-error retry behavior', () => {
     await expect(client.get('/content_types/test')).rejects.toBeDefined();
   });
 
-  it('(h) retryLimit: 0 disables network-error retries — ENOTFOUND throws immediately', async () => {
+  it('(j) retryLimit: 0 disables network-error retries — ENOTFOUND throws immediately', async () => {
     const config: StackConfig = {
       apiKey: 'TEST-API-KEY',
       deliveryToken: 'TEST-DELIVERY-TOKEN',
