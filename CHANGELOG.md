@@ -1,7 +1,14 @@
 ### Version: 5.6.0
-#### Date: Aug-05-2026
+#### Date: Aug-10-2026
 Fix: Transient network-layer errors (ENOTFOUND, ENETUNREACH, ECONNRESET, ECONNREFUSED, EAI_AGAIN, ETIMEDOUT, EHOSTUNREACH, ENETDOWN) are now retried automatically using the SDK's configured retry policy instead of failing immediately.
 Enhancement: User-supplied `retryCondition` is composed with the default network-error retry logic — both are honoured without either replacing the other. If `retryCondition` throws, the SDK logs a warning via `logHandler` and falls back to default retry behaviour.
+
+### Version: 5.5.2
+#### Date: Aug-05-2026
+Fix: Bump `@contentstack/core` to `^1.5.1`:
+- Resolve `MODULE_NOT_FOUND` / "expression is too dynamic" build failures in bundlers (Next.js/Turbopack, webpack) caused by a dynamic `require()` in the keep-alive agent setup — now uses statically analyzable `require('http')`/`require('https')`
+- Guard keep-alive agent creation for native ESM (where `require` is undefined) to avoid a `ReferenceError`
+- Add package `browser` field so `http`/`https` resolve cleanly in browser bundles
 
 ### Version: 5.5.1
 #### Date: Aug-03-2026
