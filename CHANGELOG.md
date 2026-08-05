@@ -1,3 +1,10 @@
+### Version: 5.5.2
+#### Date: Aug-05-2026
+Fix: Bump `@contentstack/core` to `^1.5.1`:
+- Resolve `MODULE_NOT_FOUND` / "expression is too dynamic" build failures in bundlers (Next.js/Turbopack, webpack) caused by a dynamic `require()` in the keep-alive agent setup — now uses statically analyzable `require('http')`/`require('https')`
+- Guard keep-alive agent creation for native ESM (where `require` is undefined) to avoid a `ReferenceError`
+- Add package `browser` field so `http`/`https` resolve cleanly in browser bundles
+
 ### Version: 5.5.1
 #### Date: Aug-03-2026
 Fix: Bump `@contentstack/core` to `^1.5.0`:
