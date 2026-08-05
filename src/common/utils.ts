@@ -38,7 +38,7 @@ export const TRANSIENT_NETWORK_ERROR_CODES: ReadonlySet<string> = new Set([
  * default retry behavior so a single blip doesn't crash the caller (e.g. a
  * Next.js static build) instead of being silently retried.
  * @param {any} error - The error thrown by the underlying HTTP client (Axios)
- * @returns {boolean} True if `error.code` matches a known transient network error code
+ * @returns {boolean} True if `error.code` matches a known transient network error code and no HTTP response was received (`error.response` is absent)
  */
 export function isTransientNetworkError(error: any): boolean {
   return !!error && typeof error.code === 'string' && !error.response && TRANSIENT_NETWORK_ERROR_CODES.has(error.code);
