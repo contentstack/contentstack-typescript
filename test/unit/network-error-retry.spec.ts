@@ -148,8 +148,8 @@ describe('Default network-error retry behavior', () => {
     expect(res.status).toBe(200);
   });
 
-  it('(g) retryCondition that throws is caught — warning logged and SDK falls back to default retry', async () => {
-    const warnMessages: string[] = [];
+  it('(g) retryCondition that throws is caught — structured warning logged and SDK falls back to default retry', async () => {
+    const warnPayloads: any[] = [];
     const throwingCondition = () => { throw new Error('boom'); };
     const config: StackConfig = {
       apiKey: 'TEST-API-KEY',
@@ -158,14 +158,13 @@ describe('Default network-error retry behavior', () => {
       retryDelay: 10,
       retryCondition: throwingCondition,
       logHandler: (level: string, msg: any) => {
-        if (level === 'warn') warnMessages.push(msg);
+        if (level === 'warn') warnPayloads.push(msg);
       },
     };
     const stack = Contentstack.stack(config);
     const client = stack.getClient();
     mockClient = new MockAdapter(client);
 
-    // SDK should fall back to default network-error retry and succeed.
     mockClient
       .onGet('/content_types/test')
       .replyOnce(dnsError('ENOTFOUND'))
@@ -174,9 +173,93 @@ describe('Default network-error retry behavior', () => {
 
     const res = await client.get('/content_types/test');
     expect(res.status).toBe(200);
-    expect(warnMessages.length).toBeGreaterThan(0);
-    expect(warnMessages[0]).toContain('[Contentstack SDK]');
-    expect(warnMessages[0]).toContain('boom');
+    expect(warnPayloads.length).toBeGreaterThan(0);
+    expect(warnPayloads[0]).toEqual(expect.objectContaining({ type: 'retry_condition_error' }));
+    expect(warnPayloads[0].message).toContain('[Contentstack SDK]');
+    expect(warnPayloads[0].message).toContain('boom');
+  });
+
+  it('(h1) retryCondition throws a non-Error (string) — ?? fallback logs the raw thrown value', async () => {
+    const warnPayloads: any[] = [];
+    const throwingCondition = () => { throw 'not-an-error-object'; };
+    const config: StackConfig = {
+      apiKey: 'TEST-API-KEY',
+      deliveryToken: 'TEST-DELIVERY-TOKEN',
+      environment: 'TEST-ENVIRONMENT',
+      retryDelay: 10,
+      retryCondition: throwingCondition,
+      logHandler: (level: string, msg: any) => {
+        if (level === 'warn') warnPayloads.push(msg);
+      },
+    };
+    const stack = Contentstack.stack(config);
+    const client = stack.getClient();
+    mockClient = new MockAdapter(client);
+
+    mockClient
+      .onGet('/content_types/test')
+      .replyOnce(dnsError('ENOTFOUND'))
+      .onGet('/content_types/test')
+      .reply(200, { content_types: [] });
+
+    const res = await client.get('/content_types/test');
+    expect(res.status).toBe(200);
+    expect(warnPayloads[0]).toEqual(expect.objectContaining({ type: 'retry_condition_error' }));
+    // message uses the raw thrown value via the ?? fallback since it has no .message
+    expect(warnPayloads[0].message).toContain('not-an-error-object');
+  });
+
+  it('(h) retryCondition that throws with no logHandler — SDK falls back silently without throwing', async () => {
+    const throwingCondition = () => { throw new Error('boom'); };
+    const config: StackConfig = {
+      apiKey: 'TEST-API-KEY',
+      deliveryToken: 'TEST-DELIVERY-TOKEN',
+      environment: 'TEST-ENVIRONMENT',
+      retryDelay: 10,
+      retryCondition: throwingCondition,
+      // no logHandler — exercises the logHandler?. undefined branch
+    };
+    const stack = Contentstack.stack(config);
+    const client = stack.getClient();
+    mockClient = new MockAdapter(client);
+
+    mockClient
+      .onGet('/content_types/test')
+      .replyOnce(dnsError('ENOTFOUND'))
+      .onGet('/content_types/test')
+      .reply(200, { content_types: [] });
+
+    const res = await client.get('/content_types/test');
+    expect(res.status).toBe(200);
+  });
+
+  it('(k) retryCondition returning true triggers retry even for non-transient-code errors', async () => {
+    // Covers the `if (config.retryCondition?.(error)) return true` branch.
+    const alwaysRetry = jest.fn().mockReturnValue(true);
+    const config: StackConfig = {
+      apiKey: 'TEST-API-KEY',
+      deliveryToken: 'TEST-DELIVERY-TOKEN',
+      environment: 'TEST-ENVIRONMENT',
+      retryDelay: 10,
+      retryCondition: alwaysRetry,
+    };
+    const stack = Contentstack.stack(config);
+    const client = stack.getClient();
+    mockClient = new MockAdapter(client);
+
+    // Use a generic error with no recognized code — only user retryCondition covers it.
+    const genericError = (cfg: any) =>
+      Promise.reject(Object.assign(new Error('generic'), { config: cfg, isAxiosError: true }));
+
+    mockClient
+      .onGet('/content_types/test')
+      .replyOnce(genericError)
+      .onGet('/content_types/test')
+      .reply(200, { content_types: [] });
+
+    const res = await client.get('/content_types/test');
+    expect(res.status).toBe(200);
+    expect(alwaysRetry).toHaveBeenCalled();
   });
 
   it('(i) retryOnError: false disables network-error retries — ENOTFOUND throws immediately', async () => {

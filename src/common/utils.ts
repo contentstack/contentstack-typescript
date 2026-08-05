@@ -41,7 +41,7 @@ export const TRANSIENT_NETWORK_ERROR_CODES: ReadonlySet<string> = new Set([
  * @returns {boolean} True if `error.code` matches a known transient network error code
  */
 export function isTransientNetworkError(error: any): boolean {
-  return !!error && typeof error.code === 'string' && TRANSIENT_NETWORK_ERROR_CODES.has(error.code);
+  return !!error && typeof error.code === 'string' && !error.response && TRANSIENT_NETWORK_ERROR_CODES.has(error.code);
 }
 
 /**
