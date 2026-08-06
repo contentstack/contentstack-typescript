@@ -16,6 +16,35 @@ export function isBrowser() {
 }
 
 /**
+ * Node.js/libuv error codes that represent transient, retryable network-layer
+ * failures. All occur before an HTTP response is received (error.response is
+ * undefined). ECONNABORTED is excluded — @contentstack/core handles it as a
+ * structured TIMEOUT error and it should not be retried here.
+ */
+export const TRANSIENT_NETWORK_ERROR_CODES: ReadonlySet<string> = new Set([
+  'ENOTFOUND',    // DNS resolution failed
+  'ENETUNREACH',  // no route to host
+  'ECONNRESET',   // connection reset mid-flight
+  'ECONNREFUSED', // port closed / service not listening
+  'EAI_AGAIN',    // DNS server returned SERVFAIL (transient)
+  'ETIMEDOUT',    // OS-level connection timeout
+  'EHOSTUNREACH', // no route to host at IP layer
+  'ENETDOWN',     // local network interface down
+]);
+
+/**
+ * Determines whether an error represents a transient, retryable network-layer
+ * failure (e.g. DNS lookup failure, connection reset), used to build the SDK's
+ * default retry behavior so a single blip doesn't crash the caller (e.g. a
+ * Next.js static build) instead of being silently retried.
+ * @param {any} error - The error thrown by the underlying HTTP client (Axios)
+ * @returns {boolean} True if `error.code` matches a known transient network error code and no HTTP response was received (`error.response` is absent)
+ */
+export function isTransientNetworkError(error: any): boolean {
+  return !!error && typeof error.code === 'string' && !error.response && TRANSIENT_NETWORK_ERROR_CODES.has(error.code);
+}
+
+/**
  * Encodes query parameters recursively, handling nested objects
  * @param {params} params - Query parameters object to encode
  * @returns {params} Encoded query parameters object

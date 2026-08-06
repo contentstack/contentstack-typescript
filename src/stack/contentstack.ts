@@ -172,9 +172,24 @@ export function stack(config: StackConfig): StackClass {
     }
   }
 
-  // Retry policy handlers
+  // Retry policy handlers.
+  // Network-layer errors (DNS failures, connection resets, etc.) are retried
+  // by default, composed on top of any user-supplied retryCondition.
+  // The user's retryCondition reference is never replaced — only wrapped.
+  const combinedRetryCondition = (error: any) => {
+    try {
+      if (config.retryCondition?.(error)) return true;
+    } catch (e) {
+      config.logHandler?.('warn', {
+        type: 'retry_condition_error',
+        message: `[Contentstack SDK] retryCondition callback threw: "${(e as Error)?.message ?? e}". Check your retryCondition implementation. Falling back to default network-error retry behavior.`,
+        error: e,
+      });
+    }
+    return Utility.isTransientNetworkError(error);
+  };
   const errorHandler = (error: any) => {
-    return retryResponseErrorHandler(error, config, client);
+    return retryResponseErrorHandler(error, { ...config, retryCondition: combinedRetryCondition }, client);
   };
   client.interceptors.request.use(retryRequestHandler);
   client.interceptors.response.use(retryResponseHandler, errorHandler);
