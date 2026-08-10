@@ -53,6 +53,7 @@ const regions = [
 regions.forEach(({ name, check }) => {
   test(`SDK works with ${name} region`, () => {
     const stack = contentstack.stack({
+      // deepcode ignore HardcodedNonCryptoSecret: test fixture value, not a real secret
       apiKey: 'test_key',
       deliveryToken: 'test_token',
       environment: 'test',
