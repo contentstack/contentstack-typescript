@@ -1,3 +1,8 @@
+### Version: 5.6.0
+#### Date: Aug-10-2026
+Fix: Transient network-layer errors (ENOTFOUND, ENETUNREACH, ECONNRESET, ECONNREFUSED, EAI_AGAIN, ETIMEDOUT, EHOSTUNREACH, ENETDOWN) are now retried automatically using the SDK's configured retry policy instead of failing immediately.
+Enhancement: User-supplied `retryCondition` is composed with the default network-error retry logic — both are honoured without either replacing the other. If `retryCondition` throws, the SDK logs a warning via `logHandler` and falls back to default retry behaviour.
+
 ### Version: 5.5.2
 #### Date: Aug-05-2026
 Fix: Bump `@contentstack/core` to `^1.5.1`:
