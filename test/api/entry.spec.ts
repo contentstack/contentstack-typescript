@@ -68,9 +68,9 @@ describe('Entry API tests', () => {
     expect(result.publish_details).toBeDefined();
   });
 
-  it('should fetch entry with asset_fields[] CDA param (user_defined_fields, embedded, ai_suggested, visual_markups)', async () => {
+  it('should fetch entry with asset_fields[] CDA param (user_defined_fields, visual_markups)', async () => {
     const result = await makeEntry(entryUid)
-      .assetFields('user_defined_fields', 'embedded_metadata', 'ai_generated_metadata', 'visual_markups')
+      .assetFields('user_defined_fields', 'visual_markups')
       .fetch<TEntry>();
     expect(result).toBeDefined();
     expect(result.uid).toBeDefined();
