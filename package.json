@@ -85,5 +85,9 @@
     "typescript": "~5.7.3",
     "ts-node": "^10.9.2"
   },
-  "homepage": "https://github.com/contentstack/contentstack-typescript"
+  "homepage": "https://github.com/contentstack/contentstack-typescript",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentstack/contentstack-typescript.git"
+  }
 }
