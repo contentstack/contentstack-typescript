@@ -49,7 +49,7 @@
   "dependencies": {
     "@contentstack/core": "^1.5.2",
     "@contentstack/utils": "^1.9.1",
-    "axios": "^1.18.1",
+    "axios": "^1.20.0",
     "humps": "^2.0.1"
   },
   "files": [
@@ -61,7 +61,7 @@
     "follow-redirects": "^1.16.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.61.1",
+    "@playwright/test": "^1.63.0",
     "@slack/bolt": "^4.7.3",
     "@types/humps": "^2.0.6",
     "@types/jest": "^29.5.14",
@@ -85,5 +85,9 @@
     "typescript": "~5.7.3",
     "ts-node": "^10.9.2"
   },
-  "homepage": "https://github.com/contentstack/contentstack-typescript"
+  "homepage": "https://github.com/contentstack/contentstack-typescript",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/contentstack/contentstack-typescript.git"
+  }
 }
