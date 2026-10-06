@@ -1,3 +1,8 @@
+### Version: 5.6.1
+#### Date: Oct-06-2026
+Fix: Resolve security vulnerabilities in dependencies — bump `@contentstack/core` to `^1.5.3` and the `follow-redirects` override to `^1.16.1`.
+Chore: Update TypeScript to `~5.9.3`.
+
 ### Version: 5.6.0
 #### Date: Aug-10-2026
 Fix: Transient network-layer errors (ENOTFOUND, ENETUNREACH, ECONNRESET, ECONNREFUSED, EAI_AGAIN, ETIMEDOUT, EHOSTUNREACH, ENETDOWN) are now retried automatically using the SDK's configured retry policy instead of failing immediately.

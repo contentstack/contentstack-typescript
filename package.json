@@ -1,6 +1,6 @@
 {
   "name": "@contentstack/delivery-sdk",
-  "version": "5.6.0",
+  "version": "5.6.1",
   "type": "module",
   "license": "MIT",
   "engines": {
@@ -47,7 +47,7 @@
     "prerelease": "npm run test:all && npm run validate:all"
   },
   "dependencies": {
-    "@contentstack/core": "^1.5.2",
+    "@contentstack/core": "^1.5.3",
     "@contentstack/utils": "^1.9.1",
     "axios": "^1.20.0",
     "humps": "^2.0.1"
@@ -58,7 +58,7 @@
     "README.md"
   ],
   "overrides": {
-    "follow-redirects": "^1.16.0"
+    "follow-redirects": "^1.16.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
@@ -82,7 +82,7 @@
     "jest-html-reporters": "^3.1.7",
     "jest-junit": "^16.0.0",
     "ts-jest": "^29.4.6",
-    "typescript": "~5.7.3",
+    "typescript": "~5.9.3",
     "ts-node": "^10.9.2"
   },
   "homepage": "https://github.com/contentstack/contentstack-typescript",
