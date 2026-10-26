@@ -1,6 +1,6 @@
 {
   "name": "@contentstack/delivery-sdk",
-  "version": "5.6.1",
+  "version": "5.6.2",
   "type": "module",
   "license": "MIT",
   "engines": {
@@ -58,7 +58,8 @@
     "README.md"
   ],
   "overrides": {
-    "follow-redirects": "^1.16.1"
+    "follow-redirects": "^1.16.1",
+    "qs": "6.16.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
