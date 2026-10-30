@@ -23,7 +23,8 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "prepare": "npm run build",
+      "postpack": "ggshield secret scan archive ./*.tgz",
+  "prepare": "npm run build",
     "test": "jest ./test/unit",
     "test:unit": "jest ./test/unit",
     "test:api": "ENABLE_HTTP_CAPTURE=true jest ./test/api",
