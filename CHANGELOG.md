@@ -1,3 +1,7 @@
+### Version: 5.6.2
+#### Date: Oct-26-2026
+Fix: Resolve a security vulnerability in the transitive `qs` dependency (via `@contentstack/core`) by adding an `overrides` entry pinning `qs` to `6.16.1`.
+
 ### Version: 5.6.1
 #### Date: Oct-06-2026
 Fix: Resolve security vulnerabilities in dependencies — bump `@contentstack/core` to `^1.5.3` and the `follow-redirects` override to `^1.16.1`.
