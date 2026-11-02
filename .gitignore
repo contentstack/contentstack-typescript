@@ -48,3 +48,4 @@ test/docs/sanity-report*
 *.log
 .nx/
 delivery-sdk-persistence/
+.cache_ggshield
